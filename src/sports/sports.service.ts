@@ -26,7 +26,7 @@ export class SportsService {
   }
 
   fetchLeagues(sportId: number) {
-    return this.prisma.leagues.findMany({
+    return this.prisma.league.findMany({
       where: { sportId },
     });
   }

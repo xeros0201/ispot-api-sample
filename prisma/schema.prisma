@@ -22,12 +22,77 @@ model User {
 model Sport {
   id      Int       @id @default(autoincrement())
   name    String    @unique
-  Leagues Leagues[]
+  League League[]
 }
 
-model Leagues {
-  id      Int    @id @default(autoincrement())
-  sport   Sport  @relation(fields: [sportId], references: [id])
+model League {
+  id      Int       @id @default(autoincrement())
+  sport   Sport     @relation(fields: [sportId], references: [id])
   sportId Int
-  name    String @unique
+  name    String    @unique
+  Season Season[]
+}
+
+model Season {
+  id       Int     @id @default(autoincrement())
+  league   League @relation(fields: [leagueId], references: [id])
+  leagueId Int
+  name     String
+  Teams    Teams[]
+  Games    Games[]
+}
+
+model Teams {
+  id            Int             @id @default(autoincrement())
+  season        Season         @relation(fields: [seasonId], references: [id])
+  seasonId      Int
+  name          String
+  logo          String?
+  Players       Players[]
+  Games         Games[]
+  HomeTeamGames Games[]         @relation("homeTeam")
+  AwayTeamGames Games[]         @relation("awayTeam")
+  PlayersOnGame PlayersOnGames[]
+}
+
+model Players {
+  id            Int             @id @default(autoincrement())
+  team          Teams           @relation(fields: [teamId], references: [id])
+  teamId        Int
+  name          String
+  playerNumber  Int
+  Games         PlayersOnGames[]
+}
+
+model Games {
+  id            Int             @id @default(autoincrement())
+  season        Season         @relation(fields: [seasonId], references: [id])
+  seasonId      Int
+  homeTeam      Teams           @relation(fields: [homeTeamId], references: [id], name: "homeTeam")
+  homeTeamId    Int
+  awayTeam      Teams           @relation(fields: [awayTeamId], references: [id], name: "awayTeam")
+  awayTeamId    Int
+  round         Int
+  date          DateTime
+  Teams         Teams?          @relation(fields: [teamsId], references: [id])
+  teamsId       Int?
+  players       PlayersOnGames[]
+  location      Location       @relation(fields: [locationId], references: [id])
+  locationId    Int
+}
+
+model PlayersOnGames {
+  id       Int     @id @default(autoincrement())
+  game     Games   @relation(fields: [gameId], references: [id])
+  gameId   Int
+  player   Players @relation(fields: [playerId], references: [id])
+  playerId Int
+  team     Teams   @relation(fields: [teamId], references: [id])
+  teamId   Int
+}
+
+model Location {
+  id    Int     @id @default(autoincrement())
+  name  String
+  Games Games[]
 }

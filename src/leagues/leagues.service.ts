@@ -10,7 +10,7 @@ export class LeaguesService {
   constructor(private prisma: PrismaService) {}
 
   create(createLeagueDto: CreateLeagueDto) {
-    return this.prisma.leagues.create({
+    return this.prisma.league.create({
       data: {
         name: createLeagueDto.name,
         sport: {
@@ -23,26 +23,26 @@ export class LeaguesService {
   }
 
   findAll() {
-    return this.prisma.leagues.findMany({
+    return this.prisma.league.findMany({
       include: { sport: true },
     });
   }
 
   findAllInSport(sportId: Sport['id']) {
-    return this.prisma.leagues.findMany({
+    return this.prisma.league.findMany({
       where: { sportId },
     });
   }
 
   findOne(id: number) {
-    return this.prisma.leagues.findUnique({
+    return this.prisma.league.findUnique({
       where: { id },
       include: { sport: true },
     });
   }
 
   update(id: number, updateLeagueDto: UpdateLeagueDto) {
-    return this.prisma.leagues.update({
+    return this.prisma.league.update({
       where: { id },
       data: {
         name: updateLeagueDto.name,
@@ -51,7 +51,7 @@ export class LeaguesService {
   }
 
   remove(id: number) {
-    return this.prisma.leagues.delete({
+    return this.prisma.league.delete({
       where: { id },
     });
   }
