@@ -176,7 +176,7 @@ async function main() {
   });
 
   // Combine players into single array
-  const players = [
+  const awayPlayers = [
     { id: awayPlayer01.id },
     { id: awayPlayer03.id },
     { id: awayPlayer04.id },
@@ -199,6 +199,8 @@ async function main() {
     { id: awayPlayer43.id },
     { id: awayPlayer44.id },
     { id: awayPlayer45.id },
+  ];
+  const homePlayers = [
     { id: homePlayer01.id },
     { id: homePlayer04.id },
     { id: homePlayer05.id },
@@ -242,14 +244,23 @@ async function main() {
           name: 'Broadbeach AFL Ground',
         },
       },
-      players: {
-        create: {
-          players: {
-            data: players,
-          }
-        },
-      },
     },
+  });
+
+  // Add players to game
+  await prisma.playersOnGames.createMany({
+    data: [
+      ...homePlayers.map((player) => ({
+        gameId: game.id,
+        playerId: player.id,
+        teamId: broadbeach.id,
+      })),
+      ...awayPlayers.map((player) => ({
+        gameId: game.id,
+        playerId: player.id,
+        teamId: aspley.id,
+      })),
+    ],
   });
 }
 
