@@ -225,8 +225,8 @@ async function main() {
     { id: homePlayer56.id },
   ];
 
-  // Create game
-  const game = await prisma.games.create({
+  // Create match
+  const match = await prisma.matches.create({
     data: {
       homeTeam: {
         connect: { id: broadbeach.id },
@@ -248,15 +248,15 @@ async function main() {
   });
 
   // Add players to game
-  await prisma.playersOnGames.createMany({
+  await prisma.playersOnMatches.createMany({
     data: [
       ...homePlayers.map((player) => ({
-        gameId: game.id,
+        matchId: match.id,
         playerId: player.id,
         teamId: broadbeach.id,
       })),
       ...awayPlayers.map((player) => ({
-        gameId: game.id,
+        matchId: match.id,
         playerId: player.id,
         teamId: aspley.id,
       })),
