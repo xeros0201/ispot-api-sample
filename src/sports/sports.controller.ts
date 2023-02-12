@@ -9,6 +9,7 @@ import {
   Put,
 } from '@nestjs/common';
 
+import { LeagueEntity } from '../leagues/entities/league.entity';
 import { CreateSportDto } from './dto/create-sport.dto';
 import { UpdateSportDto } from './dto/update-sport.dto';
 import { SportEntity } from './entities/sport.entity';
@@ -48,5 +49,12 @@ export class SportsController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<SportEntity> {
     return this.sportsService.delete(id);
+  }
+
+  @Get(':id/leagues')
+  public async findAllLeagues(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<LeagueEntity[]> {
+    return this.sportsService.findAllLeagues(id);
   }
 }

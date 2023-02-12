@@ -18,24 +18,24 @@ import { LeaguesService } from './leagues.service';
 export class LeaguesController {
   constructor(private readonly leaguesService: LeaguesService) {}
 
-  @Get()
+  @Get('/')
   public async findAll(): Promise<LeagueEntity[]> {
     return this.leaguesService.findAll();
   }
 
-  @Get(':id')
+  @Get('/:id')
   public async findById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<LeagueEntity> {
     return this.leaguesService.findById(id);
   }
 
-  @Post()
+  @Post('/')
   public async create(@Body() data: CreateLeagueDto): Promise<LeagueEntity> {
     return this.leaguesService.create(data);
   }
 
-  @Put(':id')
+  @Put('/:id')
   public async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdateLeagueDto,
@@ -43,7 +43,7 @@ export class LeaguesController {
     return this.leaguesService.update(id, data);
   }
 
-  @Delete(':id')
+  @Delete('/:id')
   public async delete(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<LeagueEntity> {

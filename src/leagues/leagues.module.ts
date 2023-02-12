@@ -6,5 +6,6 @@ import { LeaguesService } from './leagues.service';
 @Module({
   controllers: [LeaguesController],
   providers: [LeaguesService],
+  exports: [LeaguesService],
 })
 export class LeaguesModule {}

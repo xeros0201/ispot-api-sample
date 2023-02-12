@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-// import { Sport } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 
+import { SportEntity } from '../sports/entities/sport.entity';
 import { CreateLeagueDto } from './dto/create-league.dto';
 import { UpdateLeagueDto } from './dto/update-league.dto';
 import { LeagueEntity } from './entities/league.entity';
@@ -14,12 +14,16 @@ export class LeaguesService {
     return this.prismaService.league.findMany({ include: { sport: true } });
   }
 
-  // public async findAllBySportId(sportId: Sport['id']): Promise<LeagueEntity[]> {
-  //   return this.prismaService.league.findMany({ where: { sportId } });
-  // }
+  public async findAllBySportId(
+    sportId: SportEntity['id'],
+  ): Promise<LeagueEntity[]> {
+    return this.prismaService.league.findMany({
+      where: { sportId },
+    });
+  }
 
   public async findById(id: number): Promise<LeagueEntity> {
-    return this.prismaService.league.findUnique({
+    return this.prismaService.league.findFirst({
       where: { id },
       include: { sport: true },
     });
