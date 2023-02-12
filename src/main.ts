@@ -1,16 +1,25 @@
-import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { AppModule } from './app.module';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import helmet from 'helmet';
+import { PrismaClientExceptionFilter, PrismaService } from 'nestjs-prisma';
+
+import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.use(helmet());
-  app.enableCors({
-    origin: 'http://localhost:5173',
-  });
-  app.setGlobalPrefix('api');
+  const app = await NestFactory.create(AppModule, { cors: true });
+
+  const prismaService = app.get(PrismaService);
+  await prismaService.enableShutdownHooks(app);
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3000);
+
+  app.use(helmet());
+  app.enableCors({ origin: ['http://localhost:5173'] });
+  app.setGlobalPrefix('api');
+
+  await app.listen(process.env.PORT || 3000);
 }
+
 bootstrap();

@@ -1,18 +1,21 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { PrismaModule } from 'nestjs-prisma';
+
+import { LoggerMiddleware } from './common/middlewares/logger.middleware';
+import { HealthModule } from './health/health.module';
 import { LeaguesModule } from './leagues/leagues.module';
 import { SportsModule } from './sports/sports.module';
-import { MiddlewareConsumer } from '@nestjs/common/interfaces';
-import { LoggerMiddleware } from './common/middleware/logger.middleware';
 
 @Module({
-  imports: [SportsModule, LeaguesModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    PrismaModule.forRoot({ isGlobal: true }),
+    HealthModule,
+    SportsModule,
+    LeaguesModule,
+  ],
 })
-export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
+export class AppModule implements NestModule {
+  public configure(consumer: MiddlewareConsumer): void {
     consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }
