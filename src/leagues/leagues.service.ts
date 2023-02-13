@@ -1,58 +1,56 @@
-import { League } from './entities/league.entity';
 import { Injectable } from '@nestjs/common';
-import { Sport } from '@prisma/client';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { PrismaService } from 'nestjs-prisma';
+
+import { SportEntity } from '../sports/entities/sport.entity';
 import { CreateLeagueDto } from './dto/create-league.dto';
 import { UpdateLeagueDto } from './dto/update-league.dto';
+import { LeagueEntity } from './entities/league.entity';
 
 @Injectable()
 export class LeaguesService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
-  create(createLeagueDto: CreateLeagueDto) {
-    return this.prisma.league.create({
+  public async findAll(): Promise<LeagueEntity[]> {
+    return this.prismaService.league.findMany({ include: { sport: true } });
+  }
+
+  public async findAllBySportId(
+    sportId: SportEntity['id'],
+  ): Promise<LeagueEntity[]> {
+    return this.prismaService.league.findMany({
+      where: { sportId },
+    });
+  }
+
+  public async findById(id: number): Promise<LeagueEntity> {
+    return this.prismaService.league.findFirst({
+      where: { id },
+      include: { sport: true },
+    });
+  }
+
+  public async create({
+    name,
+    sportId,
+  }: CreateLeagueDto): Promise<LeagueEntity> {
+    return this.prismaService.league.create({
       data: {
-        name: createLeagueDto.name,
+        name: name,
         sport: {
-          connect: {
-            id: createLeagueDto.sportId,
-          },
+          connect: { id: sportId },
         },
       },
     });
   }
 
-  findAll() {
-    return this.prisma.league.findMany({
-      include: { sport: true },
-    });
+  public async update(
+    id: number,
+    data: UpdateLeagueDto,
+  ): Promise<LeagueEntity> {
+    return this.prismaService.league.update({ where: { id }, data });
   }
 
-  findAllInSport(sportId: Sport['id']) {
-    return this.prisma.league.findMany({
-      where: { sportId },
-    });
-  }
-
-  findOne(id: number) {
-    return this.prisma.league.findUnique({
-      where: { id },
-      include: { sport: true },
-    });
-  }
-
-  update(id: number, updateLeagueDto: UpdateLeagueDto) {
-    return this.prisma.league.update({
-      where: { id },
-      data: {
-        name: updateLeagueDto.name,
-      },
-    });
-  }
-
-  remove(id: number) {
-    return this.prisma.league.delete({
-      where: { id },
-    });
+  public async delete(id: number): Promise<LeagueEntity> {
+    return this.prismaService.league.delete({ where: { id } });
   }
 }

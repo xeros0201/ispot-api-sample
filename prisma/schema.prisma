@@ -5,10 +5,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator erd {
-  provider = "prisma-erd-generator"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -17,100 +13,121 @@ datasource db {
 model User {
   id        String  @id @default(uuid()) @db.Uuid
   email     String  @unique
-  firstName String?
-  lastName  String?
+  firstName String? @map("first_name")
+  lastName  String? @map("last_name")
   password  String
   active    Boolean
+
+  @@map("users")
 }
 
 model Sport {
-  id     Int      @id @default(autoincrement())
-  name   String   @unique
-  league League[]
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  leagues League[]
+
+  @@map("sports")
 }
 
 model League {
   id      Int      @id @default(autoincrement())
-  sport   Sport    @relation(fields: [sportId], references: [id])
-  sportId Int
   name    String   @unique
-  season  Season[]
+  sportId Int      @map("sport_id")
+  sport   Sport?   @relation(fields: [sportId], references: [id])
+  seasons Season[]
+
+  @@map("leagues")
 }
 
 model Season {
-  id       Int       @id @default(autoincrement())
-  league   League    @relation(fields: [leagueId], references: [id])
-  leagueId Int
+  id       Int     @id @default(autoincrement())
   name     String
-  teams    Teams[]
-  matches  Matches[]
+  leagueId Int     @map("league_id")
+  league   League? @relation(fields: [leagueId], references: [id])
+  teams    Team[]
+  matches  Match[]
+
+  @@map("seasons")
 }
 
-model Teams {
+model Team {
   id               Int                @id @default(autoincrement())
-  season           Season             @relation(fields: [seasonId], references: [id])
-  seasonId         Int
   name             String
   logo             String?
-  players          Players[]
-  matches          Matches[]
-  homeTeamMatches  Matches[]          @relation("homeTeam")
-  awayTeamMatches  Matches[]          @relation("awayTeam")
+  seasonId         Int                @map("season_id")
+  season           Season?            @relation(fields: [seasonId], references: [id])
+  players          Player[]
+  matches          Match[]
+  homeTeamMatches  Match[]            @relation("homeTeam")
+  awayTeamMatches  Match[]            @relation("awayTeam")
   playersOnMatches PlayersOnMatches[]
-  ResultsAfl       ResultsAfl[]
+  aflResults       AFLResult[]
+
+  @@map("teams")
 }
 
-model Players {
+model Player {
   id           Int                @id @default(autoincrement())
-  team         Teams              @relation(fields: [teamId], references: [id])
-  teamId       Int
+  teamId       Int                @map("team_id")
+  team         Team?              @relation(fields: [teamId], references: [id])
   name         String
-  playerNumber Int
+  playerNumber Int                @map("player_number")
   matches      PlayersOnMatches[]
+
+  @@map("players")
 }
 
-model Matches {
+model Match {
   id          Int                @id @default(autoincrement())
-  season      Season             @relation(fields: [seasonId], references: [id])
-  seasonId    Int
-  homeTeam    Teams              @relation(fields: [homeTeamId], references: [id], name: "homeTeam")
-  homeTeamId  Int
-  homeTeamCsv String?
-  awayTeam    Teams              @relation(fields: [awayTeamId], references: [id], name: "awayTeam")
-  awayTeamId  Int
-  awayTeamCsv String?
+  seasonId    Int                @map("season_id")
+  season      Season?            @relation(fields: [seasonId], references: [id])
+  homeTeamId  Int                @map("home_team_id")
+  homeTeam    Team?              @relation(fields: [homeTeamId], references: [id], name: "homeTeam")
+  homeTeamCsv String?            @map("home_team_csv")
+  awayTeamId  Int                @map("away_team_id")
+  awayTeam    Team?              @relation(fields: [awayTeamId], references: [id], name: "awayTeam")
+  awayTeamCsv String?            @map("away_team_csv")
   round       Int
   date        DateTime
-  teams       Teams?             @relation(fields: [teamsId], references: [id])
-  teamsId     Int?
+  teamId      Int?               @map("team_id")
+  team        Team?              @relation(fields: [teamId], references: [id])
+  locationId  Int                @map("location_id")
+  location    Location?          @relation(fields: [locationId], references: [id])
   players     PlayersOnMatches[]
-  location    Location           @relation(fields: [locationId], references: [id])
-  locationId  Int
-  resultsAfl  ResultsAfl[]
+  aflResults  AFLResult[]
+
+  @@map("matches")
 }
 
 model PlayersOnMatches {
   id       Int     @id @default(autoincrement())
-  match    Matches @relation(fields: [matchId], references: [id])
-  matchId  Int
-  player   Players @relation(fields: [playerId], references: [id])
-  playerId Int
-  team     Teams   @relation(fields: [teamId], references: [id])
-  teamId   Int
+  matchId  Int     @map("match_id")
+  match    Match?  @relation(fields: [matchId], references: [id])
+  playerId Int     @map("player_id")
+  player   Player? @relation(fields: [playerId], references: [id])
+  teamId   Int     @map("team_id")
+  team     Team?   @relation(fields: [teamId], references: [id])
+
+  @@index([matchId, playerId, teamId])
+  @@map("players_on_matches")
 }
 
 model Location {
-  id      Int       @id @default(autoincrement())
+  id      Int     @id @default(autoincrement())
   name    String
-  matches Matches[]
+  matches Match[]
+
+  @@map("locations")
 }
 
-model ResultsAfl {
+model AFLResult {
   id             Int     @id @default(autoincrement())
-  match          Matches @relation(fields: [matchId], references: [id])
-  matchId        Int
-  team           Teams   @relation(fields: [teamId], references: [id])
-  teamId         Int
-  scorePrimary   Int     @default(0)
-  scoreSecondary String?
+  matchId        Int     @map("match_id")
+  match          Match?  @relation(fields: [matchId], references: [id])
+  teamId         Int     @map("team_id")
+  team           Team?   @relation(fields: [teamId], references: [id])
+  scorePrimary   Int     @default(0) @map("score_primary")
+  scoreSecondary String? @map("score_secondary")
+
+  @@map("afl_results")
 }

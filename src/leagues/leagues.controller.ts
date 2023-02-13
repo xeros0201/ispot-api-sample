@@ -1,42 +1,52 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
 } from '@nestjs/common';
-import { LeaguesService } from './leagues.service';
+
 import { CreateLeagueDto } from './dto/create-league.dto';
 import { UpdateLeagueDto } from './dto/update-league.dto';
+import { LeagueEntity } from './entities/league.entity';
+import { LeaguesService } from './leagues.service';
 
-@Controller('league')
+@Controller('leagues')
 export class LeaguesController {
   constructor(private readonly leaguesService: LeaguesService) {}
 
-  @Post()
-  create(@Body() createLeagueDto: CreateLeagueDto) {
-    return this.leaguesService.create(createLeagueDto);
-  }
-
-  @Get()
-  findAll() {
+  @Get('/')
+  public async findAll(): Promise<LeagueEntity[]> {
     return this.leaguesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.leaguesService.findOne(+id);
+  @Get('/:id')
+  public async findById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<LeagueEntity> {
+    return this.leaguesService.findById(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLeagueDto: UpdateLeagueDto) {
-    return this.leaguesService.update(+id, updateLeagueDto);
+  @Post('/')
+  public async create(@Body() data: CreateLeagueDto): Promise<LeagueEntity> {
+    return this.leaguesService.create(data);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.leaguesService.remove(+id);
+  @Put('/:id')
+  public async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: UpdateLeagueDto,
+  ): Promise<LeagueEntity> {
+    return this.leaguesService.update(id, data);
+  }
+
+  @Delete('/:id')
+  public async delete(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<LeagueEntity> {
+    return this.leaguesService.delete(id);
   }
 }

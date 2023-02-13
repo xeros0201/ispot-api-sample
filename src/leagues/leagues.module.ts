@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { LeaguesService } from './leagues.service';
+
 import { LeaguesController } from './leagues.controller';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { LeaguesService } from './leagues.service';
 
 @Module({
   controllers: [LeaguesController],
-  providers: [LeaguesService, PrismaService],
+  providers: [LeaguesService],
+  exports: [LeaguesService],
 })
 export class LeaguesModule {}

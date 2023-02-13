@@ -1,47 +1,60 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
 } from '@nestjs/common';
-import { SportsService } from './sports.service';
+
+import { LeagueEntity } from '../leagues/entities/league.entity';
 import { CreateSportDto } from './dto/create-sport.dto';
 import { UpdateSportDto } from './dto/update-sport.dto';
+import { SportEntity } from './entities/sport.entity';
+import { SportsService } from './sports.service';
 
-@Controller('sport')
+@Controller('sports')
 export class SportsController {
-  constructor(private sportsService: SportsService) {}
+  constructor(private readonly sportsService: SportsService) {}
 
-  @Post()
-  create(@Body() createSportDto: CreateSportDto) {
-    return this.sportsService.create(createSportDto);
-  }
-
-  @Get()
-  findAll() {
+  @Get('/')
+  public async findAll(): Promise<SportEntity[]> {
     return this.sportsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.sportsService.findOne(+id);
+  @Get('/:id')
+  public async findById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<SportEntity> {
+    return this.sportsService.findById(+id);
   }
 
-  @Get(':id/league')
-  findAllInSport(@Param('id') id: string) {
-    return this.sportsService.fetchLeagues(+id);
+  @Post('/')
+  public async create(@Body() data: CreateSportDto): Promise<SportEntity> {
+    return this.sportsService.create(data);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSportDto: UpdateSportDto) {
-    return this.sportsService.update(+id, updateSportDto);
+  @Put('/:id')
+  public async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: UpdateSportDto,
+  ): Promise<SportEntity> {
+    return this.sportsService.update(id, data);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.sportsService.remove(+id);
+  @Delete('/:id')
+  public async delete(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<SportEntity> {
+    return this.sportsService.delete(id);
+  }
+
+  @Get(':id/leagues')
+  public async findAllLeagues(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<LeagueEntity[]> {
+    return this.sportsService.findAllLeagues(id);
   }
 }

@@ -1,46 +1,43 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/common/services/prisma.service';
+import { PrismaService } from 'nestjs-prisma';
+
+import { LeagueEntity } from '../leagues/entities/league.entity';
+import { LeaguesService } from '../leagues/leagues.service';
 import { CreateSportDto } from './dto/create-sport.dto';
 import { UpdateSportDto } from './dto/update-sport.dto';
+import { SportEntity } from './entities/sport.entity';
 
 @Injectable()
 export class SportsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly leaguesService: LeaguesService,
+  ) {}
 
-  create(createSportDto: CreateSportDto) {
-    return this.prisma.sport.create({
-      data: {
-        name: createSportDto.name,
-      },
-    });
+  public async findAll(): Promise<SportEntity[]> {
+    return this.prismaService.sport.findMany();
   }
 
-  findAll() {
-    return this.prisma.sport.findMany();
-  }
-
-  findOne(id: number) {
-    return this.prisma.sport.findUnique({
+  public async findById(id: number): Promise<SportEntity> {
+    return this.prismaService.sport.findFirst({
       where: { id },
+      include: { leagues: true },
     });
   }
 
-  fetchLeagues(sportId: number) {
-    return this.prisma.league.findMany({
-      where: { sportId },
-    });
+  public async create(data: CreateSportDto): Promise<SportEntity> {
+    return this.prismaService.sport.create({ data });
   }
 
-  update(id: number, updateSportDto: UpdateSportDto) {
-    return this.prisma.sport.update({
-      where: { id },
-      data: updateSportDto,
-    });
+  public async update(id: number, data: UpdateSportDto): Promise<SportEntity> {
+    return this.prismaService.sport.update({ where: { id }, data });
   }
 
-  remove(id: number) {
-    return this.prisma.sport.delete({
-      where: { id },
-    });
+  public async delete(id: number): Promise<SportEntity> {
+    return this.prismaService.sport.delete({ where: { id } });
+  }
+
+  public async findAllLeagues(id: number): Promise<LeagueEntity[]> {
+    return this.leaguesService.findAllBySportId(id);
   }
 }
