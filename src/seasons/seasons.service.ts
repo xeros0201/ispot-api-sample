@@ -39,14 +39,7 @@ export class SeasonsService {
   }
 
   public async findAllPlayers(id: number): Promise<PlayerEntity[]> {
-    const season = await this.prismaService.season.findFirst({
-      where: { id },
-      include: { teams: true },
-    });
-
-    const teamIds = season.teams.map((t) => t.id);
-
-    return this.playersService.findAllByTeamIds(teamIds);
+    return this.playersService.findAllBySeasonId(id);
   }
 
   public async findAllMatches(id: number): Promise<MatchEntity[]> {
