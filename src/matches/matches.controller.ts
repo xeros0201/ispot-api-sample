@@ -34,15 +34,21 @@ export class MatchesController {
   @UseInterceptors(
     FileFieldsInterceptor(
       [
-        { name: 'homeTeamCsv', maxCount: 1 },
-        { name: 'awayTeamCsv', maxCount: 1 },
+        {
+          name: 'homeTeamCsv',
+          maxCount: 1,
+        },
+        {
+          name: 'awayTeamCsv',
+          maxCount: 1,
+        },
       ],
       {
         fileFilter: (
           _,
           { mimetype, fieldname },
           cb: (e: Error, a: boolean) => void,
-        ) => {
+        ): void => {
           if (mimetype === 'text/csv') {
             cb(null, true);
           } else {
@@ -61,18 +67,56 @@ export class MatchesController {
       awayTeamCsv: Express.Multer.File[];
     },
   ): Promise<MatchEntity> {
-    const [homeTeamCsv] = files.homeTeamCsv;
-    const [awayTeamCsv] = files.awayTeamCsv;
-    console.log(homeTeamCsv, awayTeamCsv);
+    // const [homeTeamCsv] = files.homeTeamCsv;
+    // const [awayTeamCsv] = files.awayTeamCsv;
+    console.log(files);
 
     return this.matchesService.create(data);
   }
 
   @Put('/:id')
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        {
+          name: 'homeTeamCsv',
+          maxCount: 1,
+        },
+        {
+          name: 'awayTeamCsv',
+          maxCount: 1,
+        },
+      ],
+      {
+        fileFilter: (
+          _,
+          { mimetype, fieldname },
+          cb: (e: Error, a: boolean) => void,
+        ): void => {
+          if (mimetype === 'text/csv') {
+            cb(null, true);
+          } else {
+            cb(new MulterError('LIMIT_UNEXPECTED_FILE', fieldname), false);
+          }
+        },
+      },
+    ),
+  )
   public async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() data: UpdateMatchDto,
+    @Param('id', ParseIntPipe)
+    id: number,
+    @Body()
+    data: UpdateMatchDto,
+    @UploadedFiles()
+    files: {
+      homeTeamCsv: Express.Multer.File[];
+      awayTeamCsv: Express.Multer.File[];
+    },
   ): Promise<MatchEntity> {
+    // const [homeTeamCsv] = files.homeTeamCsv;
+    // const [awayTeamCsv] = files.awayTeamCsv;
+    console.log(files);
+
     return this.matchesService.update(id, data);
   }
 
