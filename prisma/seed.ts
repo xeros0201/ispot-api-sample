@@ -4,13 +4,34 @@ const prisma = new PrismaClient();
 
 const main = async (): Promise<void> => {
   // Clear all data
-  await prisma.playersOnMatches.deleteMany({ where: { id: { not: 0 } } });
-  await prisma.match.deleteMany({ where: { id: { not: 0 } } });
-  await prisma.player.deleteMany({ where: { id: { not: 0 } } });
-  await prisma.team.deleteMany({ where: { id: { not: 0 } } });
-  await prisma.season.deleteMany({ where: { id: { not: 0 } } });
-  await prisma.league.deleteMany({ where: { id: { not: 0 } } });
-  await prisma.sport.deleteMany({ where: { id: { not: 0 } } });
+  await prisma.playersOnMatches.deleteMany();
+  await prisma.match.deleteMany();
+  await prisma.player.deleteMany();
+  await prisma.team.deleteMany();
+  await prisma.season.deleteMany();
+  await prisma.league.deleteMany();
+  await prisma.sport.deleteMany();
+  await prisma.user.deleteMany();
+
+  // Create users
+  await prisma.user.create({
+    data: {
+      email: 'toan.doan@blackbook.ai',
+      firstName: 'Toan',
+      lastName: 'Doan',
+      password: '123',
+      active: true,
+    },
+  });
+  await prisma.user.create({
+    data: {
+      email: 'tyler.beutel@blackbook.ai',
+      firstName: 'Tyler',
+      lastName: 'Beutel',
+      password: '123',
+      active: true,
+    },
+  });
 
   // Create sports
   const sport = await prisma.sport.create({
