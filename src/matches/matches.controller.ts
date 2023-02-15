@@ -11,7 +11,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { MulterError } from 'multer';
+import { diskStorage, MulterError } from 'multer';
 
 import { PlayerEntity } from '../players/entities/player.entity';
 import { CreateMatchDto } from './dto/create-match.dto';
@@ -55,23 +55,34 @@ export class MatchesController {
             cb(new MulterError('LIMIT_UNEXPECTED_FILE', fieldname), false);
           }
         },
+        storage: diskStorage({ destination: './uploads/' }),
       },
     ),
   )
   public async create(
     @Body()
-    data: CreateMatchDto,
+    formData: CreateMatchDto,
     @UploadedFiles()
     files: {
-      homeTeamCsv: Express.Multer.File[];
-      awayTeamCsv: Express.Multer.File[];
+      homeTeamCsv?: Express.Multer.File[];
+      awayTeamCsv?: Express.Multer.File[];
     },
   ): Promise<MatchEntity> {
-    // const [homeTeamCsv] = files.homeTeamCsv;
-    // const [awayTeamCsv] = files.awayTeamCsv;
-    console.log(files);
+    let homeTeamCsv: string;
+    let awayTeamCsv: string;
 
-    return this.matchesService.create(data);
+    if (files.homeTeamCsv && files.homeTeamCsv.length > 0) {
+      homeTeamCsv = files.homeTeamCsv[0].path;
+    }
+
+    if (files.awayTeamCsv && files.awayTeamCsv.length > 0) {
+      awayTeamCsv = files.awayTeamCsv[0].path;
+    }
+
+    return this.matchesService.create(formData, {
+      homeTeamCsv,
+      awayTeamCsv,
+    });
   }
 
   @Put('/:id')
@@ -99,6 +110,7 @@ export class MatchesController {
             cb(new MulterError('LIMIT_UNEXPECTED_FILE', fieldname), false);
           }
         },
+        storage: diskStorage({ destination: './uploads/' }),
       },
     ),
   )
@@ -113,11 +125,18 @@ export class MatchesController {
       awayTeamCsv: Express.Multer.File[];
     },
   ): Promise<MatchEntity> {
-    // const [homeTeamCsv] = files.homeTeamCsv;
-    // const [awayTeamCsv] = files.awayTeamCsv;
-    console.log(files);
+    let homeTeamCsv: string;
+    let awayTeamCsv: string;
 
-    return this.matchesService.update(id, data);
+    if (files.homeTeamCsv && files.homeTeamCsv.length > 0) {
+      homeTeamCsv = files.homeTeamCsv[0].path;
+    }
+
+    if (files.awayTeamCsv && files.awayTeamCsv.length > 0) {
+      awayTeamCsv = files.awayTeamCsv[0].path;
+    }
+
+    return this.matchesService.update(id, data, { homeTeamCsv, awayTeamCsv });
   }
 
   @Delete('/:id')

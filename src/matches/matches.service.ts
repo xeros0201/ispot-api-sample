@@ -1,5 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { existsSync, unlinkSync } from 'fs';
 import { PrismaService } from 'nestjs-prisma';
+import { join } from 'path';
 
 import { PlayerEntity } from '../players/entities/player.entity';
 import { PlayersService } from '../players/players.service';
@@ -10,8 +12,6 @@ import { MatchEntity } from './entities/match.entity';
 
 @Injectable()
 export class MatchesService {
-  private readonly logger = new Logger(MatchesService.name);
-
   constructor(
     private readonly prismaService: PrismaService,
     private readonly playersService: PlayersService,
@@ -28,14 +28,50 @@ export class MatchesService {
     });
   }
 
-  public async create(data: CreateMatchDto): Promise<MatchEntity> {
+  public async create(
+    data: CreateMatchDto,
+    { homeTeamCsv, awayTeamCsv }: { homeTeamCsv: string; awayTeamCsv: string },
+  ): Promise<MatchEntity> {
     return this.prismaService.match.create({
-      data: { ...data },
+      data: {
+        ...data,
+        homeTeamCsv,
+        awayTeamCsv,
+      },
     });
   }
 
-  public async update(id: number, data: UpdateMatchDto): Promise<MatchEntity> {
-    return this.prismaService.match.update({ where: { id }, data });
+  public async update(
+    id: number,
+    data: UpdateMatchDto,
+    { homeTeamCsv, awayTeamCsv }: { homeTeamCsv: string; awayTeamCsv: string },
+  ): Promise<MatchEntity> {
+    const match = await this.prismaService.match.findFirst({ where: { id } });
+
+    if (match.homeTeamCsv && match.homeTeamCsv.length > 0) {
+      const path = join(process.cwd(), match.homeTeamCsv);
+
+      if (existsSync(path)) {
+        unlinkSync(path);
+      }
+    }
+
+    if (match.awayTeamCsv && match.awayTeamCsv.length > 0) {
+      const path = join(process.cwd(), match.awayTeamCsv);
+
+      if (existsSync(path)) {
+        unlinkSync(path);
+      }
+    }
+
+    return this.prismaService.match.update({
+      where: { id },
+      data: {
+        ...data,
+        homeTeamCsv,
+        awayTeamCsv,
+      },
+    });
   }
 
   public async delete(id: number): Promise<MatchEntity> {
