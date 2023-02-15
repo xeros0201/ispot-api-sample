@@ -25,5 +25,6 @@ module.exports = {
     eqeqeq: ['error', 'always'],
     'simple-import-sort/imports': 'warn',
     'simple-import-sort/exports': 'warn',
+    'security/detect-non-literal-fs-filename': 'off',
   },
 };

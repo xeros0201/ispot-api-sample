@@ -13,7 +13,13 @@ async function bootstrap() {
 
   const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      enableDebugMessages: true,
+      transform: true,
+      skipNullProperties: true,
+    }),
+  );
 
   app.use(helmet());
   app.enableCors({ origin: ['http://localhost:5173'] });
