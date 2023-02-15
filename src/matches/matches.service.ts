@@ -48,7 +48,7 @@ export class MatchesService {
   ): Promise<MatchEntity> {
     const match = await this.prismaService.match.findFirst({ where: { id } });
 
-    if (match.homeTeamCsv && match.homeTeamCsv.length > 0) {
+    if (match.homeTeamCsv !== null) {
       const path = join(process.cwd(), match.homeTeamCsv);
 
       if (existsSync(path)) {
@@ -56,7 +56,7 @@ export class MatchesService {
       }
     }
 
-    if (match.awayTeamCsv && match.awayTeamCsv.length > 0) {
+    if (match.awayTeamCsv !== null) {
       const path = join(process.cwd(), match.awayTeamCsv);
 
       if (existsSync(path)) {
