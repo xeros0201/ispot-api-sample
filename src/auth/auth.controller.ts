@@ -2,11 +2,14 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Post,
   Req,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { Request } from 'express';
 
 import { ExcludePasswordInterceptor } from '../common/interceptors/exclude-password.interceptor';
@@ -17,9 +20,11 @@ import { SessionAuthGuard } from './guards/session-auth.guard';
 
 @Controller('auth')
 export class AuthController {
+  // @Throttle(1, 60) -> Only for testing
   @Post('/login')
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard, ThrottlerGuard)
   @UseInterceptors(ExcludePasswordInterceptor)
+  @HttpCode(HttpStatus.OK)
   public login(@CurrentUser() user: UserEntity): UserEntity {
     return user;
   }

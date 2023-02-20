@@ -21,6 +21,7 @@
     "@nestjs/passport": "^9.0.3",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/terminus": "^9.2.0",
+    "@nestjs/throttler": "^4.0.0",
     "@prisma/client": "^4.10.1",
     "@types/bluebird": "^3.5.38",
     "bcrypt": "^5.1.0",
