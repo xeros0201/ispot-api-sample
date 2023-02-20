@@ -1,8 +1,17 @@
-import { Controller, Delete, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Req,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { Request } from 'express';
 
+import { ExcludePasswordInterceptor } from '../common/interceptors/exclude-password.interceptor';
 import { UserEntity } from '../users/entities/user.entity';
-import { CurrentUser } from '../users/user.decorator';
+import { CurrentUser } from '../users/users.decorator';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { SessionAuthGuard } from './guards/session-auth.guard';
 
@@ -10,23 +19,28 @@ import { SessionAuthGuard } from './guards/session-auth.guard';
 export class AuthController {
   @Post('/login')
   @UseGuards(LocalAuthGuard)
+  @UseInterceptors(ExcludePasswordInterceptor)
   public login(@CurrentUser() user: UserEntity): UserEntity {
     return user;
+  }
+
+  @Get('/check')
+  @UseGuards(SessionAuthGuard)
+  public check(): void {
+    return;
   }
 
   @Delete('/logout')
   @UseGuards(SessionAuthGuard)
   public async logout(@Req() req: Request): Promise<any> {
-    await new Promise<void>((resolve) => {
-      req.session.destroy(() => {
+    await new Promise<void>((resolve, reject) => {
+      req.session.destroy((err) => {
+        if (err) {
+          reject(err);
+        }
+
         resolve();
       });
     });
-  }
-
-  @Get('/check')
-  @UseGuards(SessionAuthGuard)
-  public check(@CurrentUser() user: UserEntity): UserEntity {
-    return user;
   }
 }

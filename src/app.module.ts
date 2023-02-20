@@ -16,6 +16,7 @@ import { UsersModule } from './users/users.module';
   imports: [
     PrismaModule.forRoot({ isGlobal: true }),
     HealthModule,
+    AuthModule,
     SportsModule,
     LeaguesModule,
     SeasonsModule,
@@ -23,7 +24,6 @@ import { UsersModule } from './users/users.module';
     PlayersModule,
     MatchesModule,
     UsersModule,
-    AuthModule,
   ],
 })
 export class AppModule implements NestModule {
