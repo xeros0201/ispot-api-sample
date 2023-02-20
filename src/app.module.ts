@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { PrismaModule } from 'nestjs-prisma';
 
+import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { HealthModule } from './health/health.module';
 import { LeaguesModule } from './leagues/leagues.module';
@@ -22,6 +23,7 @@ import { UsersModule } from './users/users.module';
     PlayersModule,
     MatchesModule,
     UsersModule,
+    AuthModule,
   ],
 })
 export class AppModule implements NestModule {

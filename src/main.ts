@@ -1,7 +1,10 @@
 import { ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import * as cookieParser from 'cookie-parser';
+import * as session from 'express-session';
 import helmet from 'helmet';
 import { PrismaClientExceptionFilter, PrismaService } from 'nestjs-prisma';
+import * as passport from 'passport';
 
 import { AppModule } from './app.module';
 
@@ -21,8 +24,20 @@ async function bootstrap() {
     }),
   );
 
+  app.use(cookieParser());
+  app.use(
+    session({
+      secret: 'isports',
+      resave: false,
+      saveUninitialized: false,
+    }),
+  );
+
+  app.use(passport.initialize());
+  app.use(passport.session());
+
   app.use(helmet());
-  app.enableCors({ origin: ['http://localhost:5173'] });
+  app.enableCors({ origin: ['http://localhost:3000'] });
   app.setGlobalPrefix('api');
 
   await app.listen(process.env.PORT || 3000);
