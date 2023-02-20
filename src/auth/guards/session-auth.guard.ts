@@ -11,7 +11,7 @@ export class SessionAuthGuard implements CanActivate {
   public canActivate(ctx: ExecutionContext): boolean | Promise<boolean> {
     const req = ctx.switchToHttp().getRequest();
 
-    if (!req.isAuthenticated() || !_.isNil(req.user)) {
+    if (!req.isAuthenticated() || _.isNil(req.user)) {
       throw new UnauthorizedException();
     }
 
