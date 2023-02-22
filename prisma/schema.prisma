@@ -19,13 +19,19 @@ model Session {
   @@map("sessions")
 }
 
+enum UserRole {
+  STAFF
+  ADMIN
+}
+
 model User {
-  id        String  @id @default(uuid()) @db.Uuid
-  email     String  @unique
-  firstName String? @map("first_name")
-  lastName  String? @map("last_name")
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique
+  firstName String?  @map("first_name")
+  lastName  String?  @map("last_name")
   password  String
   active    Boolean
+  role      UserRole @default(STAFF)
 
   @@map("users")
 }
