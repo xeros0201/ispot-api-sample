@@ -27,7 +27,7 @@ async function bootstrap() {
   app.use(cookieParser());
   app.use(
     session({
-      secret: 'isports',
+      secret: process.env.APP_SECRET,
       resave: false,
       saveUninitialized: false,
     }),
