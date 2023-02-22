@@ -10,6 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  STAFF
+  ADMIN
+}
+
 model Session {
   id        String   @id
   sid       String   @unique
@@ -17,11 +22,6 @@ model Session {
   expiresAt DateTime @map("expires_at")
 
   @@map("sessions")
-}
-
-enum UserRole {
-  STAFF
-  ADMIN
 }
 
 model User {
