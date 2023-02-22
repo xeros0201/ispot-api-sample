@@ -16,7 +16,7 @@ const main = async (): Promise<void> => {
 
   // Create users
   const salt = await bcrypt.genSalt();
-  const password = await bcrypt.hash('123456', salt);
+  const password = await bcrypt.hash('Aa@123456', salt);
 
   await prisma.user.create({
     data: {
