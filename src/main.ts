@@ -1,5 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { PrismaClient } from '@prisma/client';
+import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
 import helmet from 'helmet';
@@ -30,6 +32,13 @@ async function bootstrap() {
       secret: process.env.APP_SECRET,
       resave: false,
       saveUninitialized: false,
+      cookie: {
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 1 Week
+      },
+      store: new PrismaSessionStore(new PrismaClient(), {
+        checkPeriod: 2 * 60 * 1000, // 2 Min
+        dbRecordIdIsSessionId: true,
+      }),
     }),
   );
 
