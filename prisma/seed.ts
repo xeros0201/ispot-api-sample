@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -14,21 +15,25 @@ const main = async (): Promise<void> => {
   await prisma.user.deleteMany();
 
   // Create users
+  const salt = await bcrypt.genSalt();
+  const password = await bcrypt.hash('123456', salt);
+
   await prisma.user.create({
     data: {
       email: 'toan.doan@blackbook.ai',
       firstName: 'Toan',
       lastName: 'Doan',
-      password: '123',
+      password,
       active: true,
     },
   });
+
   await prisma.user.create({
     data: {
       email: 'tyler.beutel@blackbook.ai',
       firstName: 'Tyler',
       lastName: 'Beutel',
-      password: '123',
+      password,
       active: true,
     },
   });
