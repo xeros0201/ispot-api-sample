@@ -7,14 +7,19 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 
+import { SessionAuthGuard } from '../auth/guards/session-auth.guard';
+import { UserEntity } from '../users/entities/user.entity';
+import { CurrentUser } from '../users/users.decorator';
 import { CreateLeagueDto } from './dto/create-league.dto';
 import { UpdateLeagueDto } from './dto/update-league.dto';
 import { LeagueEntity } from './entities/league.entity';
 import { LeaguesService } from './leagues.service';
 
 @Controller('leagues')
+@UseGuards(SessionAuthGuard)
 export class LeaguesController {
   constructor(private readonly leaguesService: LeaguesService) {}
 
@@ -31,16 +36,20 @@ export class LeaguesController {
   }
 
   @Post('/')
-  public async create(@Body() data: CreateLeagueDto): Promise<LeagueEntity> {
-    return this.leaguesService.create(data);
+  public async create(
+    @Body() data: CreateLeagueDto,
+    @CurrentUser() user: UserEntity,
+  ): Promise<LeagueEntity> {
+    return this.leaguesService.create(data, user.id);
   }
 
   @Put('/:id')
   public async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdateLeagueDto,
+    @CurrentUser() user: UserEntity,
   ): Promise<LeagueEntity> {
-    return this.leaguesService.update(id, data);
+    return this.leaguesService.update(id, data, user.id);
   }
 
   @Delete('/:id')

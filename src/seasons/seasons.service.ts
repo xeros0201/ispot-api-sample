@@ -7,6 +7,7 @@ import { PlayerEntity } from '../players/entities/player.entity';
 import { PlayersService } from '../players/players.service';
 import { TeamEntity } from '../teams/entities/team.entity';
 import { TeamsService } from '../teams/teams.service';
+import { UserEntity } from '../users/entities/user.entity';
 import { CreateSeasonDto } from './dto/create-season.dto';
 import { SeasonEntity } from './entities/season.entity';
 
@@ -23,15 +24,18 @@ export class SeasonsService {
     return this.prismaService.season.findFirst({
       where: { id },
       include: {
-        league: {
-          include: { sport: true },
-        },
+        league: { include: { sport: true } },
       },
     });
   }
 
-  public async create(data: CreateSeasonDto): Promise<SeasonEntity> {
-    return this.prismaService.season.create({ data });
+  public async create(
+    data: CreateSeasonDto,
+    userId: UserEntity['id'],
+  ): Promise<SeasonEntity> {
+    return this.prismaService.season.create({
+      data: { ...data, createdUserId: userId },
+    });
   }
 
   public async findAllTeams(id: number): Promise<TeamEntity[]> {
