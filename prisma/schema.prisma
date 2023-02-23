@@ -25,13 +25,17 @@ model Session {
 }
 
 model User {
-  id        String   @id @default(uuid()) @db.Uuid
-  email     String   @unique
-  firstName String?  @map("first_name")
-  lastName  String?  @map("last_name")
-  password  String
-  active    Boolean
-  role      UserRole @default(STAFF)
+  id             String   @id @default(uuid()) @db.Uuid
+  email          String   @unique
+  firstName      String?  @map("first_name")
+  lastName       String?  @map("last_name")
+  password       String
+  active         Boolean
+  role           UserRole @default(STAFF)
+  createdLeagues League[] @relation("createdUser")
+  updatedLeagues League[] @relation("updatedUser")
+  createdSeasons Season[] @relation("createdUser")
+  updatedSeasons Season[] @relation("updatedUser")
 
   @@map("users")
 }
@@ -45,22 +49,34 @@ model Sport {
 }
 
 model League {
-  id      Int      @id @default(autoincrement())
-  name    String   @unique
-  sportId Int      @map("sport_id")
-  sport   Sport?   @relation(fields: [sportId], references: [id])
-  seasons Season[]
+  id            Int      @id @default(autoincrement())
+  name          String   @unique
+  sportId       Int      @map("sport_id")
+  sport         Sport?   @relation(fields: [sportId], references: [id])
+  createdDate   DateTime @default(now()) @map("created_date")
+  createdUserId String?  @map("created_user_id") @db.Uuid
+  createdUser   User?    @relation(fields: [createdUserId], references: [id], name: "createdUser")
+  updatedDate   DateTime @updatedAt @map("updated_date")
+  updatedUserId String?  @map("updated_user_id") @db.Uuid
+  updatedUser   User?    @relation(fields: [updatedUserId], references: [id], name: "updatedUser")
+  seasons       Season[]
 
   @@map("leagues")
 }
 
 model Season {
-  id       Int     @id @default(autoincrement())
-  name     String
-  leagueId Int     @map("league_id")
-  league   League? @relation(fields: [leagueId], references: [id])
-  teams    Team[]
-  matches  Match[]
+  id            Int      @id @default(autoincrement())
+  name          String
+  leagueId      Int      @map("league_id")
+  league        League?  @relation(fields: [leagueId], references: [id])
+  createdDate   DateTime @default(now()) @map("created_date")
+  createdUserId String?  @map("created_user_id") @db.Uuid
+  createdUser   User?    @relation(fields: [createdUserId], references: [id], name: "createdUser")
+  updatedDate   DateTime @updatedAt @map("updated_date")
+  updatedUserId String?  @map("updated_user_id") @db.Uuid
+  updatedUser   User?    @relation(fields: [updatedUserId], references: [id], name: "updatedUser")
+  teams         Team[]
+  matches       Match[]
 
   @@map("seasons")
 }
