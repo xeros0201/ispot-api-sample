@@ -5,16 +5,21 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 
+import { SessionAuthGuard } from '../auth/guards/session-auth.guard';
 import { MatchEntity } from '../matches/entities/match.entity';
 import { PlayerEntity } from '../players/entities/player.entity';
 import { TeamEntity } from '../teams/entities/team.entity';
+import { UserEntity } from '../users/entities/user.entity';
+import { CurrentUser } from '../users/users.decorator';
 import { CreateSeasonDto } from './dto/create-season.dto';
 import { SeasonEntity } from './entities/season.entity';
 import { SeasonsService } from './seasons.service';
 
 @Controller('seasons')
+@UseGuards(SessionAuthGuard)
 export class SeasonsController {
   constructor(private readonly seasonsService: SeasonsService) {}
 
@@ -26,8 +31,11 @@ export class SeasonsController {
   }
 
   @Post()
-  public async create(@Body() data: CreateSeasonDto): Promise<SeasonEntity> {
-    return this.seasonsService.create(data);
+  public async create(
+    @Body() data: CreateSeasonDto,
+    @CurrentUser() user: UserEntity,
+  ): Promise<SeasonEntity> {
+    return this.seasonsService.create(data, user.id);
   }
 
   @Get('/:id/teams')

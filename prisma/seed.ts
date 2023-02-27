@@ -18,25 +18,26 @@ const main = async (): Promise<void> => {
   const salt = await bcrypt.genSalt();
   const password = await bcrypt.hash('Aa@123456', salt);
 
-  await prisma.user.create({
-    data: {
-      email: 'toan.doan@blackbook.ai',
-      firstName: 'Toan',
-      lastName: 'Doan',
-      password,
-      active: true,
-    },
-  });
-
-  await prisma.user.create({
-    data: {
-      email: 'tyler.beutel@blackbook.ai',
-      firstName: 'Tyler',
-      lastName: 'Beutel',
-      password,
-      active: true,
-    },
-  });
+  const [user01, user02] = await Promise.all([
+    prisma.user.create({
+      data: {
+        email: 'toan.doan@blackbook.ai',
+        firstName: 'Toan',
+        lastName: 'Doan',
+        password,
+        active: true,
+      },
+    }),
+    prisma.user.create({
+      data: {
+        email: 'tyler.beutel@blackbook.ai',
+        firstName: 'Tyler',
+        lastName: 'Beutel',
+        password,
+        active: true,
+      },
+    }),
+  ]);
 
   // Create sports
   const sport = await prisma.sport.create({
@@ -48,6 +49,8 @@ const main = async (): Promise<void> => {
     data: {
       name: 'QAFL',
       sport: { connect: { id: sport.id } },
+      createdUser: { connect: { id: user01.id } },
+      updatedUser: { connect: { id: user02.id } },
     },
   });
 
@@ -56,6 +59,8 @@ const main = async (): Promise<void> => {
     data: {
       name: '2021',
       league: { connect: { id: league.id } },
+      createdUser: { connect: { id: user01.id } },
+      updatedUser: { connect: { id: user02.id } },
     },
   });
 

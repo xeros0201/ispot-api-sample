@@ -6,4 +6,12 @@ export class SeasonEntity implements Season {
   name: string;
 
   leagueId: number;
+
+  createdDate: Date;
+
+  createdUserId: string;
+
+  updatedDate: Date;
+
+  updatedUserId: string;
 }
