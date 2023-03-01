@@ -9,6 +9,7 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import * as cookieParser from 'cookie-parser';
 import * as session from 'express-session';
+import * as fs from 'fs';
 import helmet from 'helmet';
 import { PrismaClientExceptionFilter, PrismaService } from 'nestjs-prisma';
 import * as passport from 'passport';
@@ -69,6 +70,10 @@ async function bootstrap() {
     operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
   };
   const document = SwaggerModule.createDocument(app, config, options);
+  fs.writeFileSync(
+    './thunder-tests/swagger-collection.json',
+    JSON.stringify(document),
+  );
   SwaggerModule.setup('api', app, document);
 
   await app.listen(process.env.PORT || 3000);
