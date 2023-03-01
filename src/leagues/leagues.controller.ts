@@ -9,6 +9,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
 
 import { SessionAuthGuard } from '../auth/guards/session-auth.guard';
 import { UserEntity } from '../users/entities/user.entity';
@@ -18,6 +19,7 @@ import { UpdateLeagueDto } from './dto/update-league.dto';
 import { LeagueEntity } from './entities/league.entity';
 import { LeaguesService } from './leagues.service';
 
+@ApiTags('leagues')
 @Controller('leagues')
 export class LeaguesController {
   constructor(private readonly leaguesService: LeaguesService) {}

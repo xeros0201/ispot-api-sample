@@ -9,15 +9,18 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { Request } from 'express';
 
 import { ExcludePasswordInterceptor } from '../common/interceptors/exclude-password.interceptor';
 import { UserEntity } from '../users/entities/user.entity';
 import { CurrentUser } from '../users/users.decorator';
+import { LoginDto } from './dto/login.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { SessionAuthGuard } from './guards/session-auth.guard';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   // @Throttle(1, 60) -> Only for testing
@@ -25,6 +28,10 @@ export class AuthController {
   @UseGuards(LocalAuthGuard, ThrottlerGuard)
   @UseInterceptors(ExcludePasswordInterceptor)
   @HttpCode(HttpStatus.OK)
+  @ApiBody({
+    description: 'List of cats',
+    type: LoginDto,
+  })
   public login(@CurrentUser() user: UserEntity): UserEntity {
     return user;
   }

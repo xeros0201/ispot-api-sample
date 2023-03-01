@@ -1,5 +1,10 @@
 import { ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import {
+  DocumentBuilder,
+  SwaggerDocumentOptions,
+  SwaggerModule,
+} from '@nestjs/swagger';
 import { PrismaClient } from '@prisma/client';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
 import * as cookieParser from 'cookie-parser';
@@ -52,6 +57,19 @@ async function bootstrap() {
     credentials: true,
   });
   app.setGlobalPrefix('api');
+
+  // configure Swagger
+  const config = new DocumentBuilder()
+    .setTitle('iSports')
+    .setDescription('The iSports API description')
+    .setVersion('1.0')
+    .build();
+
+  const options: SwaggerDocumentOptions = {
+    operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
+  };
+  const document = SwaggerModule.createDocument(app, config, options);
+  SwaggerModule.setup('api', app, document);
 
   await app.listen(process.env.PORT || 3000);
 }
