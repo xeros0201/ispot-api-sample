@@ -11,7 +11,7 @@ import * as passport from 'passport';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
 
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
@@ -34,6 +34,7 @@ async function bootstrap() {
       saveUninitialized: false,
       cookie: {
         maxAge: 7 * 24 * 60 * 60 * 1000, // 1 Week
+        domain: 'localhost',
       },
       store: new PrismaSessionStore(new PrismaClient(), {
         checkPeriod: 2 * 60 * 1000, // 2 Min
@@ -46,7 +47,10 @@ async function bootstrap() {
   app.use(passport.session());
 
   app.use(helmet());
-  app.enableCors({ origin: ['http://localhost:3000'] });
+  app.enableCors({
+    origin: ['http://localhost:3000', 'http://localhost:5173'],
+    credentials: true,
+  });
   app.setGlobalPrefix('api');
 
   await app.listen(process.env.PORT || 3000);
