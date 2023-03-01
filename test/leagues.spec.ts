@@ -1,13 +1,13 @@
 process.env.NODE_ENV = 'test';
+import chaiHttp = require('chai-http');
+
+import * as chai from 'chai';
 import { PrismaService } from 'nestjs-prisma';
 import { LeaguesModule } from 'src/leagues/leagues.module';
 
 import { LeaguesController } from '../src/leagues/leagues.controller';
 import { LeaguesService } from '../src/leagues/leagues.service';
 import { UsersService } from '../src/users/users.service';
-
-const chai = require('chai');
-const chaiHttp = require('chai-http');
 
 const expect = chai.expect;
 const should = chai.should();
@@ -27,16 +27,22 @@ describe('Leagues', () => {
     leaguesService = new LeaguesService(prismaService);
     leaguesController = new LeaguesController(leaguesService);
 
-    await prismaService.league.deleteMany();
+    await prismaService.league.deleteMany({
+      where: {
+        NOT: {
+          id: 1,
+        },
+      },
+    });
   });
 
   describe('Login', () => {
     it('should create user session for valid user', async function () {
       const data = {
-        email: 'admin@gmail.com',
-        firstName: 'Admin',
-        lastName: 'Admin',
-        password: 'Admin@123',
+        email: 'tyler.beutel@blackbook.ai',
+        firstName: 'Tyler',
+        lastName: 'Beutel',
+        password: 'Aa@123456',
         active: true,
       };
       // await usersService.create(data);
@@ -51,7 +57,7 @@ describe('Leagues', () => {
       res.body.firstName.should.equal(data.firstName);
       res.body.email.should.equal(data.email);
       // Save the cookie to use it later to retrieve the session
-      Cookies = res.headers['set-cookie'].pop().split(';')[0];
+      Cookies = res.header['set-cookie'].pop().split(';')[0];
     });
   });
 
@@ -64,7 +70,7 @@ describe('Leagues', () => {
         include: { sport: true },
       });
 
-      expect(res.length).to.equal(0);
+      expect(res.length).to.equal(1);
     });
   });
 
