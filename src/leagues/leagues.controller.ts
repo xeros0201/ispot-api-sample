@@ -19,7 +19,6 @@ import { LeagueEntity } from './entities/league.entity';
 import { LeaguesService } from './leagues.service';
 
 @Controller('leagues')
-@UseGuards(SessionAuthGuard)
 export class LeaguesController {
   constructor(private readonly leaguesService: LeaguesService) {}
 
@@ -36,6 +35,7 @@ export class LeaguesController {
   }
 
   @Post('/')
+  @UseGuards(SessionAuthGuard)
   public async create(
     @Body() data: CreateLeagueDto,
     @CurrentUser() user: UserEntity,
@@ -44,6 +44,7 @@ export class LeaguesController {
   }
 
   @Put('/:id')
+  @UseGuards(SessionAuthGuard)
   public async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdateLeagueDto,
@@ -53,6 +54,7 @@ export class LeaguesController {
   }
 
   @Delete('/:id')
+  @UseGuards(SessionAuthGuard)
   public async delete(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<LeagueEntity> {
