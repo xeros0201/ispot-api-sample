@@ -1,0 +1,417 @@
+[
+  {
+    "_id": "d6f8963e-55b8-4ce8-85bd-457e8070002b",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "2989cd2a-b05b-42ef-b872-46c16e23bbca",
+    "name": "Login",
+    "url": "{{base_url}}/auth/login",
+    "method": "POST",
+    "sortNum": 10000,
+    "created": "2023-03-01T04:03:32.922Z",
+    "modified": "2023-03-01T04:03:32.922Z",
+    "headers": [
+      {
+        "name": "x-xsrf-token",
+        "value": "fOZ6tlJQ0DCUBEPN-KTWlD19AW3wDMSMI-CvYdOkEe0w"
+      }
+    ],
+    "body": {
+      "type": "json",
+      "raw": "{\n    \"email\": \"toan.doan@blackbook.ai\",\n    \"password\": \"Aa@123456\"\n}"
+    },
+    "auth": {
+      "type": "none"
+    }
+  },
+  {
+    "_id": "54c8531a-0f7c-4b15-bef0-a4d4b1a994fa",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "2989cd2a-b05b-42ef-b872-46c16e23bbca",
+    "name": "Check",
+    "url": "{{base_url}}/auth/check",
+    "method": "GET",
+    "sortNum": 20000,
+    "created": "2023-03-01T04:03:32.923Z",
+    "modified": "2023-03-01T04:03:32.923Z",
+    "headers": []
+  },
+  {
+    "_id": "4300e855-78fe-4094-97fb-8a71b235d8b7",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "2989cd2a-b05b-42ef-b872-46c16e23bbca",
+    "name": "Logout",
+    "url": "{{base_url}}/auth/logout",
+    "method": "DELETE",
+    "sortNum": 30000,
+    "created": "2023-03-01T04:03:32.924Z",
+    "modified": "2023-03-01T04:03:32.924Z",
+    "headers": []
+  },
+  {
+    "_id": "8198bcc7-a4bb-4b2a-82a7-58ab9fd93b79",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "3feb9c00-8fd9-4e4a-9636-aabd84c3c586",
+    "name": "Find All",
+    "url": "{{base_url}}/sports",
+    "method": "GET",
+    "sortNum": 40000,
+    "created": "2023-03-01T04:03:32.925Z",
+    "modified": "2023-03-01T04:03:32.925Z",
+    "headers": []
+  },
+  {
+    "_id": "69b16595-964f-4433-ba8f-07c98aebd32b",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "3feb9c00-8fd9-4e4a-9636-aabd84c3c586",
+    "name": "Find By ID",
+    "url": "{{base_url}}/sports/{id}",
+    "method": "GET",
+    "sortNum": 50000,
+    "created": "2023-03-01T04:03:32.926Z",
+    "modified": "2023-03-01T04:15:22.195Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "id",
+        "value": "1",
+        "isPath": true
+      }
+    ],
+    "tests": []
+  },
+  {
+    "_id": "84936890-9659-4d9c-bd9a-311d43dbe770",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "3feb9c00-8fd9-4e4a-9636-aabd84c3c586",
+    "name": "Leagues in Sport",
+    "url": "{{base_url}}/sports/{id}/leagues",
+    "method": "GET",
+    "sortNum": 60000,
+    "created": "2023-03-01T04:03:32.927Z",
+    "modified": "2023-03-01T04:03:32.927Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "id",
+        "value": "1",
+        "isDisabled": false,
+        "isPath": true
+      }
+    ]
+  },
+  {
+    "_id": "52e3afba-7870-4625-9ff4-99553bc173c7",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "3feb9c00-8fd9-4e4a-9636-aabd84c3c586",
+    "name": "Create",
+    "url": "{{base_url}}/sports",
+    "method": "POST",
+    "sortNum": 70000,
+    "created": "2023-03-01T04:03:32.928Z",
+    "modified": "2023-03-01T04:03:32.928Z",
+    "headers": [],
+    "body": {
+      "type": "json",
+      "raw": "{\r\n    \"name\": \"Aflasd\"\r\n}"
+    }
+  },
+  {
+    "_id": "e0a4be19-7f75-4bff-9784-982d6f7cb3a4",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "96edd0b0-41d3-4f8f-8f0d-70d92e88bf45",
+    "name": "Find All",
+    "url": "{{base_url}}/leagues",
+    "method": "GET",
+    "sortNum": 80000,
+    "created": "2023-03-01T04:03:32.929Z",
+    "modified": "2023-03-01T04:03:32.929Z",
+    "headers": []
+  },
+  {
+    "_id": "555d70a4-1f81-47b9-aa4f-562e27ed186a",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "96edd0b0-41d3-4f8f-8f0d-70d92e88bf45",
+    "name": "Find By ID",
+    "url": "{{base_url}}/leagues/{id}",
+    "method": "GET",
+    "sortNum": 90000,
+    "created": "2023-03-01T04:03:32.930Z",
+    "modified": "2023-03-01T04:15:50.048Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "id",
+        "value": "1",
+        "isPath": true
+      }
+    ],
+    "tests": []
+  },
+  {
+    "_id": "74f833bf-c147-482f-a778-f0aaf118419d",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "96edd0b0-41d3-4f8f-8f0d-70d92e88bf45",
+    "name": "Create",
+    "url": "{{base_url}}/leagues",
+    "method": "POST",
+    "sortNum": 100000,
+    "created": "2023-03-01T04:03:32.932Z",
+    "modified": "2023-03-01T04:03:32.932Z",
+    "headers": [],
+    "body": {
+      "type": "json",
+      "raw": "{\r\n    \"name\": \"QAFLW\",\r\n    \"sportId\": 1\r\n}"
+    }
+  },
+  {
+    "_id": "a7e61ef6-781a-4a99-b853-95b505df6f06",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "96edd0b0-41d3-4f8f-8f0d-70d92e88bf45",
+    "name": "Update",
+    "url": "{{base_url}}/leagues/{id}",
+    "method": "PUT",
+    "sortNum": 110000,
+    "created": "2023-03-01T04:03:32.933Z",
+    "modified": "2023-03-01T04:03:32.933Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "id",
+        "value": "2",
+        "isDisabled": false,
+        "isPath": true
+      }
+    ],
+    "body": {
+      "type": "json",
+      "raw": "{\r\n    \"name\": \"QAFLW-updated\"\r\n}"
+    }
+  },
+  {
+    "_id": "9dec7d47-5d54-4fdc-8b04-22aa6c7d6859",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "96edd0b0-41d3-4f8f-8f0d-70d92e88bf45",
+    "name": "Delete",
+    "url": "{{base_url}}/leagues/{id}",
+    "method": "DELETE",
+    "sortNum": 120000,
+    "created": "2023-03-01T04:03:32.934Z",
+    "modified": "2023-03-01T04:03:32.934Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "id",
+        "value": "2",
+        "isDisabled": false,
+        "isPath": true
+      }
+    ]
+  },
+  {
+    "_id": "c6ba3640-2f8c-417c-bc54-5fad4fade615",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "1ce8393a-dc54-4114-920c-67af8626c7f2",
+    "name": "Find By ID",
+    "url": "{{base_url}}/players",
+    "method": "GET",
+    "sortNum": 130000,
+    "created": "2023-03-01T04:03:32.935Z",
+    "modified": "2023-03-01T04:03:32.935Z",
+    "headers": []
+  },
+  {
+    "_id": "d37881d8-1a6a-4c32-b750-bd4afee80533",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "1ce8393a-dc54-4114-920c-67af8626c7f2",
+    "name": "Create",
+    "url": "{{base_url}}/players",
+    "method": "POST",
+    "sortNum": 140000,
+    "created": "2023-03-01T04:03:32.936Z",
+    "modified": "2023-03-01T04:03:32.936Z",
+    "headers": [],
+    "body": {
+      "type": "json",
+      "raw": "{}"
+    }
+  },
+  {
+    "_id": "3ee296e2-c30c-4323-9800-f21b87cd6b30",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "7aad7f2b-d567-49fe-b647-57958bef272c",
+    "name": "Find By ID",
+    "url": "{{base_url}}/seasons/{id}",
+    "method": "GET",
+    "sortNum": 150000,
+    "created": "2023-03-01T04:03:32.937Z",
+    "modified": "2023-03-01T04:03:32.937Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "id",
+        "value": "3",
+        "isDisabled": false,
+        "isPath": true
+      }
+    ]
+  },
+  {
+    "_id": "01cec97e-d32b-46c7-9eac-75cfd917d43c",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "7aad7f2b-d567-49fe-b647-57958bef272c",
+    "name": "Teams in Season",
+    "url": "{{base_url}}/seasons/{id}/teams",
+    "method": "GET",
+    "sortNum": 160000,
+    "created": "2023-03-01T04:03:32.938Z",
+    "modified": "2023-03-01T04:03:32.938Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "id",
+        "value": "1",
+        "isDisabled": false,
+        "isPath": true
+      }
+    ]
+  },
+  {
+    "_id": "e1d2e752-b701-4aaf-b4ea-00e1dee0acae",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "7aad7f2b-d567-49fe-b647-57958bef272c",
+    "name": "Players in Season",
+    "url": "{{base_url}}/seasons/{id}/players",
+    "method": "GET",
+    "sortNum": 170000,
+    "created": "2023-03-01T04:03:32.939Z",
+    "modified": "2023-03-01T04:03:32.939Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "id",
+        "value": "2",
+        "isDisabled": false,
+        "isPath": true
+      }
+    ]
+  },
+  {
+    "_id": "09a10df5-b540-40e6-929f-485a16d0e762",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "7aad7f2b-d567-49fe-b647-57958bef272c",
+    "name": "Matches in Season",
+    "url": "{{base_url}}/seasons/{id}/matches",
+    "method": "GET",
+    "sortNum": 180000,
+    "created": "2023-03-01T04:03:32.940Z",
+    "modified": "2023-03-01T04:03:32.940Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "id",
+        "value": "10",
+        "isDisabled": false,
+        "isPath": true
+      }
+    ]
+  },
+  {
+    "_id": "479b2800-8952-4a1e-a804-2b8ec91ac539",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "7aad7f2b-d567-49fe-b647-57958bef272c",
+    "name": "Create",
+    "url": "{{base_url}}/seasons",
+    "method": "POST",
+    "sortNum": 190000,
+    "created": "2023-03-01T04:03:32.941Z",
+    "modified": "2023-03-01T04:03:32.941Z",
+    "headers": [],
+    "body": {
+      "type": "json",
+      "raw": "{\r\n    \"name\": \"QAFLW\",\r\n    \"leagueId\": 11\r\n}"
+    }
+  },
+  {
+    "_id": "5ee7b009-ce99-478c-a368-a609ef71e13b",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "2ab39496-a935-4a4f-a026-466539ea72bf",
+    "name": "Find All",
+    "url": "{{base_url}}/users",
+    "method": "GET",
+    "sortNum": 200000,
+    "created": "2023-03-01T04:03:32.942Z",
+    "modified": "2023-03-01T04:03:32.942Z",
+    "headers": []
+  },
+  {
+    "_id": "9cf14424-3586-4b1c-9a66-ccac2300d895",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "2ab39496-a935-4a4f-a026-466539ea72bf",
+    "name": "Find By ID",
+    "url": "{{base_url}}/users/e27ab080-44ae-43dc-ad4f-b3118ed2b67f",
+    "method": "GET",
+    "sortNum": 210000,
+    "created": "2023-03-01T04:03:32.943Z",
+    "modified": "2023-03-01T04:03:32.943Z",
+    "headers": []
+  },
+  {
+    "_id": "9abacb4a-7cb4-474a-829a-6dd0eb6ad947",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "2ab39496-a935-4a4f-a026-466539ea72bf",
+    "name": "Create",
+    "url": "{{base_url}}/users",
+    "method": "POST",
+    "sortNum": 220000,
+    "created": "2023-03-01T04:03:32.944Z",
+    "modified": "2023-03-01T04:03:32.944Z",
+    "headers": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n    \"email\": \"toan.doan2@blackbook.ai\",\n    \"password\": \"Aa@123456\",\n    \"firstName\": \"Toan\",\n    \"lastName\": \"Doan\",\n    \"active\": true\n}"
+    }
+  },
+  {
+    "_id": "b302daca-852f-4882-971b-07769661d68a",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "2ab39496-a935-4a4f-a026-466539ea72bf",
+    "name": "Edit",
+    "url": "{{base_url}}/users/e27ab080-44ae-43dc-ad4f-b3118ed2b67f",
+    "method": "PUT",
+    "sortNum": 230000,
+    "created": "2023-03-01T04:03:32.945Z",
+    "modified": "2023-03-01T04:03:32.945Z",
+    "headers": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n    \"email\": \"toan.doan2@blackbook.ai\",\n    \"password\": \"Aa@123456\",\n    \"firstName\": \"Toan\",\n    \"lastName\": \"Doan\",\n    \"active\": true\n}"
+    }
+  },
+  {
+    "_id": "c23a1583-c114-4b8e-aadc-240f8060c813",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "",
+    "name": "HealthCheck",
+    "url": "{{base_url}}",
+    "method": "GET",
+    "sortNum": 240000,
+    "created": "2023-03-01T04:03:32.946Z",
+    "modified": "2023-03-01T04:03:32.946Z",
+    "headers": [],
+    "auth": {
+      "type": "none"
+    }
+  },
+  {
+    "_id": "a9c4f3ec-f730-4b64-9c4e-fe91ce64b65a",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "",
+    "name": "CSRF",
+    "url": "{{base_url}}/csrf",
+    "method": "POST",
+    "sortNum": 250000,
+    "created": "2023-03-01T04:03:32.947Z",
+    "modified": "2023-03-01T04:03:32.947Z",
+    "headers": []
+  }
+]
