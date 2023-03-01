@@ -1,0 +1,57 @@
+[
+  {
+    "_id": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "colName": "iSports API",
+    "created": "2023-03-01T04:03:32.917Z",
+    "sortNum": 10000,
+    "folders": [
+      {
+        "_id": "2989cd2a-b05b-42ef-b872-46c16e23bbca",
+        "name": "Auth",
+        "containerId": "",
+        "created": "2023-03-01T04:03:32.922Z",
+        "sortNum": 10000
+      },
+      {
+        "_id": "3feb9c00-8fd9-4e4a-9636-aabd84c3c586",
+        "name": "Sports",
+        "containerId": "",
+        "created": "2023-03-01T04:03:32.923Z",
+        "sortNum": 20000
+      },
+      {
+        "_id": "96edd0b0-41d3-4f8f-8f0d-70d92e88bf45",
+        "name": "Leagues",
+        "containerId": "",
+        "created": "2023-03-01T04:03:32.924Z",
+        "sortNum": 30000
+      },
+      {
+        "_id": "1ce8393a-dc54-4114-920c-67af8626c7f2",
+        "name": "Players",
+        "containerId": "",
+        "created": "2023-03-01T04:03:32.925Z",
+        "sortNum": 40000
+      },
+      {
+        "_id": "7aad7f2b-d567-49fe-b647-57958bef272c",
+        "name": "Seasons",
+        "containerId": "",
+        "created": "2023-03-01T04:03:32.926Z",
+        "sortNum": 50000
+      },
+      {
+        "_id": "2ab39496-a935-4a4f-a026-466539ea72bf",
+        "name": "Users",
+        "containerId": "",
+        "created": "2023-03-01T04:03:32.927Z",
+        "sortNum": 60000
+      }
+    ],
+    "settings": {
+      "headers": [],
+      "tests": [],
+      "envId": "2296bbb8-485d-4128-bcae-452db6de2262"
+    }
+  }
+]
