@@ -31,8 +31,8 @@ export class AuthController {
 
   @Get('/check')
   @UseGuards(SessionAuthGuard)
-  public check(): void {
-    return;
+  public check(@CurrentUser() user): UserEntity {
+    return user;
   }
 
   @Delete('/logout')
