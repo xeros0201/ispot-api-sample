@@ -6,4 +6,7 @@ export class CreateLeagueDto {
 
   @IsNumber({ maxDecimalPlaces: 0 })
   sportId: number;
+
+  @IsString()
+  logo: string;
 }

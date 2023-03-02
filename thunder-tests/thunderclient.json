@@ -8,20 +8,23 @@
     "method": "POST",
     "sortNum": 10000,
     "created": "2023-03-01T04:03:32.922Z",
-    "modified": "2023-03-01T04:03:32.922Z",
+    "modified": "2023-03-02T03:22:55.525Z",
     "headers": [
       {
         "name": "x-xsrf-token",
         "value": "fOZ6tlJQ0DCUBEPN-KTWlD19AW3wDMSMI-CvYdOkEe0w"
       }
     ],
+    "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n    \"email\": \"toan.doan@blackbook.ai\",\n    \"password\": \"Aa@123456\"\n}"
+      "raw": "{\n    \"email\": \"toan.doan@blackbook.ai\",\n    \"password\": \"Aa@123456\"\n}",
+      "form": []
     },
     "auth": {
       "type": "none"
-    }
+    },
+    "tests": []
   },
   {
     "_id": "54c8531a-0f7c-4b15-bef0-a4d4b1a994fa",
@@ -169,23 +172,24 @@
     "containerId": "96edd0b0-41d3-4f8f-8f0d-70d92e88bf45",
     "name": "Update",
     "url": "{{base_url}}/leagues/{id}",
-    "method": "PUT",
+    "method": "PATCH",
     "sortNum": 110000,
     "created": "2023-03-01T04:03:32.933Z",
-    "modified": "2023-03-01T04:03:32.933Z",
+    "modified": "2023-03-02T03:23:28.879Z",
     "headers": [],
     "params": [
       {
         "name": "id",
-        "value": "2",
-        "isDisabled": false,
+        "value": "5",
         "isPath": true
       }
     ],
     "body": {
       "type": "json",
-      "raw": "{\r\n    \"name\": \"QAFLW-updated\"\r\n}"
-    }
+      "raw": "{\n    \"name\": \"QAFLW-updated\"\n}",
+      "form": []
+    },
+    "tests": []
   },
   {
     "_id": "9dec7d47-5d54-4fdc-8b04-22aa6c7d6859",
