@@ -51,6 +51,7 @@ model Sport {
 model League {
   id            Int      @id @default(autoincrement())
   name          String   @unique
+  logo          String   @default("")
   sportId       Int      @map("sport_id")
   sport         Sport?   @relation(fields: [sportId], references: [id])
   createdDate   DateTime @default(now()) @map("created_date")
