@@ -9,6 +9,7 @@ import { TeamEntity } from '../teams/entities/team.entity';
 import { TeamsService } from '../teams/teams.service';
 import { UserEntity } from '../users/entities/user.entity';
 import { CreateSeasonDto } from './dto/create-season.dto';
+import { UpdateSeasonDto } from './dto/update-season.dto';
 import { SeasonEntity } from './entities/season.entity';
 
 @Injectable()
@@ -19,6 +20,14 @@ export class SeasonsService {
     private readonly playersService: PlayersService,
     private readonly matchesService: MatchesService,
   ) {}
+
+  public async findAll(): Promise<SeasonEntity[]> {
+    return this.prismaService.season.findMany({
+      include: {
+        league: { include: { sport: true } },
+      },
+    });
+  }
 
   public async findById(id: number): Promise<SeasonEntity> {
     return this.prismaService.season.findFirst({
@@ -35,6 +44,17 @@ export class SeasonsService {
   ): Promise<SeasonEntity> {
     return this.prismaService.season.create({
       data: { ...data, createdUserId: userId },
+    });
+  }
+
+  public async update(
+    id: number,
+    data: UpdateSeasonDto,
+    userId: UserEntity['id'],
+  ): Promise<SeasonEntity> {
+    return this.prismaService.season.update({
+      where: { id },
+      data: { ...data, updatedUserId: userId },
     });
   }
 

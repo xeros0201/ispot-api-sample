@@ -248,16 +248,16 @@
     "method": "GET",
     "sortNum": 150000,
     "created": "2023-03-01T04:03:32.937Z",
-    "modified": "2023-03-01T04:03:32.937Z",
+    "modified": "2023-03-02T22:59:01.745Z",
     "headers": [],
     "params": [
       {
         "name": "id",
-        "value": "3",
-        "isDisabled": false,
+        "value": "2",
         "isPath": true
       }
-    ]
+    ],
+    "tests": []
   },
   {
     "_id": "01cec97e-d32b-46c7-9eac-75cfd917d43c",
@@ -328,12 +328,15 @@
     "method": "POST",
     "sortNum": 190000,
     "created": "2023-03-01T04:03:32.941Z",
-    "modified": "2023-03-01T04:03:32.941Z",
+    "modified": "2023-03-03T00:30:58.742Z",
     "headers": [],
+    "params": [],
     "body": {
       "type": "json",
-      "raw": "{\r\n    \"name\": \"QAFLW\",\r\n    \"leagueId\": 11\r\n}"
-    }
+      "raw": "{\r\n  \"name\": \"2022\",\r\n  \"startDate\": \"2023-03-01T00:21:21.000Z\",\r\n  \"endDate\": \"2023-03-02T00:21:21.000Z\",\r\n  \"leagueId\": 4\r\n}",
+      "form": []
+    },
+    "tests": []
   },
   {
     "_id": "5ee7b009-ce99-478c-a368-a609ef71e13b",
@@ -417,5 +420,19 @@
     "created": "2023-03-01T04:03:32.947Z",
     "modified": "2023-03-01T04:03:32.947Z",
     "headers": []
+  },
+  {
+    "_id": "5407bc92-4587-4a79-8127-11cc899a2a94",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "7aad7f2b-d567-49fe-b647-57958bef272c",
+    "name": "Find All",
+    "url": "{{base_url}}/seasons",
+    "method": "GET",
+    "sortNum": 75000,
+    "created": "2023-03-02T23:54:25.418Z",
+    "modified": "2023-03-02T23:54:51.617Z",
+    "headers": [],
+    "params": [],
+    "tests": []
   }
 ]
