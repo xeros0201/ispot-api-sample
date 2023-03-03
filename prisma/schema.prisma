@@ -68,6 +68,8 @@ model League {
 model Season {
   id            Int      @id @default(autoincrement())
   name          String
+  startDate     DateTime @default(now()) @map("start_date")
+  endDate       DateTime @default(now()) @map("end_date")
   leagueId      Int      @map("league_id")
   league        League?  @relation(fields: [leagueId], references: [id])
   createdDate   DateTime @default(now()) @map("created_date")
