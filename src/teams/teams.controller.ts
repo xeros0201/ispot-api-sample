@@ -16,6 +16,11 @@ import { TeamsService } from './teams.service';
 export class TeamsController {
   constructor(private readonly teamsService: TeamsService) {}
 
+  @Get('/')
+  public async findAll(): Promise<TeamEntity[]> {
+    return this.teamsService.findAll();
+  }
+
   @Get('/:id')
   public async findById(
     @Param('id', ParseIntPipe) id: number,
