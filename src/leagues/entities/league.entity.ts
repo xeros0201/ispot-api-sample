@@ -5,6 +5,8 @@ export class LeagueEntity implements League {
 
   name: string;
 
+  logo: string;
+
   sportId: number;
 
   createdDate: Date;

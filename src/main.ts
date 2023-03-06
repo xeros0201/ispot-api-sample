@@ -40,7 +40,7 @@ async function bootstrap() {
       saveUninitialized: false,
       cookie: {
         maxAge: 7 * 24 * 60 * 60 * 1000, // 1 Week
-        domain: 'localhost',
+        domain: '.isports.local',
       },
       store: new PrismaSessionStore(new PrismaClient(), {
         checkPeriod: 2 * 60 * 1000, // 2 Min
@@ -54,7 +54,12 @@ async function bootstrap() {
 
   app.use(helmet());
   app.enableCors({
-    origin: ['http://localhost:3000', 'http://localhost:5173'],
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:5173',
+      'http://isports.local:3000',
+      'http://isports.local:5173',
+    ],
     credentials: true,
   });
   app.setGlobalPrefix('api');

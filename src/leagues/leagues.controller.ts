@@ -5,8 +5,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiCookieAuth, ApiTags } from '@nestjs/swagger';
@@ -45,7 +45,7 @@ export class LeaguesController {
     return this.leaguesService.create(data, user.id);
   }
 
-  @Put('/:id')
+  @Patch('/:id')
   @UseGuards(SessionAuthGuard)
   public async update(
     @Param('id', ParseIntPipe) id: number,

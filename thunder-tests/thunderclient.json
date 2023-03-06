@@ -8,20 +8,23 @@
     "method": "POST",
     "sortNum": 10000,
     "created": "2023-03-01T04:03:32.922Z",
-    "modified": "2023-03-01T04:03:32.922Z",
+    "modified": "2023-03-02T03:22:55.525Z",
     "headers": [
       {
         "name": "x-xsrf-token",
         "value": "fOZ6tlJQ0DCUBEPN-KTWlD19AW3wDMSMI-CvYdOkEe0w"
       }
     ],
+    "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n    \"email\": \"toan.doan@blackbook.ai\",\n    \"password\": \"Aa@123456\"\n}"
+      "raw": "{\n    \"email\": \"toan.doan@blackbook.ai\",\n    \"password\": \"Aa@123456\"\n}",
+      "form": []
     },
     "auth": {
       "type": "none"
-    }
+    },
+    "tests": []
   },
   {
     "_id": "54c8531a-0f7c-4b15-bef0-a4d4b1a994fa",
@@ -169,23 +172,24 @@
     "containerId": "96edd0b0-41d3-4f8f-8f0d-70d92e88bf45",
     "name": "Update",
     "url": "{{base_url}}/leagues/{id}",
-    "method": "PUT",
+    "method": "PATCH",
     "sortNum": 110000,
     "created": "2023-03-01T04:03:32.933Z",
-    "modified": "2023-03-01T04:03:32.933Z",
+    "modified": "2023-03-02T03:23:28.879Z",
     "headers": [],
     "params": [
       {
         "name": "id",
-        "value": "2",
-        "isDisabled": false,
+        "value": "5",
         "isPath": true
       }
     ],
     "body": {
       "type": "json",
-      "raw": "{\r\n    \"name\": \"QAFLW-updated\"\r\n}"
-    }
+      "raw": "{\n    \"name\": \"QAFLW-updated\"\n}",
+      "form": []
+    },
+    "tests": []
   },
   {
     "_id": "9dec7d47-5d54-4fdc-8b04-22aa6c7d6859",
@@ -244,16 +248,16 @@
     "method": "GET",
     "sortNum": 150000,
     "created": "2023-03-01T04:03:32.937Z",
-    "modified": "2023-03-01T04:03:32.937Z",
+    "modified": "2023-03-02T22:59:01.745Z",
     "headers": [],
     "params": [
       {
         "name": "id",
-        "value": "3",
-        "isDisabled": false,
+        "value": "2",
         "isPath": true
       }
-    ]
+    ],
+    "tests": []
   },
   {
     "_id": "01cec97e-d32b-46c7-9eac-75cfd917d43c",
@@ -324,12 +328,15 @@
     "method": "POST",
     "sortNum": 190000,
     "created": "2023-03-01T04:03:32.941Z",
-    "modified": "2023-03-01T04:03:32.941Z",
+    "modified": "2023-03-03T00:30:58.742Z",
     "headers": [],
+    "params": [],
     "body": {
       "type": "json",
-      "raw": "{\r\n    \"name\": \"QAFLW\",\r\n    \"leagueId\": 11\r\n}"
-    }
+      "raw": "{\r\n  \"name\": \"2022\",\r\n  \"startDate\": \"2023-03-01T00:21:21.000Z\",\r\n  \"endDate\": \"2023-03-02T00:21:21.000Z\",\r\n  \"leagueId\": 4\r\n}",
+      "form": []
+    },
+    "tests": []
   },
   {
     "_id": "5ee7b009-ce99-478c-a368-a609ef71e13b",
@@ -413,5 +420,19 @@
     "created": "2023-03-01T04:03:32.947Z",
     "modified": "2023-03-01T04:03:32.947Z",
     "headers": []
+  },
+  {
+    "_id": "5407bc92-4587-4a79-8127-11cc899a2a94",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "7aad7f2b-d567-49fe-b647-57958bef272c",
+    "name": "Find All",
+    "url": "{{base_url}}/seasons",
+    "method": "GET",
+    "sortNum": 75000,
+    "created": "2023-03-02T23:54:25.418Z",
+    "modified": "2023-03-02T23:54:51.617Z",
+    "headers": [],
+    "params": [],
+    "tests": []
   }
 ]
