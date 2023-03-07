@@ -1,4 +1,4 @@
-import { Match } from '@prisma/client';
+import { Match, MatchType } from '@prisma/client';
 
 export type MatchUploadedFiles = {
   homeTeamCsv: Express.Multer.File[];
@@ -7,6 +7,8 @@ export type MatchUploadedFiles = {
 
 export class MatchEntity implements Match {
   id: number;
+
+  type: MatchType;
 
   seasonId: number;
 

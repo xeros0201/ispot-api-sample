@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { HealthModule } from './health/health.module';
 import { LeaguesModule } from './leagues/leagues.module';
+import { LocationsModule } from './locations/locations.module';
 import { MatchesModule } from './matches/matches.module';
 import { PlayersModule } from './players/players.module';
 import { SeasonsModule } from './seasons/seasons.module';
@@ -29,6 +30,7 @@ import { UsersModule } from './users/users.module';
     PlayersModule,
     MatchesModule,
     UsersModule,
+    LocationsModule,
   ],
 })
 export class AppModule implements NestModule {

@@ -1,7 +1,11 @@
+import { MatchType } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsDate, IsNumber } from 'class-validator';
+import { IsDate, IsEnum, IsNumber } from 'class-validator';
 
 export class CreateMatchDto {
+  @IsEnum(MatchType)
+  type: MatchType;
+
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 0 })
   seasonId: number;
