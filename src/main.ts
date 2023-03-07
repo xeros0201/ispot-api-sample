@@ -74,7 +74,7 @@ async function bootstrap() {
     './thunder-tests/swagger-collection.json',
     JSON.stringify(document),
   );
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('docs', app, document);
 
   await app.listen(process.env.PORT || 3000);
 }
