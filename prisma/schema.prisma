@@ -15,6 +15,13 @@ enum UserRole {
   ADMIN
 }
 
+enum MatchType {
+  REGULAR
+  QUARTER_FINAL
+  SEMI_FINAL
+  FINAL
+}
+
 model Session {
   id        String   @id
   sid       String   @unique
@@ -113,6 +120,7 @@ model Player {
 
 model Match {
   id          Int                @id @default(autoincrement())
+  type        MatchType          @default(REGULAR)
   seasonId    Int                @map("season_id")
   season      Season?            @relation(fields: [seasonId], references: [id])
   homeTeamId  Int                @map("home_team_id")
