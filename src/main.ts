@@ -34,7 +34,7 @@ async function bootstrap() {
       saveUninitialized: false,
       cookie: {
         maxAge: 7 * 24 * 60 * 60 * 1000, // 1 Week
-        domain: '.isports.local',
+        domain: 'localhost',
       },
       store: new PrismaSessionStore(new PrismaClient(), {
         checkPeriod: 2 * 60 * 1000, // 2 Min

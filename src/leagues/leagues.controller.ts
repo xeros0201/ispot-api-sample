@@ -13,6 +13,7 @@ import {
 import { SessionAuthGuard } from '../auth/guards/session-auth.guard';
 import { UserEntity } from '../users/entities/user.entity';
 import { CurrentUser } from '../users/users.decorator';
+import { SeasonEntity } from './../seasons/entities/season.entity';
 import { CreateLeagueDto } from './dto/create-league.dto';
 import { UpdateLeagueDto } from './dto/update-league.dto';
 import { LeagueEntity } from './entities/league.entity';
@@ -32,6 +33,13 @@ export class LeaguesController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<LeagueEntity> {
     return this.leaguesService.findById(id);
+  }
+
+  @Get('/:id/seasons')
+  public async findAllSeasons(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<SeasonEntity[]> {
+    return this.leaguesService.findAllSeasons(id);
   }
 
   @Post('/')

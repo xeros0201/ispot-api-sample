@@ -268,16 +268,16 @@
     "method": "GET",
     "sortNum": 160000,
     "created": "2023-03-01T04:03:32.938Z",
-    "modified": "2023-03-01T04:03:32.938Z",
+    "modified": "2023-03-05T23:36:23.174Z",
     "headers": [],
     "params": [
       {
         "name": "id",
         "value": "1",
-        "isDisabled": false,
         "isPath": true
       }
-    ]
+    ],
+    "tests": []
   },
   {
     "_id": "e1d2e752-b701-4aaf-b4ea-00e1dee0acae",
@@ -308,16 +308,16 @@
     "method": "GET",
     "sortNum": 180000,
     "created": "2023-03-01T04:03:32.940Z",
-    "modified": "2023-03-01T04:03:32.940Z",
+    "modified": "2023-03-05T23:36:29.766Z",
     "headers": [],
     "params": [
       {
         "name": "id",
-        "value": "10",
-        "isDisabled": false,
+        "value": "1",
         "isPath": true
       }
-    ]
+    ],
+    "tests": []
   },
   {
     "_id": "479b2800-8952-4a1e-a804-2b8ec91ac539",
@@ -433,6 +433,26 @@
     "modified": "2023-03-02T23:54:51.617Z",
     "headers": [],
     "params": [],
+    "tests": []
+  },
+  {
+    "_id": "441ce0ab-5480-4ec4-9b0f-3114204139a4",
+    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "containerId": "96edd0b0-41d3-4f8f-8f0d-70d92e88bf45",
+    "name": "Seasons in League",
+    "url": "{{base_url}}/leagues/{id}/seasons",
+    "method": "GET",
+    "sortNum": 95000,
+    "created": "2023-03-03T05:01:41.105Z",
+    "modified": "2023-03-03T05:01:58.834Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "id",
+        "value": "1",
+        "isPath": true
+      }
+    ],
     "tests": []
   }
 ]
