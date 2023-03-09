@@ -11,7 +11,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { ApiTags } from '@nestjs/swagger';
 import { diskStorage, MulterError } from 'multer';
 
 import { PlayerEntity } from '../players/entities/player.entity';
@@ -20,7 +19,6 @@ import { UpdateMatchDto } from './dto/update-match.dto';
 import { MatchEntity } from './entities/match.entity';
 import { MatchesService } from './matches.service';
 
-@ApiTags('matches')
 @Controller('matches')
 export class MatchesController {
   constructor(private readonly matchesService: MatchesService) {}
