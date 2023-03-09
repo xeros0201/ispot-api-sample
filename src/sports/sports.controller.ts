@@ -8,7 +8,6 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 
 import { LeagueEntity } from '../leagues/entities/league.entity';
 import { CreateSportDto } from './dto/create-sport.dto';
@@ -16,7 +15,6 @@ import { UpdateSportDto } from './dto/update-sport.dto';
 import { SportEntity } from './entities/sport.entity';
 import { SportsService } from './sports.service';
 
-@ApiTags('sports')
 @Controller('sports')
 export class SportsController {
   constructor(private readonly sportsService: SportsService) {}

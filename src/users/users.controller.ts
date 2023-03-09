@@ -8,7 +8,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 
 import { SessionAuthGuard } from '../auth/guards/session-auth.guard';
 import { ExcludePasswordInterceptor } from '../common/interceptors/exclude-password.interceptor';
@@ -20,7 +19,6 @@ import { RolesGuard } from './guards/roles.guard';
 import { Roles } from './roles.decorator';
 import { UsersService } from './users.service';
 
-@ApiTags('users')
 @Controller('users')
 @UseGuards(SessionAuthGuard, RolesGuard)
 @UseInterceptors(new ExcludePasswordInterceptor())
