@@ -5,11 +5,18 @@ import { MatchEntity } from '../matches/entities/match.entity';
 import { SeasonEntity } from '../seasons/entities/season.entity';
 import { TeamEntity } from '../teams/entities/team.entity';
 import { CreatePlayerDto } from './dto/create-player.dto';
+import { UpdatePlayerDto } from './dto/update-player.dto';
 import { PlayerEntity } from './entities/player.entity';
 
 @Injectable()
 export class PlayersService {
   constructor(private readonly prismaService: PrismaService) {}
+
+  public async findAll(): Promise<PlayerEntity[]> {
+    return this.prismaService.player.findMany({
+      include: { team: true },
+    });
+  }
 
   public async findById(id: number): Promise<PlayerEntity> {
     return this.prismaService.player.findFirst({
@@ -20,6 +27,13 @@ export class PlayersService {
 
   public async create(data: CreatePlayerDto): Promise<PlayerEntity> {
     return this.prismaService.player.create({ data });
+  }
+
+  public async update(
+    id: number,
+    data: UpdatePlayerDto,
+  ): Promise<PlayerEntity> {
+    return this.prismaService.player.update({ where: { id }, data });
   }
 
   public async findAllBySeasonId(

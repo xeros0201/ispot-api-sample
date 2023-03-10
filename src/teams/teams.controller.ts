@@ -6,15 +6,22 @@ import {
   ParseIntPipe,
   Post,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { PlayerEntity } from '../players/entities/player.entity';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { TeamEntity } from './entities/team.entity';
 import { TeamsService } from './teams.service';
 
+@ApiTags('teams')
 @Controller('teams')
 export class TeamsController {
   constructor(private readonly teamsService: TeamsService) {}
+
+  @Get('/')
+  public async findAll(): Promise<TeamEntity[]> {
+    return this.teamsService.findAll();
+  }
 
   @Get('/:id')
   public async findById(

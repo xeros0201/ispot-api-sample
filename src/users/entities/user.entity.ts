@@ -14,4 +14,12 @@ export class UserEntity implements User {
   active: boolean;
 
   role: UserRole;
+
+  createdDate: Date;
+
+  createdUserId: string;
+
+  updatedDate: Date;
+
+  updatedUserId: string;
 }

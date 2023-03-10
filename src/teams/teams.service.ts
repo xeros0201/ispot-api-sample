@@ -14,9 +14,24 @@ export class TeamsService {
     private readonly playersService: PlayersService,
   ) {}
 
+  public async findAll(): Promise<TeamEntity[]> {
+    return this.prismaService.team.findMany({
+      include: {
+        season: {
+          include: { league: true },
+        },
+      },
+    });
+  }
+
   public async findById(id: number): Promise<TeamEntity> {
     return this.prismaService.team.findFirst({
       where: { id },
+      include: {
+        season: {
+          include: { league: true },
+        },
+      },
     });
   }
 
