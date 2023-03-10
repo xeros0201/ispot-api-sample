@@ -43,6 +43,10 @@ model User {
   updatedLeagues League[] @relation("updatedUser")
   createdSeasons Season[] @relation("createdUser")
   updatedSeasons Season[] @relation("updatedUser")
+  createdDate    DateTime @default(now()) @map("created_date")
+  createdUserId  String?  @map("created_user_id") @db.Uuid
+  updatedDate    DateTime @default(now()) @updatedAt @map("updated_date")
+  updatedUserId  String?  @map("updated_user_id") @db.Uuid
 
   @@map("users")
 }
