@@ -8,6 +8,7 @@ import { SeasonsService } from './seasons.service';
 
 @Module({
   controllers: [SeasonsController],
-  providers: [SeasonsService, TeamsService, PlayersService, MatchesService],
+  providers: [SeasonsService, MatchesService, PlayersService, TeamsService],
+  exports: [SeasonsService],
 })
 export class SeasonsModule {}

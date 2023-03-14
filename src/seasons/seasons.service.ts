@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
+import { LeagueEntity } from 'src/leagues/entities/league.entity';
 
 import { MatchEntity } from '../matches/entities/match.entity';
 import { MatchesService } from '../matches/matches.service';
@@ -55,6 +56,14 @@ export class SeasonsService {
     return this.prismaService.season.update({
       where: { id },
       data: { ...data, updatedUserId: userId },
+    });
+  }
+
+  public async findAllByLeagueId(
+    leagueId: LeagueEntity['id'],
+  ): Promise<SeasonEntity[]> {
+    return this.prismaService.season.findMany({
+      where: { leagueId },
     });
   }
 
