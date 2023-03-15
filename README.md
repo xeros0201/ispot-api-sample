@@ -49,7 +49,8 @@ FINISH
 
 1. Run `git fetch` to get updated information from repo.
 2. Merge `develop` into your feature branch and fix any merge requests.
-3. Test your branch to make sure it is still working.4. Create pull request (great time to double check what changes are being made)
+3. Test your branch to make sure it is still working.
+4. Create pull request (great time to double check what changes are being made)
 
 ## Scripts
 
