@@ -212,11 +212,11 @@ export class MatchesService {
     return data.Key;
   }
 
-  public async readCsvFromS3(bucket: string, key: string): Promise<string> {
+  public async readCsvFromS3(bucket: string, key: string): Promise<Buffer> {
     const { Body } = await this.s3
       .getObject({ Bucket: bucket, Key: key })
       .promise();
 
-    return Buffer.from(Body as Buffer).toString();
+    return Buffer.from(Body as Buffer);
   }
 }
