@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { existsSync, unlinkSync } from 'fs';
+import { readFileSync, unlinkSync } from 'fs';
 import * as _ from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
-import { join } from 'path';
+import { InjectS3, S3 } from 'nestjs-s3';
+import { v4 as uuid } from 'uuid';
 
 import { PlayerEntity } from '../players/entities/player.entity';
 import { PlayersService } from '../players/players.service';
@@ -14,6 +15,7 @@ import { MatchEntity } from './entities/match.entity';
 @Injectable()
 export class MatchesService {
   constructor(
+    @InjectS3() private readonly s3: S3,
     private readonly prismaService: PrismaService,
     private readonly playersService: PlayersService,
   ) {}
@@ -38,6 +40,11 @@ export class MatchesService {
     data: CreateMatchDto,
     { homeTeamCsv, awayTeamCsv }: { homeTeamCsv: string; awayTeamCsv: string },
   ): Promise<MatchEntity> {
+    [homeTeamCsv, awayTeamCsv] = await Promise.all([
+      this.uploadCsvToS3('csv', homeTeamCsv),
+      this.uploadCsvToS3('csv', awayTeamCsv),
+    ]);
+
     const [homeTeamPlayers, awayTeamPlayers] = await Promise.all([
       this.playersService.findAllByTeamId(data.homeTeamId),
       this.playersService.findAllByTeamId(data.awayTeamId),
@@ -73,21 +80,17 @@ export class MatchesService {
   ): Promise<MatchEntity> {
     const match = await this.prismaService.match.findFirst({ where: { id } });
 
-    if (match.homeTeamCsv !== null) {
-      const path = join(process.cwd(), match.homeTeamCsv);
+    homeTeamCsv = await this.uploadCsvToS3(
+      'csv',
+      homeTeamCsv,
+      !_.isNil(match.homeTeamCsv) ? match.homeTeamCsv : undefined,
+    );
 
-      if (existsSync(path)) {
-        unlinkSync(path);
-      }
-    }
-
-    if (match.awayTeamCsv !== null) {
-      const path = join(process.cwd(), match.awayTeamCsv);
-
-      if (existsSync(path)) {
-        unlinkSync(path);
-      }
-    }
+    awayTeamCsv = await this.uploadCsvToS3(
+      'csv',
+      awayTeamCsv,
+      !_.isNil(match.homeTeamCsv) ? match.awayTeamCsv : undefined,
+    );
 
     const homePlayerIds = _(data.homePlayerIds)
       .transform<
@@ -183,5 +186,37 @@ export class MatchesService {
 
   public async findAllPlayers(id: number): Promise<PlayerEntity[]> {
     return this.playersService.findAllByMatchId(id);
+  }
+
+  public async uploadCsvToS3(
+    bucket: string,
+    filePath: string,
+    oldKey?: string,
+  ): Promise<string> {
+    if (!_.isNil(oldKey)) {
+      await this.s3.deleteObject({ Bucket: bucket, Key: oldKey }).promise();
+    }
+
+    const buffer = readFileSync(filePath);
+
+    const data = await this.s3
+      .upload({
+        Bucket: bucket,
+        Key: `${uuid()}.csv`,
+        Body: buffer,
+      })
+      .promise();
+
+    unlinkSync(filePath);
+
+    return data.Key;
+  }
+
+  public async readCsvFromS3(bucket: string, key: string): Promise<string> {
+    const { Body } = await this.s3
+      .getObject({ Bucket: bucket, Key: key })
+      .promise();
+
+    return Buffer.from(Body as Buffer).toString();
   }
 }
