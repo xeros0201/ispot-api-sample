@@ -83,13 +83,13 @@ export class MatchesService {
     homeTeamCsv = await this.uploadCsvToS3(
       'csv',
       homeTeamCsv,
-      !_.isNil(match.homeTeamCsv) ? match.homeTeamCsv : undefined,
+      match.homeTeamCsv,
     );
 
     awayTeamCsv = await this.uploadCsvToS3(
       'csv',
       awayTeamCsv,
-      !_.isNil(match.homeTeamCsv) ? match.awayTeamCsv : undefined,
+      match.awayTeamCsv,
     );
 
     const homePlayerIds = _(data.homePlayerIds)
