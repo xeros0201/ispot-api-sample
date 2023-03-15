@@ -26,15 +26,10 @@ Database
 Backend
 
 1. Clone
-2. Run `yarn` to installRun `yarn prisma migrate dev` to setup database
-3. Run `yarn prisma db seed` to populate db with test data
-4. Run `yarn run start:dev` to run backend
-
-Web app
-
-1. Clone
 2. Run `yarn` to install
-3. Run `yarn run dev` to start
+3. Run `yarn prisma migrate dev` to setup database
+4. Run `yarn prisma db seed` to populate db with test data
+5. Run `yarn run start:dev` to run backend
 
 ### Working with the repo
 
