@@ -24,7 +24,5 @@ export class MatchEntity implements Match {
 
   date: Date;
 
-  teamId: number;
-
   locationId: number;
 }

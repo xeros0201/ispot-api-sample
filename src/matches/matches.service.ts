@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { existsSync, unlinkSync } from 'fs';
+import * as _ from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
 import { join } from 'path';
 
@@ -24,6 +25,11 @@ export class MatchesService {
         homeTeam: true,
         awayTeam: true,
         location: true,
+        players: {
+          include: {
+            player: true,
+          },
+        },
       },
     });
   }
@@ -32,11 +38,28 @@ export class MatchesService {
     data: CreateMatchDto,
     { homeTeamCsv, awayTeamCsv }: { homeTeamCsv: string; awayTeamCsv: string },
   ): Promise<MatchEntity> {
+    const [homeTeamPlayers, awayTeamPlayers] = await Promise.all([
+      this.playersService.findAllByTeamId(data.homeTeamId),
+      this.playersService.findAllByTeamId(data.awayTeamId),
+    ]);
+
     return this.prismaService.match.create({
       data: {
-        ...data,
+        ..._.omit(data, ['homePlayerIds', 'awayPlayerIds']),
         homeTeamCsv,
         awayTeamCsv,
+        players: {
+          create: [
+            ..._.map(homeTeamPlayers, (player) => ({
+              playerId: player.id,
+              teamId: player.teamId,
+            })),
+            ..._.map(awayTeamPlayers, (player) => ({
+              playerId: player.id,
+              teamId: player.teamId,
+            })),
+          ],
+        },
       },
     });
   }

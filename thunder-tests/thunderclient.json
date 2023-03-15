@@ -422,7 +422,7 @@
     "method": "POST",
     "sortNum": 260000,
     "created": "2023-03-09T04:40:59.858Z",
-    "modified": "2023-03-09T04:44:02.115Z",
+    "modified": "2023-03-15T08:06:56.138Z",
     "headers": [],
     "params": [],
     "body": {
@@ -435,15 +435,15 @@
         },
         {
           "name": "seasonId",
-          "value": "3"
+          "value": "1"
         },
         {
           "name": "homeTeamId",
-          "value": "5"
+          "value": "1"
         },
         {
           "name": "awayTeamId",
-          "value": "6"
+          "value": "2"
         },
         {
           "name": "round",
@@ -458,16 +458,20 @@
           "value": "1"
         },
         {
-          "name": "homePlayerIds[][\"A01\"]",
+          "name": "homePlayerIds[A01]",
           "value": "1"
         },
         {
-          "name": "homePlayerIds[][\"A02\"]",
+          "name": "homePlayerIds[A02]",
           "value": "2"
         },
         {
-          "name": "awayPlayerIds[][\"A01\"]",
-          "value": "3"
+          "name": "awayPlayerIds[A01]",
+          "value": "1"
+        },
+        {
+          "name": "awayPlayerIds[A01]",
+          "value": "2"
         }
       ],
       "files": [
