@@ -143,13 +143,14 @@ model Match {
 }
 
 model PlayersOnMatches {
-  id       Int     @id @default(autoincrement())
-  matchId  Int     @map("match_id")
-  match    Match?  @relation(fields: [matchId], references: [id])
-  playerId Int     @map("player_id")
-  player   Player? @relation(fields: [playerId], references: [id])
-  teamId   Int     @map("team_id")
-  team     Team?   @relation(fields: [teamId], references: [id])
+  id           Int     @id @default(autoincrement())
+  matchId      Int     @map("match_id")
+  match        Match?  @relation(fields: [matchId], references: [id])
+  playerId     Int     @map("player_id")
+  player       Player? @relation(fields: [playerId], references: [id])
+  teamId       Int     @map("team_id")
+  team         Team?   @relation(fields: [teamId], references: [id])
+  playerNumber Int     @map("player_number")
 
   @@index([matchId, playerId, teamId])
   @@map("players_on_matches")

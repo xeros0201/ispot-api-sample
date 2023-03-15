@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -42,5 +43,12 @@ export class PlayersController {
     data: UpdatePlayerDto,
   ): Promise<PlayerEntity> {
     return this.playersService.update(id, data);
+  }
+
+  @Delete('/:id')
+  public async delete(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<PlayerEntity> {
+    return this.playersService.delete(id);
   }
 }

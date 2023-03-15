@@ -422,7 +422,94 @@
     "method": "POST",
     "sortNum": 260000,
     "created": "2023-03-09T04:40:59.858Z",
-    "modified": "2023-03-15T08:06:56.138Z",
+    "modified": "2023-03-15T08:49:52.831Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "formdata",
+      "raw": "",
+      "form": [
+        {
+          "name": "type",
+          "value": "REGULAR"
+        },
+        {
+          "name": "seasonId",
+          "value": "1"
+        },
+        {
+          "name": "homeTeamId",
+          "value": "1"
+        },
+        {
+          "name": "awayTeamId",
+          "value": "2"
+        },
+        {
+          "name": "round",
+          "value": "1"
+        },
+        {
+          "name": "date",
+          "value": "2022-10-11 14:50"
+        },
+        {
+          "name": "locationId",
+          "value": "1"
+        }
+      ],
+      "files": [
+        {
+          "name": "homeTeamCsv",
+          "value": "../../../../../Downloads/123.csv"
+        },
+        {
+          "name": "awayTeamCsv",
+          "value": "../../../../../Downloads/123.csv"
+        }
+      ]
+    },
+    "tests": []
+  },
+  {
+    "_id": "c567f6a3-55e5-45eb-940f-dfd6000d8f4b",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "622ae513-acbe-45da-a475-3a8483d41d1e",
+    "name": "Find All",
+    "url": "/matches",
+    "method": "GET",
+    "sortNum": 130000,
+    "created": "2023-03-09T04:40:59.859Z",
+    "modified": "2023-03-15T10:25:42.256Z",
+    "headers": []
+  },
+  {
+    "_id": "9f449adb-712a-4c20-88ee-5d1d0b737532",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "",
+    "name": "HealthCheck",
+    "url": "/",
+    "method": "GET",
+    "sortNum": 280000,
+    "created": "2023-03-09T04:40:59.860Z",
+    "modified": "2023-03-09T04:42:57.717Z",
+    "headers": [],
+    "params": [],
+    "auth": {
+      "type": "none"
+    },
+    "tests": []
+  },
+  {
+    "_id": "162ba717-9443-4297-89a0-9623731c1ea4",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "622ae513-acbe-45da-a475-3a8483d41d1e",
+    "name": "Update",
+    "url": "/matches/2",
+    "method": "PUT",
+    "sortNum": 265000,
+    "created": "2023-03-15T08:49:39.641Z",
+    "modified": "2023-03-15T10:35:28.047Z",
     "headers": [],
     "params": [],
     "body": {
@@ -458,20 +545,20 @@
           "value": "1"
         },
         {
-          "name": "homePlayerIds[A01]",
+          "name": "homePlayerIds[H999]",
           "value": "1"
         },
         {
-          "name": "homePlayerIds[A02]",
+          "name": "homePlayerIds[H2]",
           "value": "2"
         },
         {
-          "name": "awayPlayerIds[A01]",
+          "name": "awayPlayerIds[A1]",
           "value": "1"
         },
         {
-          "name": "awayPlayerIds[A01]",
-          "value": "2"
+          "name": "awayPlayerIds[A2]",
+          "value": "22"
         }
       ],
       "files": [
@@ -488,32 +575,17 @@
     "tests": []
   },
   {
-    "_id": "c567f6a3-55e5-45eb-940f-dfd6000d8f4b",
+    "_id": "3d50f7e2-dda3-4d97-ac26-f14a88034749",
     "colId": "946616f3-12a2-4489-a612-965150521279",
-    "containerId": "622ae513-acbe-45da-a475-3a8483d41d1e",
-    "name": "Find All",
-    "url": "/matches",
-    "method": "GET",
-    "sortNum": 270000,
-    "created": "2023-03-09T04:40:59.859Z",
-    "modified": "2023-03-09T04:40:59.859Z",
-    "headers": []
-  },
-  {
-    "_id": "9f449adb-712a-4c20-88ee-5d1d0b737532",
-    "colId": "946616f3-12a2-4489-a612-965150521279",
-    "containerId": "",
-    "name": "HealthCheck",
-    "url": "/",
-    "method": "GET",
-    "sortNum": 280000,
-    "created": "2023-03-09T04:40:59.860Z",
-    "modified": "2023-03-09T04:42:57.717Z",
+    "containerId": "17ac7faa-ae07-4483-879d-34cc16f031b8",
+    "name": "Delete",
+    "url": "/players/1",
+    "method": "DELETE",
+    "sortNum": 225000,
+    "created": "2023-03-15T10:39:08.875Z",
+    "modified": "2023-03-15T10:39:36.501Z",
     "headers": [],
     "params": [],
-    "auth": {
-      "type": "none"
-    },
     "tests": []
   }
 ]

@@ -45,7 +45,7 @@ export class MatchesService {
 
     return this.prismaService.match.create({
       data: {
-        ..._.omit(data, ['homePlayerIds', 'awayPlayerIds']),
+        ...data,
         homeTeamCsv,
         awayTeamCsv,
         players: {
@@ -53,10 +53,12 @@ export class MatchesService {
             ..._.map(homeTeamPlayers, (player) => ({
               playerId: player.id,
               teamId: player.teamId,
+              playerNumber: player.playerNumber,
             })),
             ..._.map(awayTeamPlayers, (player) => ({
               playerId: player.id,
               teamId: player.teamId,
+              playerNumber: player.playerNumber,
             })),
           ],
         },
@@ -87,12 +89,77 @@ export class MatchesService {
       }
     }
 
+    const homePlayerIds = _(data.homePlayerIds)
+      .transform<
+        {
+          playerNumber: number;
+          playerId: PlayerEntity['id'];
+        }[]
+      >((result, value, key) => {
+        result.push({
+          playerNumber: +key.substring(1),
+          playerId: +value,
+        });
+      }, [])
+      .value();
+    const awayPlayerIds = _(data.awayPlayerIds)
+      .transform<
+        {
+          playerNumber: number;
+          playerId: PlayerEntity['id'];
+        }[]
+      >((result, value, key) => {
+        result.push({
+          playerNumber: +key.substring(1),
+          playerId: +value,
+        });
+      }, [])
+      .value();
+
+    const [homeTeamPlayers, awayTeamPlayers] = await Promise.all([
+      this.playersService.findAllByTeamId(data.homeTeamId),
+      this.playersService.findAllByTeamId(data.awayTeamId),
+    ]);
+
     return this.prismaService.match.update({
       where: { id },
       data: {
-        ...data,
+        ..._.omit(data, ['homePlayerIds', 'awayPlayerIds']),
         homeTeamCsv,
         awayTeamCsv,
+        players: {
+          deleteMany: {
+            teamId: {
+              in: [data.homeTeamId, data.awayTeamId],
+            },
+          },
+          create: [
+            ..._.map(homeTeamPlayers, (player) => {
+              const { playerNumber } = _.find(
+                homePlayerIds,
+                (s) => s.playerId === player.id,
+              ) || { playerNumber: player.playerNumber };
+
+              return {
+                playerId: player.id,
+                teamId: player.teamId,
+                playerNumber,
+              };
+            }),
+            ..._.map(awayTeamPlayers, (player) => {
+              const { playerNumber } = _.find(
+                awayPlayerIds,
+                (s) => s.playerId === player.id,
+              ) || { playerNumber: player.playerNumber };
+
+              return {
+                playerId: player.id,
+                teamId: player.teamId,
+                playerNumber,
+              };
+            }),
+          ],
+        },
       },
     });
   }

@@ -464,21 +464,18 @@ const main = async (): Promise<void> => {
 
   // Add players to game
   await prisma.playersOnMatches.createMany({
-    // data: homePlayers.concat(awayPlayers).map((playerId) => ({
-    //   teamId: broadbeach.id,
-    //   playerId: playerId,
-    //   matchId: match.id,
-    // })),
     data: [
-      ...homePlayers.map((player) => ({
+      ...homePlayers.map((player, i) => ({
         matchId: match.id,
         playerId: player,
         teamId: broadbeach.id,
+        playerNumber: i,
       })),
-      ...awayPlayers.map((player) => ({
+      ...awayPlayers.map((player, i) => ({
         matchId: match.id,
         playerId: player,
         teamId: aspley.id,
+        playerNumber: i,
       })),
     ],
   });
