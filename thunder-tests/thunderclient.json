@@ -1,20 +1,15 @@
 [
   {
-    "_id": "d6f8963e-55b8-4ce8-85bd-457e8070002b",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "2989cd2a-b05b-42ef-b872-46c16e23bbca",
+    "_id": "e033aa27-08ab-475e-819b-3aaf1830dcbe",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "98b5e94c-766c-49d3-a858-7e271f226171",
     "name": "Login",
-    "url": "{{base_url}}/auth/login",
+    "url": "/auth/login",
     "method": "POST",
     "sortNum": 10000,
-    "created": "2023-03-01T04:03:32.922Z",
-    "modified": "2023-03-02T03:22:55.525Z",
-    "headers": [
-      {
-        "name": "x-xsrf-token",
-        "value": "fOZ6tlJQ0DCUBEPN-KTWlD19AW3wDMSMI-CvYdOkEe0w"
-      }
-    ],
+    "created": "2023-03-09T04:40:59.832Z",
+    "modified": "2023-03-09T04:43:48.729Z",
+    "headers": [],
     "params": [],
     "body": {
       "type": "json",
@@ -27,71 +22,51 @@
     "tests": []
   },
   {
-    "_id": "54c8531a-0f7c-4b15-bef0-a4d4b1a994fa",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "2989cd2a-b05b-42ef-b872-46c16e23bbca",
+    "_id": "d21bd753-effc-4053-b914-9113a82a578a",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "98b5e94c-766c-49d3-a858-7e271f226171",
     "name": "Check",
-    "url": "{{base_url}}/auth/check",
+    "url": "/auth/check",
     "method": "GET",
     "sortNum": 20000,
-    "created": "2023-03-01T04:03:32.923Z",
-    "modified": "2023-03-01T04:03:32.923Z",
+    "created": "2023-03-09T04:40:59.833Z",
+    "modified": "2023-03-09T04:40:59.833Z",
     "headers": []
   },
   {
-    "_id": "4300e855-78fe-4094-97fb-8a71b235d8b7",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "2989cd2a-b05b-42ef-b872-46c16e23bbca",
+    "_id": "c32ce257-574c-440b-bac9-1f04e3c31df4",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "98b5e94c-766c-49d3-a858-7e271f226171",
     "name": "Logout",
-    "url": "{{base_url}}/auth/logout",
+    "url": "/auth/logout",
     "method": "DELETE",
     "sortNum": 30000,
-    "created": "2023-03-01T04:03:32.924Z",
-    "modified": "2023-03-01T04:03:32.924Z",
+    "created": "2023-03-09T04:40:59.834Z",
+    "modified": "2023-03-09T04:40:59.834Z",
     "headers": []
   },
   {
-    "_id": "8198bcc7-a4bb-4b2a-82a7-58ab9fd93b79",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "3feb9c00-8fd9-4e4a-9636-aabd84c3c586",
+    "_id": "dcb9b90f-f1a4-4ad9-8064-a46bd493a02c",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "a92d9ac1-0638-4bb9-928f-fc4685580bf3",
     "name": "Find All",
-    "url": "{{base_url}}/sports",
+    "url": "/sports",
     "method": "GET",
     "sortNum": 40000,
-    "created": "2023-03-01T04:03:32.925Z",
-    "modified": "2023-03-01T04:03:32.925Z",
+    "created": "2023-03-09T04:40:59.835Z",
+    "modified": "2023-03-09T04:40:59.835Z",
     "headers": []
   },
   {
-    "_id": "69b16595-964f-4433-ba8f-07c98aebd32b",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "3feb9c00-8fd9-4e4a-9636-aabd84c3c586",
+    "_id": "975c9704-ca46-490b-9d22-ba13164abfce",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "a92d9ac1-0638-4bb9-928f-fc4685580bf3",
     "name": "Find By ID",
-    "url": "{{base_url}}/sports/{id}",
+    "url": "/sports/{id}",
     "method": "GET",
     "sortNum": 50000,
-    "created": "2023-03-01T04:03:32.926Z",
-    "modified": "2023-03-01T04:15:22.195Z",
-    "headers": [],
-    "params": [
-      {
-        "name": "id",
-        "value": "1",
-        "isPath": true
-      }
-    ],
-    "tests": []
-  },
-  {
-    "_id": "84936890-9659-4d9c-bd9a-311d43dbe770",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "3feb9c00-8fd9-4e4a-9636-aabd84c3c586",
-    "name": "Leagues in Sport",
-    "url": "{{base_url}}/sports/{id}/leagues",
-    "method": "GET",
-    "sortNum": 60000,
-    "created": "2023-03-01T04:03:32.927Z",
-    "modified": "2023-03-01T04:03:32.927Z",
+    "created": "2023-03-09T04:40:59.836Z",
+    "modified": "2023-03-09T04:40:59.836Z",
     "headers": [],
     "params": [
       {
@@ -103,15 +78,35 @@
     ]
   },
   {
-    "_id": "52e3afba-7870-4625-9ff4-99553bc173c7",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "3feb9c00-8fd9-4e4a-9636-aabd84c3c586",
+    "_id": "ce2a677a-ed0b-4b25-9147-bbec94879468",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "a92d9ac1-0638-4bb9-928f-fc4685580bf3",
+    "name": "Leagues in Sport",
+    "url": "/sports/{id}/leagues",
+    "method": "GET",
+    "sortNum": 60000,
+    "created": "2023-03-09T04:40:59.837Z",
+    "modified": "2023-03-09T04:40:59.837Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "id",
+        "value": "1",
+        "isDisabled": false,
+        "isPath": true
+      }
+    ]
+  },
+  {
+    "_id": "4cf39118-424e-4a3a-8068-e2c1e847a411",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "a92d9ac1-0638-4bb9-928f-fc4685580bf3",
     "name": "Create",
-    "url": "{{base_url}}/sports",
+    "url": "/sports",
     "method": "POST",
     "sortNum": 70000,
-    "created": "2023-03-01T04:03:32.928Z",
-    "modified": "2023-03-01T04:03:32.928Z",
+    "created": "2023-03-09T04:40:59.838Z",
+    "modified": "2023-03-09T04:40:59.838Z",
     "headers": [],
     "body": {
       "type": "json",
@@ -119,47 +114,47 @@
     }
   },
   {
-    "_id": "e0a4be19-7f75-4bff-9784-982d6f7cb3a4",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "96edd0b0-41d3-4f8f-8f0d-70d92e88bf45",
+    "_id": "3da78437-1431-428d-b6c6-c97d033712fd",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "0b4afc9b-d6d2-48ae-900a-2c7b0dfd56a0",
     "name": "Find All",
-    "url": "{{base_url}}/leagues",
+    "url": "/leagues",
     "method": "GET",
     "sortNum": 80000,
-    "created": "2023-03-01T04:03:32.929Z",
-    "modified": "2023-03-01T04:03:32.929Z",
+    "created": "2023-03-09T04:40:59.839Z",
+    "modified": "2023-03-09T04:40:59.839Z",
     "headers": []
   },
   {
-    "_id": "555d70a4-1f81-47b9-aa4f-562e27ed186a",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "96edd0b0-41d3-4f8f-8f0d-70d92e88bf45",
+    "_id": "fb782736-9da8-4044-b346-68d4415ef13e",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "0b4afc9b-d6d2-48ae-900a-2c7b0dfd56a0",
     "name": "Find By ID",
-    "url": "{{base_url}}/leagues/{id}",
+    "url": "/leagues/{id}",
     "method": "GET",
     "sortNum": 90000,
-    "created": "2023-03-01T04:03:32.930Z",
-    "modified": "2023-03-01T04:15:50.048Z",
+    "created": "2023-03-09T04:40:59.840Z",
+    "modified": "2023-03-09T04:40:59.840Z",
     "headers": [],
     "params": [
       {
         "name": "id",
         "value": "1",
+        "isDisabled": false,
         "isPath": true
       }
-    ],
-    "tests": []
+    ]
   },
   {
-    "_id": "74f833bf-c147-482f-a778-f0aaf118419d",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "96edd0b0-41d3-4f8f-8f0d-70d92e88bf45",
+    "_id": "dd5ab9dc-a59d-4b1c-9e02-37e18d5a09d5",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "0b4afc9b-d6d2-48ae-900a-2c7b0dfd56a0",
     "name": "Create",
-    "url": "{{base_url}}/leagues",
+    "url": "/leagues",
     "method": "POST",
     "sortNum": 100000,
-    "created": "2023-03-01T04:03:32.932Z",
-    "modified": "2023-03-01T04:03:32.932Z",
+    "created": "2023-03-09T04:40:59.842Z",
+    "modified": "2023-03-09T04:40:59.842Z",
     "headers": [],
     "body": {
       "type": "json",
@@ -167,40 +162,39 @@
     }
   },
   {
-    "_id": "a7e61ef6-781a-4a99-b853-95b505df6f06",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "96edd0b0-41d3-4f8f-8f0d-70d92e88bf45",
+    "_id": "8958ad55-dec3-414a-887f-c77d53587759",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "0b4afc9b-d6d2-48ae-900a-2c7b0dfd56a0",
     "name": "Update",
-    "url": "{{base_url}}/leagues/{id}",
-    "method": "PATCH",
+    "url": "/leagues/{id}",
+    "method": "PUT",
     "sortNum": 110000,
-    "created": "2023-03-01T04:03:32.933Z",
-    "modified": "2023-03-02T03:23:28.879Z",
+    "created": "2023-03-09T04:40:59.843Z",
+    "modified": "2023-03-09T04:40:59.843Z",
     "headers": [],
     "params": [
       {
         "name": "id",
-        "value": "5",
+        "value": "2",
+        "isDisabled": false,
         "isPath": true
       }
     ],
     "body": {
       "type": "json",
-      "raw": "{\n    \"name\": \"QAFLW-updated\"\n}",
-      "form": []
-    },
-    "tests": []
+      "raw": "{\r\n    \"name\": \"QAFLW-updated\"\r\n}"
+    }
   },
   {
-    "_id": "9dec7d47-5d54-4fdc-8b04-22aa6c7d6859",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "96edd0b0-41d3-4f8f-8f0d-70d92e88bf45",
+    "_id": "fdfd055a-9b4f-44d1-96c1-67a5f05640b8",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "0b4afc9b-d6d2-48ae-900a-2c7b0dfd56a0",
     "name": "Delete",
-    "url": "{{base_url}}/leagues/{id}",
+    "url": "/leagues/{id}",
     "method": "DELETE",
     "sortNum": 120000,
-    "created": "2023-03-01T04:03:32.934Z",
-    "modified": "2023-03-01T04:03:32.934Z",
+    "created": "2023-03-09T04:40:59.844Z",
+    "modified": "2023-03-09T04:40:59.844Z",
     "headers": [],
     "params": [
       {
@@ -212,83 +206,111 @@
     ]
   },
   {
-    "_id": "c6ba3640-2f8c-417c-bc54-5fad4fade615",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "1ce8393a-dc54-4114-920c-67af8626c7f2",
-    "name": "Find By ID",
-    "url": "{{base_url}}/players",
+    "_id": "d6a589de-088f-4bbd-84e3-0841b5382ca3",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "17ac7faa-ae07-4483-879d-34cc16f031b8",
+    "name": "Find All",
+    "url": "/players",
     "method": "GET",
     "sortNum": 130000,
-    "created": "2023-03-01T04:03:32.935Z",
-    "modified": "2023-03-01T04:03:32.935Z",
+    "created": "2023-03-09T04:40:59.845Z",
+    "modified": "2023-03-09T04:40:59.845Z",
     "headers": []
   },
   {
-    "_id": "d37881d8-1a6a-4c32-b750-bd4afee80533",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "1ce8393a-dc54-4114-920c-67af8626c7f2",
-    "name": "Create",
-    "url": "{{base_url}}/players",
-    "method": "POST",
+    "_id": "1046b5fa-e0c2-49ce-8df5-a3b180bbee14",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "17ac7faa-ae07-4483-879d-34cc16f031b8",
+    "name": "Find By ID",
+    "url": "/players/135",
+    "method": "GET",
     "sortNum": 140000,
-    "created": "2023-03-01T04:03:32.936Z",
-    "modified": "2023-03-01T04:03:32.936Z",
+    "created": "2023-03-09T04:40:59.846Z",
+    "modified": "2023-03-09T04:40:59.846Z",
+    "headers": []
+  },
+  {
+    "_id": "165b15d4-99e1-4cee-9891-49f35177f92f",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "17ac7faa-ae07-4483-879d-34cc16f031b8",
+    "name": "Create",
+    "url": "/players",
+    "method": "POST",
+    "sortNum": 150000,
+    "created": "2023-03-09T04:40:59.847Z",
+    "modified": "2023-03-09T04:40:59.847Z",
     "headers": [],
     "body": {
       "type": "json",
-      "raw": "{}"
+      "raw": "{\n    \"name\": \"Player Name\",\n    \"playerNumber\": 1,\n    \"teamId\": 5\n}"
     }
   },
   {
-    "_id": "3ee296e2-c30c-4323-9800-f21b87cd6b30",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "7aad7f2b-d567-49fe-b647-57958bef272c",
+    "_id": "ab79827e-51a3-4b5f-8ef5-8a0e250d6981",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "17ac7faa-ae07-4483-879d-34cc16f031b8",
+    "name": "Update",
+    "url": "/players/135",
+    "method": "PUT",
+    "sortNum": 160000,
+    "created": "2023-03-09T04:40:59.848Z",
+    "modified": "2023-03-09T04:40:59.848Z",
+    "headers": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n    \"name\": \"Player Name\",\n    \"playerNumber\": 1,\n    \"teamId\": 5\n}"
+    }
+  },
+  {
+    "_id": "dec76e2c-2f28-4225-afc1-ab621a8420b5",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "18687e6b-b92c-4587-98a7-868f9fd56af6",
     "name": "Find By ID",
-    "url": "{{base_url}}/seasons/{id}",
+    "url": "/seasons/{id}",
     "method": "GET",
-    "sortNum": 150000,
-    "created": "2023-03-01T04:03:32.937Z",
-    "modified": "2023-03-02T22:59:01.745Z",
+    "sortNum": 170000,
+    "created": "2023-03-09T04:40:59.849Z",
+    "modified": "2023-03-09T04:40:59.849Z",
     "headers": [],
     "params": [
       {
         "name": "id",
-        "value": "2",
+        "value": "3",
+        "isDisabled": false,
         "isPath": true
       }
-    ],
-    "tests": []
+    ]
   },
   {
-    "_id": "01cec97e-d32b-46c7-9eac-75cfd917d43c",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "7aad7f2b-d567-49fe-b647-57958bef272c",
+    "_id": "b3ffbf2b-5c7f-4a8a-a00d-ea5b5a715f07",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "18687e6b-b92c-4587-98a7-868f9fd56af6",
     "name": "Teams in Season",
-    "url": "{{base_url}}/seasons/{id}/teams",
+    "url": "/seasons/{id}/teams",
     "method": "GET",
-    "sortNum": 160000,
-    "created": "2023-03-01T04:03:32.938Z",
-    "modified": "2023-03-05T23:36:23.174Z",
+    "sortNum": 180000,
+    "created": "2023-03-09T04:40:59.850Z",
+    "modified": "2023-03-09T04:40:59.850Z",
     "headers": [],
     "params": [
       {
         "name": "id",
         "value": "1",
+        "isDisabled": false,
         "isPath": true
       }
-    ],
-    "tests": []
+    ]
   },
   {
-    "_id": "e1d2e752-b701-4aaf-b4ea-00e1dee0acae",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "7aad7f2b-d567-49fe-b647-57958bef272c",
+    "_id": "3968caf3-c4a0-4994-8e42-79b1a503da9b",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "18687e6b-b92c-4587-98a7-868f9fd56af6",
     "name": "Players in Season",
-    "url": "{{base_url}}/seasons/{id}/players",
+    "url": "/seasons/{id}/players",
     "method": "GET",
-    "sortNum": 170000,
-    "created": "2023-03-01T04:03:32.939Z",
-    "modified": "2023-03-01T04:03:32.939Z",
+    "sortNum": 190000,
+    "created": "2023-03-09T04:40:59.851Z",
+    "modified": "2023-03-09T04:40:59.851Z",
     "headers": [],
     "params": [
       {
@@ -300,159 +322,194 @@
     ]
   },
   {
-    "_id": "09a10df5-b540-40e6-929f-485a16d0e762",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "7aad7f2b-d567-49fe-b647-57958bef272c",
+    "_id": "ba93e4cc-9804-4348-aecf-e97c1eec42ca",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "18687e6b-b92c-4587-98a7-868f9fd56af6",
     "name": "Matches in Season",
-    "url": "{{base_url}}/seasons/{id}/matches",
+    "url": "/seasons/{id}/matches",
     "method": "GET",
-    "sortNum": 180000,
-    "created": "2023-03-01T04:03:32.940Z",
-    "modified": "2023-03-05T23:36:29.766Z",
+    "sortNum": 200000,
+    "created": "2023-03-09T04:40:59.852Z",
+    "modified": "2023-03-09T04:40:59.852Z",
     "headers": [],
     "params": [
       {
         "name": "id",
-        "value": "1",
+        "value": "10",
+        "isDisabled": false,
         "isPath": true
       }
-    ],
-    "tests": []
+    ]
   },
   {
-    "_id": "479b2800-8952-4a1e-a804-2b8ec91ac539",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "7aad7f2b-d567-49fe-b647-57958bef272c",
+    "_id": "c735cdcd-62d3-4e6c-80eb-819280c310c9",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "18687e6b-b92c-4587-98a7-868f9fd56af6",
     "name": "Create",
-    "url": "{{base_url}}/seasons",
+    "url": "/seasons",
     "method": "POST",
-    "sortNum": 190000,
-    "created": "2023-03-01T04:03:32.941Z",
-    "modified": "2023-03-03T00:30:58.742Z",
+    "sortNum": 210000,
+    "created": "2023-03-09T04:40:59.853Z",
+    "modified": "2023-03-09T04:40:59.853Z",
+    "headers": [],
+    "body": {
+      "type": "json",
+      "raw": "{\r\n    \"name\": \"QAFLW\",\r\n    \"leagueId\": 11\r\n}"
+    }
+  },
+  {
+    "_id": "47cec756-8910-4e98-9b98-b28f79028db7",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "ae41dd83-6109-4f61-a14a-a5bac6caae92",
+    "name": "Find All",
+    "url": "/users",
+    "method": "GET",
+    "sortNum": 220000,
+    "created": "2023-03-09T04:40:59.854Z",
+    "modified": "2023-03-09T04:40:59.854Z",
+    "headers": []
+  },
+  {
+    "_id": "8c76b700-9b8c-427d-ab0a-e69c5099cb58",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "ae41dd83-6109-4f61-a14a-a5bac6caae92",
+    "name": "Find By ID",
+    "url": "/users/6772aa6b-684a-4dcc-b5b4-b3e483437794",
+    "method": "GET",
+    "sortNum": 230000,
+    "created": "2023-03-09T04:40:59.855Z",
+    "modified": "2023-03-09T04:40:59.855Z",
+    "headers": []
+  },
+  {
+    "_id": "adac6a2e-5745-4f55-8e5e-cd51c3354338",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "ae41dd83-6109-4f61-a14a-a5bac6caae92",
+    "name": "Create",
+    "url": "/users",
+    "method": "POST",
+    "sortNum": 240000,
+    "created": "2023-03-09T04:40:59.856Z",
+    "modified": "2023-03-09T04:40:59.856Z",
+    "headers": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n    \"email\": \"toan.doan2@blackbook.ai\",\n    \"password\": \"Aa@123456\",\n    \"firstName\": \"Toan\",\n    \"lastName\": \"Doan\",\n    \"active\": true\n}"
+    }
+  },
+  {
+    "_id": "ec015d3b-4ecf-4bde-bfb1-d7eb247e01fc",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "ae41dd83-6109-4f61-a14a-a5bac6caae92",
+    "name": "Update",
+    "url": "/users/e27ab080-44ae-43dc-ad4f-b3118ed2b67f",
+    "method": "PUT",
+    "sortNum": 250000,
+    "created": "2023-03-09T04:40:59.857Z",
+    "modified": "2023-03-09T04:40:59.857Z",
+    "headers": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n    \"email\": \"toan.doan2@blackbook.ai\",\n    \"password\": \"Aa@123456\",\n    \"firstName\": \"Toan\",\n    \"lastName\": \"Doan\",\n    \"active\": true\n}"
+    }
+  },
+  {
+    "_id": "1587b56f-86e1-4f22-a358-c82d47f92b6a",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "622ae513-acbe-45da-a475-3a8483d41d1e",
+    "name": "Create",
+    "url": "/matches",
+    "method": "POST",
+    "sortNum": 260000,
+    "created": "2023-03-09T04:40:59.858Z",
+    "modified": "2023-03-09T04:44:02.115Z",
     "headers": [],
     "params": [],
     "body": {
-      "type": "json",
-      "raw": "{\r\n  \"name\": \"2022\",\r\n  \"startDate\": \"2023-03-01T00:21:21.000Z\",\r\n  \"endDate\": \"2023-03-02T00:21:21.000Z\",\r\n  \"leagueId\": 4\r\n}",
-      "form": []
+      "type": "formdata",
+      "raw": "",
+      "form": [
+        {
+          "name": "type",
+          "value": "REGULAR"
+        },
+        {
+          "name": "seasonId",
+          "value": "3"
+        },
+        {
+          "name": "homeTeamId",
+          "value": "5"
+        },
+        {
+          "name": "awayTeamId",
+          "value": "6"
+        },
+        {
+          "name": "round",
+          "value": "1"
+        },
+        {
+          "name": "date",
+          "value": "2022-10-11 14:50"
+        },
+        {
+          "name": "locationId",
+          "value": "1"
+        },
+        {
+          "name": "homePlayerIds[][\"A01\"]",
+          "value": "1"
+        },
+        {
+          "name": "homePlayerIds[][\"A02\"]",
+          "value": "2"
+        },
+        {
+          "name": "awayPlayerIds[][\"A01\"]",
+          "value": "3"
+        }
+      ],
+      "files": [
+        {
+          "name": "homeTeamCsv",
+          "value": "../../../../../Downloads/123.csv"
+        },
+        {
+          "name": "awayTeamCsv",
+          "value": "../../../../../Downloads/123.csv"
+        }
+      ]
     },
     "tests": []
   },
   {
-    "_id": "5ee7b009-ce99-478c-a368-a609ef71e13b",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "2ab39496-a935-4a4f-a026-466539ea72bf",
+    "_id": "c567f6a3-55e5-45eb-940f-dfd6000d8f4b",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "622ae513-acbe-45da-a475-3a8483d41d1e",
     "name": "Find All",
-    "url": "{{base_url}}/users",
+    "url": "/matches",
     "method": "GET",
-    "sortNum": 200000,
-    "created": "2023-03-01T04:03:32.942Z",
-    "modified": "2023-03-01T04:03:32.942Z",
+    "sortNum": 270000,
+    "created": "2023-03-09T04:40:59.859Z",
+    "modified": "2023-03-09T04:40:59.859Z",
     "headers": []
   },
   {
-    "_id": "9cf14424-3586-4b1c-9a66-ccac2300d895",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "2ab39496-a935-4a4f-a026-466539ea72bf",
-    "name": "Find By ID",
-    "url": "{{base_url}}/users/e27ab080-44ae-43dc-ad4f-b3118ed2b67f",
-    "method": "GET",
-    "sortNum": 210000,
-    "created": "2023-03-01T04:03:32.943Z",
-    "modified": "2023-03-01T04:03:32.943Z",
-    "headers": []
-  },
-  {
-    "_id": "9abacb4a-7cb4-474a-829a-6dd0eb6ad947",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "2ab39496-a935-4a4f-a026-466539ea72bf",
-    "name": "Create",
-    "url": "{{base_url}}/users",
-    "method": "POST",
-    "sortNum": 220000,
-    "created": "2023-03-01T04:03:32.944Z",
-    "modified": "2023-03-01T04:03:32.944Z",
-    "headers": [],
-    "body": {
-      "type": "json",
-      "raw": "{\n    \"email\": \"toan.doan2@blackbook.ai\",\n    \"password\": \"Aa@123456\",\n    \"firstName\": \"Toan\",\n    \"lastName\": \"Doan\",\n    \"active\": true\n}"
-    }
-  },
-  {
-    "_id": "b302daca-852f-4882-971b-07769661d68a",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "2ab39496-a935-4a4f-a026-466539ea72bf",
-    "name": "Edit",
-    "url": "{{base_url}}/users/e27ab080-44ae-43dc-ad4f-b3118ed2b67f",
-    "method": "PUT",
-    "sortNum": 230000,
-    "created": "2023-03-01T04:03:32.945Z",
-    "modified": "2023-03-01T04:03:32.945Z",
-    "headers": [],
-    "body": {
-      "type": "json",
-      "raw": "{\n    \"email\": \"toan.doan2@blackbook.ai\",\n    \"password\": \"Aa@123456\",\n    \"firstName\": \"Toan\",\n    \"lastName\": \"Doan\",\n    \"active\": true\n}"
-    }
-  },
-  {
-    "_id": "c23a1583-c114-4b8e-aadc-240f8060c813",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
+    "_id": "9f449adb-712a-4c20-88ee-5d1d0b737532",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
     "containerId": "",
     "name": "HealthCheck",
-    "url": "{{base_url}}",
+    "url": "/",
     "method": "GET",
-    "sortNum": 240000,
-    "created": "2023-03-01T04:03:32.946Z",
-    "modified": "2023-03-01T04:03:32.946Z",
-    "headers": [],
-    "auth": {
-      "type": "none"
-    }
-  },
-  {
-    "_id": "a9c4f3ec-f730-4b64-9c4e-fe91ce64b65a",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "",
-    "name": "CSRF",
-    "url": "{{base_url}}/csrf",
-    "method": "POST",
-    "sortNum": 250000,
-    "created": "2023-03-01T04:03:32.947Z",
-    "modified": "2023-03-01T04:03:32.947Z",
-    "headers": []
-  },
-  {
-    "_id": "5407bc92-4587-4a79-8127-11cc899a2a94",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "7aad7f2b-d567-49fe-b647-57958bef272c",
-    "name": "Find All",
-    "url": "{{base_url}}/seasons",
-    "method": "GET",
-    "sortNum": 75000,
-    "created": "2023-03-02T23:54:25.418Z",
-    "modified": "2023-03-02T23:54:51.617Z",
+    "sortNum": 280000,
+    "created": "2023-03-09T04:40:59.860Z",
+    "modified": "2023-03-09T04:42:57.717Z",
     "headers": [],
     "params": [],
-    "tests": []
-  },
-  {
-    "_id": "441ce0ab-5480-4ec4-9b0f-3114204139a4",
-    "colId": "222b9f26-a10b-4b00-8f5a-18ff85ab5d32",
-    "containerId": "96edd0b0-41d3-4f8f-8f0d-70d92e88bf45",
-    "name": "Seasons in League",
-    "url": "{{base_url}}/leagues/{id}/seasons",
-    "method": "GET",
-    "sortNum": 95000,
-    "created": "2023-03-03T05:01:41.105Z",
-    "modified": "2023-03-03T05:01:58.834Z",
-    "headers": [],
-    "params": [
-      {
-        "name": "id",
-        "value": "1",
-        "isPath": true
-      }
-    ],
+    "auth": {
+      "type": "none"
+    },
     "tests": []
   }
 ]

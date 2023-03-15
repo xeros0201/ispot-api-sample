@@ -8,7 +8,6 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 
 import { SessionAuthGuard } from '../auth/guards/session-auth.guard';
 import { MatchEntity } from '../matches/entities/match.entity';
@@ -21,7 +20,6 @@ import { UpdateSeasonDto } from './dto/update-season.dto';
 import { SeasonEntity } from './entities/season.entity';
 import { SeasonsService } from './seasons.service';
 
-@ApiTags('seasons')
 @Controller('seasons')
 export class SeasonsController {
   constructor(private readonly seasonsService: SeasonsService) {}
