@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsNumber, IsString } from 'class-validator';
 
 export class CreateTeamDto {
@@ -5,8 +6,9 @@ export class CreateTeamDto {
   name: string;
 
   @IsString()
-  logo?: string;
+  logo: string;
 
-  @IsNumber()
+  @Type(() => Number)
+  @IsNumber({ maxDecimalPlaces: 0 })
   seasonId: number;
 }

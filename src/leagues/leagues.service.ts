@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
+import { SeasonEntity } from 'src/seasons/entities/season.entity';
+import { SeasonsService } from 'src/seasons/seasons.service';
 
 import { SportEntity } from '../sports/entities/sport.entity';
 import { UserEntity } from '../users/entities/user.entity';
@@ -9,7 +11,10 @@ import { LeagueEntity } from './entities/league.entity';
 
 @Injectable()
 export class LeaguesService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly seasonService: SeasonsService,
+  ) {}
 
   public async findAll(): Promise<LeagueEntity[]> {
     return this.prismaService.league.findMany({ include: { sport: true } });
@@ -31,12 +36,13 @@ export class LeaguesService {
   }
 
   public async create(
-    { name, sportId }: CreateLeagueDto,
+    { name, logo, sportId }: CreateLeagueDto,
     userId: UserEntity['id'],
   ): Promise<LeagueEntity> {
     return this.prismaService.league.create({
       data: {
         name: name,
+        logo: logo,
         sport: { connect: { id: sportId } },
         createdUser: { connect: { id: userId } },
       },
@@ -52,6 +58,10 @@ export class LeaguesService {
       where: { id },
       data: { ...data, updatedUserId: userId },
     });
+  }
+
+  public async findAllSeasons(id: number): Promise<SeasonEntity[]> {
+    return this.seasonService.findAllByLeagueId(id);
   }
 
   public async delete(id: number): Promise<LeagueEntity> {

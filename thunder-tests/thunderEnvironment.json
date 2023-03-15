@@ -1,16 +1,1 @@
-[
-  {
-    "_id": "2296bbb8-485d-4128-bcae-452db6de2262",
-    "name": "isports",
-    "default": true,
-    "sortNum": 10000,
-    "created": "2023-03-01T04:07:47.938Z",
-    "modified": "2023-03-01T04:07:47.938Z",
-    "data": [
-      {
-        "name": "base_url",
-        "value": "http://localhost:3000/api"
-      }
-    ]
-  }
-]
+[]
