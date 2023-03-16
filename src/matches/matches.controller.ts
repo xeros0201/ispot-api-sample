@@ -23,6 +23,11 @@ import { MatchesService } from './matches.service';
 export class MatchesController {
   constructor(private readonly matchesService: MatchesService) {}
 
+  @Get('/')
+  public async findAll(): Promise<MatchEntity[]> {
+    return this.matchesService.findAll();
+  }
+
   @Get('/:id')
   public async findById(
     @Param('id', ParseIntPipe) id: number,

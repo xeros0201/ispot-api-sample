@@ -20,6 +20,17 @@ export class MatchesService {
     private readonly playersService: PlayersService,
   ) {}
 
+  public async findAll(): Promise<MatchEntity[]> {
+    return this.prismaService.match.findMany({
+      include: {
+        homeTeam: true,
+        awayTeam: true,
+        location: true,
+        aflResults: true,
+      },
+    });
+  }
+
   public async findById(id: number): Promise<MatchEntity> {
     return this.prismaService.match.findFirst({
       where: { id },
