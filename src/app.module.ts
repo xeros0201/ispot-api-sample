@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { PrismaModule } from 'nestjs-prisma';
+import { S3Module } from 'nestjs-s3';
 
 import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
@@ -20,6 +21,16 @@ import { UsersModule } from './users/users.module';
     ThrottlerModule.forRoot({
       ttl: 60,
       limit: 10,
+    }),
+    S3Module.forRoot({
+      config: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        endpoint: process.env.AWS_S3_ENDPOINT,
+        s3BucketEndpoint: true,
+        s3ForcePathStyle: true,
+        signatureVersion: 'v4',
+      },
     }),
     HealthModule,
     AuthModule,

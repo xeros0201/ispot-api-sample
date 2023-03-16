@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { LeagueEntity } from 'src/leagues/entities/league.entity';
 
+import { LeagueEntity } from '../leagues/entities/league.entity';
 import { MatchEntity } from '../matches/entities/match.entity';
 import { MatchesService } from '../matches/matches.service';
 import { PlayerEntity } from '../players/entities/player.entity';

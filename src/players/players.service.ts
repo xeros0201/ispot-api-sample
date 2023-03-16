@@ -36,6 +36,10 @@ export class PlayersService {
     return this.prismaService.player.update({ where: { id }, data });
   }
 
+  public async delete(id: number): Promise<PlayerEntity> {
+    return this.prismaService.player.delete({ where: { id } });
+  }
+
   public async findAllBySeasonId(
     seasonId: SeasonEntity['id'],
   ): Promise<PlayerEntity[]> {

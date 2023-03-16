@@ -422,7 +422,7 @@
     "method": "POST",
     "sortNum": 260000,
     "created": "2023-03-09T04:40:59.858Z",
-    "modified": "2023-03-09T04:44:02.115Z",
+    "modified": "2023-03-15T19:11:29.464Z",
     "headers": [],
     "params": [],
     "body": {
@@ -435,15 +435,15 @@
         },
         {
           "name": "seasonId",
-          "value": "3"
+          "value": "1"
         },
         {
           "name": "homeTeamId",
-          "value": "5"
+          "value": "1"
         },
         {
           "name": "awayTeamId",
-          "value": "6"
+          "value": "2"
         },
         {
           "name": "round",
@@ -456,18 +456,6 @@
         {
           "name": "locationId",
           "value": "1"
-        },
-        {
-          "name": "homePlayerIds[][\"A01\"]",
-          "value": "1"
-        },
-        {
-          "name": "homePlayerIds[][\"A02\"]",
-          "value": "2"
-        },
-        {
-          "name": "awayPlayerIds[][\"A01\"]",
-          "value": "3"
         }
       ],
       "files": [
@@ -490,9 +478,9 @@
     "name": "Find All",
     "url": "/matches",
     "method": "GET",
-    "sortNum": 270000,
+    "sortNum": 130000,
     "created": "2023-03-09T04:40:59.859Z",
-    "modified": "2023-03-09T04:40:59.859Z",
+    "modified": "2023-03-15T10:25:42.256Z",
     "headers": []
   },
   {
@@ -510,6 +498,108 @@
     "auth": {
       "type": "none"
     },
+    "tests": []
+  },
+  {
+    "_id": "162ba717-9443-4297-89a0-9623731c1ea4",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "622ae513-acbe-45da-a475-3a8483d41d1e",
+    "name": "Update",
+    "url": "/matches/15",
+    "method": "PUT",
+    "sortNum": 265000,
+    "created": "2023-03-15T08:49:39.641Z",
+    "modified": "2023-03-15T19:27:11.834Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "formdata",
+      "raw": "",
+      "form": [
+        {
+          "name": "type",
+          "value": "REGULAR"
+        },
+        {
+          "name": "seasonId",
+          "value": "1"
+        },
+        {
+          "name": "homeTeamId",
+          "value": "1"
+        },
+        {
+          "name": "awayTeamId",
+          "value": "2"
+        },
+        {
+          "name": "round",
+          "value": "1"
+        },
+        {
+          "name": "date",
+          "value": "2022-10-11 14:50"
+        },
+        {
+          "name": "locationId",
+          "value": "1"
+        },
+        {
+          "name": "homePlayerIds[H999]",
+          "value": "1"
+        },
+        {
+          "name": "homePlayerIds[H2]",
+          "value": "2"
+        },
+        {
+          "name": "awayPlayerIds[A1]",
+          "value": "1"
+        },
+        {
+          "name": "awayPlayerIds[A2]",
+          "value": "22"
+        }
+      ],
+      "files": [
+        {
+          "name": "homeTeamCsv",
+          "value": "../../../../../Downloads/123.csv"
+        },
+        {
+          "name": "awayTeamCsv",
+          "value": "../../../../../Downloads/123.csv"
+        }
+      ]
+    },
+    "tests": []
+  },
+  {
+    "_id": "3d50f7e2-dda3-4d97-ac26-f14a88034749",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "17ac7faa-ae07-4483-879d-34cc16f031b8",
+    "name": "Delete",
+    "url": "/players/1",
+    "method": "DELETE",
+    "sortNum": 225000,
+    "created": "2023-03-15T10:39:08.875Z",
+    "modified": "2023-03-15T10:39:36.501Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "03c9c1b4-e5e7-4093-86a1-69258d682e62",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "50a9d6e7-8d74-4e86-bd99-b6368ef6c9d2",
+    "name": "Find All",
+    "url": "/teams",
+    "method": "GET",
+    "sortNum": 10000,
+    "created": "2023-03-16T03:48:12.365Z",
+    "modified": "2023-03-16T03:48:33.507Z",
+    "headers": [],
+    "params": [],
     "tests": []
   }
 ]

@@ -102,7 +102,6 @@ model Team {
   seasonId         Int                @map("season_id")
   season           Season?            @relation(fields: [seasonId], references: [id])
   players          Player[]
-  matches          Match[]
   homeTeamMatches  Match[]            @relation("homeTeam")
   awayTeamMatches  Match[]            @relation("awayTeam")
   playersOnMatches PlayersOnMatches[]
@@ -135,8 +134,6 @@ model Match {
   awayTeamCsv String?            @map("away_team_csv")
   round       Int
   date        DateTime
-  teamId      Int?               @map("team_id")
-  team        Team?              @relation(fields: [teamId], references: [id])
   locationId  Int                @map("location_id")
   location    Location?          @relation(fields: [locationId], references: [id])
   players     PlayersOnMatches[]
@@ -146,13 +143,14 @@ model Match {
 }
 
 model PlayersOnMatches {
-  id       Int     @id @default(autoincrement())
-  matchId  Int     @map("match_id")
-  match    Match?  @relation(fields: [matchId], references: [id])
-  playerId Int     @map("player_id")
-  player   Player? @relation(fields: [playerId], references: [id])
-  teamId   Int     @map("team_id")
-  team     Team?   @relation(fields: [teamId], references: [id])
+  id           Int     @id @default(autoincrement())
+  matchId      Int     @map("match_id")
+  match        Match?  @relation(fields: [matchId], references: [id])
+  playerId     Int     @map("player_id")
+  player       Player? @relation(fields: [playerId], references: [id])
+  teamId       Int     @map("team_id")
+  team         Team?   @relation(fields: [teamId], references: [id])
+  playerNumber Int     @map("player_number")
 
   @@index([matchId, playerId, teamId])
   @@map("players_on_matches")

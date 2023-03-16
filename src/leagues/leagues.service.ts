@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { SeasonEntity } from 'src/seasons/entities/season.entity';
-import { SeasonsService } from 'src/seasons/seasons.service';
 
+import { SeasonEntity } from '../seasons/entities/season.entity';
+import { SeasonsService } from '../seasons/seasons.service';
 import { SportEntity } from '../sports/entities/sport.entity';
 import { UserEntity } from '../users/entities/user.entity';
 import { CreateLeagueDto } from './dto/create-league.dto';
