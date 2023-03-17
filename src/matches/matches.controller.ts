@@ -144,6 +144,11 @@ export class MatchesController {
     return this.matchesService.update(id, data, { homeTeamCsv, awayTeamCsv });
   }
 
+  @Get('/:id/_publish')
+  public async publish(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.matchesService.publish(id);
+  }
+
   @Delete('/:id')
   public async delete(
     @Param('id', ParseIntPipe) id: number,

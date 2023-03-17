@@ -111,12 +111,13 @@ model Team {
 }
 
 model Player {
-  id           Int                @id @default(autoincrement())
-  teamId       Int                @map("team_id")
-  team         Team?              @relation(fields: [teamId], references: [id])
+  id           Int                     @id @default(autoincrement())
+  teamId       Int                     @map("team_id")
+  team         Team?                   @relation(fields: [teamId], references: [id])
   name         String
-  playerNumber Int                @map("player_number")
+  playerNumber Int                     @map("player_number")
   matches      PlayersOnMatches[]
+  aflResults   CriteriasOnAFLResults[]
 
   @@map("players")
 }
@@ -164,14 +165,38 @@ model Location {
   @@map("locations")
 }
 
+model AFLResultCriteria {
+  id         Int                     @id @default(autoincrement())
+  name       String
+  indexInCsv Int                     @map("index_in_csv")
+  aflResults CriteriasOnAFLResults[]
+
+  @@map("afl_result_criterias")
+}
+
 model AFLResult {
-  id             Int     @id @default(autoincrement())
-  matchId        Int     @map("match_id")
-  match          Match?  @relation(fields: [matchId], references: [id])
-  teamId         Int     @map("team_id")
-  team           Team?   @relation(fields: [teamId], references: [id])
-  scorePrimary   Int     @default(0) @map("score_primary")
-  scoreSecondary String? @map("score_secondary")
+  id             Int                     @id @default(autoincrement())
+  matchId        Int                     @map("match_id")
+  match          Match?                  @relation(fields: [matchId], references: [id])
+  teamId         Int                     @map("team_id")
+  team           Team?                   @relation(fields: [teamId], references: [id])
+  scorePrimary   Float                   @default(0) @map("score_primary")
+  scoreSecondary Float?                  @default(0) @map("score_secondary")
+  criterias      CriteriasOnAFLResults[]
 
   @@map("afl_results")
+}
+
+model CriteriasOnAFLResults {
+  id                  Int                @id @default(autoincrement())
+  playerId            Int                @map("player_id")
+  player              Player?            @relation(fields: [playerId], references: [id])
+  aflResultId         Int                @map("afl_result_id")
+  aflResult           AFLResult?         @relation(fields: [aflResultId], references: [id])
+  aflResultCriteriaId Int                @map("afl_result_criteria_id")
+  aflResultCriteria   AFLResultCriteria? @relation(fields: [aflResultCriteriaId], references: [id])
+  value               Int
+
+  @@index([playerId, aflResultId, aflResultCriteriaId])
+  @@map("criterias_on_afl_results")
 }

@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { parse } from 'csv-parse/sync';
 import { readFileSync, unlinkSync } from 'fs';
 import * as _ from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
@@ -14,6 +15,7 @@ import { MatchEntity } from './entities/match.entity';
 
 @Injectable()
 export class MatchesService {
+  private readonly logger = new Logger(MatchesService.name);
   constructor(
     @InjectS3() private readonly s3: S3,
     private readonly prismaService: PrismaService,
@@ -180,6 +182,131 @@ export class MatchesService {
 
   public async delete(id: number): Promise<MatchEntity> {
     return this.prismaService.match.delete({ where: { id } });
+  }
+
+  public async publish(id: number): Promise<void> {
+    const match = await this.prismaService.match.findFirst({
+      where: { id },
+      include: { players: true },
+    });
+
+    const [homeTeamCsv, awayTeamCsv] = await Promise.all([
+      this.readCsvFromS3('csv', match.homeTeamCsv),
+      this.readCsvFromS3('csv', match.awayTeamCsv),
+    ]);
+
+    const homeTeamRows = _.transform(
+      parse(homeTeamCsv, { skip_empty_lines: true }),
+      (results, row) => {
+        const [k, ...args] = row as string[];
+
+        _.assign(results, { [k]: args });
+      },
+      {},
+    );
+    const awayTeamRows = _.transform(
+      parse(awayTeamCsv, { skip_empty_lines: true }),
+      (results, row) => {
+        const [k, ...args] = row as string[];
+
+        _.assign(results, { [k]: args });
+      },
+      {},
+    );
+
+    const homeTeamPlayers = _.filter(
+      match.players,
+      (p) => p.teamId === match.homeTeamId,
+    );
+    const awayTeamPlayers = _.filter(
+      match.players,
+      (p) => p.teamId === match.awayTeamId,
+    );
+
+    const criterias = await this.prismaService.aFLResultCriteria.findMany();
+
+    const [homeTeamAFLResult, awayTeamAFLResult] = await Promise.all([
+      this.prismaService.aFLResult.create({
+        data: {
+          matchId: match.id,
+          teamId: match.homeTeamId,
+          scorePrimary: 0,
+        },
+      }),
+      this.prismaService.aFLResult.create({
+        data: {
+          matchId: match.id,
+          teamId: match.homeTeamId,
+          scorePrimary: 0,
+        },
+      }),
+    ]);
+
+    await Promise.all(
+      _.keys(homeTeamRows).map(async (k) => {
+        const player = _.find(
+          homeTeamPlayers,
+          (p) => p.playerNumber === _.toNumber(k.substring(1)),
+        );
+
+        if (_.isNil(player)) {
+          // throw new Error('Player not found!');
+
+          return;
+        }
+
+        const row = _.get(homeTeamRows, k);
+
+        await this.prismaService.aFLResult.update({
+          where: { id: homeTeamAFLResult.id },
+          data: {
+            criterias: {
+              createMany: {
+                data: _.map(criterias, (c) => ({
+                  playerId: player.id,
+                  aflResultCriteriaId: c.id,
+                  value: _.toNumber(row[c.indexInCsv]),
+                })),
+              },
+            },
+          },
+        });
+      }),
+    );
+
+    await Promise.all(
+      _.keys(awayTeamRows).map(async (k) => {
+        const player = _.find(
+          awayTeamPlayers,
+          (p) => p.playerNumber === _.toNumber(k.substring(1)),
+        );
+
+        if (_.isNil(player)) {
+          // throw new Error('Player not found!');
+
+          return;
+        }
+
+        const row = _.get(awayTeamRows, k);
+
+        await this.prismaService.aFLResult.update({
+          where: { id: awayTeamAFLResult.id },
+          data: {
+            criterias: {
+              createMany: {
+                data: _.map(criterias, (c) => ({
+                  playerId: player.id,
+                  aflResultCriteriaId: c.id,
+                  value: _.toNumber(row[c.indexInCsv]),
+                })),
+              },
+            },
+          },
+        });
+      }),
+    );
+
+    this.logger.debug(`Publish report of match #${match.id} successful.`);
   }
 
   public async findAllBySeasonId(

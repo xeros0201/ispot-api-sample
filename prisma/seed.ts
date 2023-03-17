@@ -13,6 +13,7 @@ const main = async (): Promise<void> => {
   await prisma.league.deleteMany();
   await prisma.sport.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.aFLResultCriteria.deleteMany();
 
   // Create users
   const salt = await bcrypt.genSalt();
@@ -478,6 +479,42 @@ const main = async (): Promise<void> => {
         playerNumber: i,
       })),
     ],
+  });
+
+  await prisma.aFLResultCriteria.createMany({
+    data: [
+      'BEHIND:AWAY',
+      'BEHIND:HOME',
+      'CLR:BU',
+      'CLR:CSB',
+      'CLR:TI',
+      'CP:GB Hard',
+      'CP:GB Loose',
+      'FK:AGAINST',
+      'FK:FOR',
+      'GOAL:AWAY',
+      'GOAL:HOME',
+      'HB:EF',
+      'HB:IE',
+      'HB:TO',
+      'I50:Deep',
+      'I50:I',
+      'I50:Shallow',
+      'KICK:EF',
+      'KICK:IE',
+      'KICK:TO',
+      'MARK:C',
+      'MARK:F50',
+      'MARK:INT',
+      'MARK:UC',
+      'Possession:Contested',
+      'Possession:Uncontested',
+      'RUCK:ADV',
+      'RUCK:HO',
+      'TACKLE:EF',
+      'UP:Gather',
+      'UP:HB Receive',
+    ].map((e, i) => ({ name: e, indexInCsv: i })),
   });
 };
 

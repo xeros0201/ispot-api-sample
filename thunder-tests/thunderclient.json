@@ -422,7 +422,7 @@
     "method": "POST",
     "sortNum": 260000,
     "created": "2023-03-09T04:40:59.858Z",
-    "modified": "2023-03-15T19:11:29.464Z",
+    "modified": "2023-03-16T15:24:13.045Z",
     "headers": [],
     "params": [],
     "body": {
@@ -461,11 +461,11 @@
       "files": [
         {
           "name": "homeTeamCsv",
-          "value": "../../../../../Downloads/123.csv"
+          "value": "../../../../../Downloads/Book1.csv"
         },
         {
           "name": "awayTeamCsv",
-          "value": "../../../../../Downloads/123.csv"
+          "value": "../../../../../Downloads/Book1.csv"
         }
       ]
     },
@@ -505,11 +505,11 @@
     "colId": "946616f3-12a2-4489-a612-965150521279",
     "containerId": "622ae513-acbe-45da-a475-3a8483d41d1e",
     "name": "Update",
-    "url": "/matches/15",
+    "url": "/matches/1",
     "method": "PUT",
     "sortNum": 265000,
     "created": "2023-03-15T08:49:39.641Z",
-    "modified": "2023-03-15T19:27:11.834Z",
+    "modified": "2023-03-17T03:16:02.008Z",
     "headers": [],
     "params": [],
     "body": {
@@ -518,35 +518,43 @@
       "form": [
         {
           "name": "type",
-          "value": "REGULAR"
+          "value": "REGULAR",
+          "isDisabled": true
         },
         {
           "name": "seasonId",
-          "value": "1"
+          "value": "1",
+          "isDisabled": true
         },
         {
           "name": "homeTeamId",
-          "value": "1"
+          "value": "1",
+          "isDisabled": true
         },
         {
           "name": "awayTeamId",
-          "value": "2"
+          "value": "2",
+          "isDisabled": true
         },
         {
           "name": "round",
-          "value": "1"
+          "value": "1",
+          "isDisabled": true
         },
         {
           "name": "date",
-          "value": "2022-10-11 14:50"
+          "value": "2022-10-11 14:50",
+          "isDisabled": true
         },
         {
           "name": "locationId",
-          "value": "1"
+          "value": "1",
+          "isDisabled": true
         },
         {
           "name": "homePlayerIds[H999]",
-          "value": "1"
+          "value": "1",
+          "isDisabled": true
         },
         {
           "name": "homePlayerIds[H2]",
@@ -558,17 +566,18 @@
         },
         {
           "name": "awayPlayerIds[A2]",
-          "value": "22"
+          "value": "22",
+          "isDisabled": true
         }
       ],
       "files": [
         {
           "name": "homeTeamCsv",
-          "value": "../../../../../Downloads/123.csv"
+          "value": "../../../../../Downloads/Book1.csv"
         },
         {
           "name": "awayTeamCsv",
-          "value": "../../../../../Downloads/123.csv"
+          "value": "../../../../../Downloads/Book1.csv"
         }
       ]
     },
@@ -598,6 +607,20 @@
     "sortNum": 10000,
     "created": "2023-03-16T03:48:12.365Z",
     "modified": "2023-03-16T03:48:33.507Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "4c07df71-b42d-4730-a968-d49af4eaf296",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "622ae513-acbe-45da-a475-3a8483d41d1e",
+    "name": "Publish",
+    "url": "/matches/1/_publish",
+    "method": "GET",
+    "sortNum": 275000,
+    "created": "2023-03-16T15:21:37.880Z",
+    "modified": "2023-03-17T03:16:10.773Z",
     "headers": [],
     "params": [],
     "tests": []
