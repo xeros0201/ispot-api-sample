@@ -188,6 +188,11 @@ export class MatchesService {
     return this.prismaService.match.findMany({
       where: { seasonId },
       include: {
+        season: {
+          include: {
+            league: true,
+          }
+        },
         awayTeam: true,
         homeTeam: true,
         location: true,
