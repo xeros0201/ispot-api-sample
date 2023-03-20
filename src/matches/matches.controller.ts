@@ -151,6 +151,14 @@ export class MatchesController {
     return this.matchesService.delete(id);
   }
 
+  @Delete('/:id/players/:playerId')
+  public async deletePlayer(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('playerId', ParseIntPipe) playerId: number,
+  ): Promise<MatchEntity> {
+    return this.matchesService.deletePlayer(id, playerId);
+  }
+
   @Get('/:id/players')
   public async findAllPlayers(
     @Param('id', ParseIntPipe) id: number,
