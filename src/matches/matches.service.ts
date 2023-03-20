@@ -229,6 +229,12 @@ export class MatchesService {
       },
     });
 
+    const properties = await this.prismaService.aFLResultProperty.findMany({
+      where: {
+        parentId: { not: null },
+      },
+    });
+
     const [homeTeamStats, awayTeamStats] = await Promise.all([
       this.getStatsFromCsv(match.homeTeamCsv, 'HOME'),
       this.getStatsFromCsv(match.awayTeamCsv, 'AWAY'),
@@ -249,10 +255,6 @@ export class MatchesService {
       }),
     ]);
 
-    const properties = await this.prismaService.aFLResultProperty.findMany({
-      where: { parentId: { not: null } },
-    });
-
     await Promise.all([
       ..._(homeTeamStats)
         .keys()
@@ -272,7 +274,10 @@ export class MatchesService {
             data: _(stats)
               .keys()
               .map((k) => {
-                const property = _.find(properties, (p) => p.alias === k);
+                const property = _.find(properties, {
+                  alias: k,
+                  type: 'PLAYER',
+                });
 
                 if (_.isNil(property)) {
                   throw new Error('AFL Result Property not found!');
@@ -307,7 +312,10 @@ export class MatchesService {
             data: _(stats)
               .keys()
               .map((k) => {
-                const property = _.find(properties, (p) => p.alias === k);
+                const property = _.find(properties, {
+                  alias: k,
+                  type: 'PLAYER',
+                });
 
                 if (_.isNil(property)) {
                   throw new Error('AFL Result Property not found!');
