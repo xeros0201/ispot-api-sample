@@ -18,7 +18,7 @@ export class MatchesService {
     @InjectS3() private readonly s3: S3,
     private readonly prismaService: PrismaService,
     private readonly playersService: PlayersService,
-  ) {}
+  ) { }
 
   public async findAll(): Promise<MatchEntity[]> {
     return this.prismaService.match.findMany({
@@ -191,9 +191,22 @@ export class MatchesService {
     return this.prismaService.match.findMany({
       where: { seasonId },
       include: {
+        season: {
+          select: {
+            id: true,
+            name: true,
+            league: {
+              select: {
+                id: true,
+                name: true,
+              }
+            },
+          }
+        },
         awayTeam: true,
         homeTeam: true,
         location: true,
+        aflResults: true,
       },
     });
   }
