@@ -189,8 +189,15 @@ export class MatchesService {
       where: { seasonId },
       include: {
         season: {
-          include: {
-            league: true,
+          select: {
+            id: true,
+            name: true,
+            league: {
+              select: {
+                id: true,
+                name: true,
+              }
+            },
           }
         },
         awayTeam: true,
