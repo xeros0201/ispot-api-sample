@@ -162,4 +162,11 @@ export class MatchesController {
   ): Promise<PlayerEntity[]> {
     return this.matchesService.findAllPlayers(id);
   }
+
+  @Get('/:id/_stats')
+  public async getStats(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<MatchEntity> {
+    return this.matchesService.getStats(id);
+  }
 }
