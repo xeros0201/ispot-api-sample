@@ -35,8 +35,7 @@ export class AuthController {
   @UseGuards(SessionAuthGuard)
   @Roles(Role.ADMIN)
   public async getRoles(): Promise<Role[]> {
-    const test = Object.values(Role);
-    return Promise.resolve(test);
+    return Promise.resolve(Object.values(Role));
   }
 
   @Get('/check')
