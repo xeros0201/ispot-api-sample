@@ -497,10 +497,11 @@ const main = async (): Promise<void> => {
   });
 
   // AFL Result Property for Player
-  await prisma.aFLResultProperty.create({
+  await prisma.resultProperty.create({
     data: {
       name: 'Disposal Statistics',
       type: 'PLAYER',
+      sportId: sport.id,
       children: {
         createMany: {
           data: [
@@ -524,15 +525,17 @@ const main = async (): Promise<void> => {
             name: s,
             alias: s,
             type: 'PLAYER',
+            sportId: sport.id,
           })),
         },
       },
     },
   });
-  await prisma.aFLResultProperty.create({
+  await prisma.resultProperty.create({
     data: {
       name: 'Clearances',
       type: 'PLAYER',
+      sportId: sport.id,
       children: {
         createMany: {
           data: [
@@ -545,15 +548,17 @@ const main = async (): Promise<void> => {
             name: s,
             alias: s,
             type: 'PLAYER',
+            sportId: sport.id,
           })),
         },
       },
     },
   });
-  await prisma.aFLResultProperty.create({
+  await prisma.resultProperty.create({
     data: {
       name: 'Possessions & Marking',
       type: 'PLAYER',
+      sportId: sport.id,
       children: {
         createMany: {
           data: [
@@ -568,15 +573,17 @@ const main = async (): Promise<void> => {
             name: s,
             alias: s,
             type: 'PLAYER',
+            sportId: sport.id,
           })),
         },
       },
     },
   });
-  await prisma.aFLResultProperty.create({
+  await prisma.resultProperty.create({
     data: {
       name: 'Other',
       type: 'PLAYER',
+      sportId: sport.id,
       children: {
         createMany: {
           data: [
@@ -593,6 +600,7 @@ const main = async (): Promise<void> => {
             name: s,
             alias: s,
             type: 'PLAYER',
+            sportId: sport.id,
           })),
         },
       },
@@ -600,10 +608,11 @@ const main = async (): Promise<void> => {
   });
 
   // AFL Result Property for Match
-  await prisma.aFLResultProperty.create({
+  await prisma.resultProperty.create({
     data: {
       name: 'Overview',
       type: 'MATCH',
+      sportId: sport.id,
       children: {
         createMany: {
           data: [
@@ -629,6 +638,57 @@ const main = async (): Promise<void> => {
             name: s.split('|')[0],
             alias: s.split('|')[1],
             type: 'MATCH',
+            sportId: sport.id,
+          })),
+        },
+      },
+    },
+  });
+  await prisma.resultProperty.create({
+    data: {
+      name: 'Stoppage',
+      type: 'MATCH',
+      sportId: sport.id,
+      children: {
+        createMany: {
+          data: [
+            //
+            'BU|BU',
+            'CSB|CSB',
+            'TI|TI',
+            'Total CLR|TCLR',
+            'Hit Outs|HO',
+            'Hit Outs TA|HOTA',
+          ].map((s) => ({
+            name: s.split('|')[0],
+            alias: s.split('|')[1],
+            type: 'MATCH',
+            sportId: sport.id,
+          })),
+        },
+      },
+    },
+  });
+  await prisma.resultProperty.create({
+    data: {
+      name: 'Offence',
+      type: 'MATCH',
+      sportId: sport.id,
+      children: {
+        createMany: {
+          data: [
+            //
+            'I50s|I50S',
+            'Sc %/I50|SC_PER',
+            'Deep|I50_D',
+            'Shallow|SH',
+            'F50 Marks|F50_M',
+            'R. Behinds|RB',
+          ].map((s) => ({
+            name: s.split('|')[0],
+            alias: s.split('|')[1],
+            type: 'MATCH',
+            sportId: sport.id,
           })),
         },
       },

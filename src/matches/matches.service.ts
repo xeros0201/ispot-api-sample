@@ -44,6 +44,7 @@ type CSVProperty = {
   T?: number;
   FK_F?: number;
   FK_A?: number;
+  I50_D?: number;
   I50?: number;
   G?: number;
   B?: number;
@@ -224,13 +225,15 @@ export class MatchesService {
     const match = await this.prismaService.match.findFirst({
       where: { id },
       include: {
+        season: { include: { league: true } },
         players: true,
         aflResults: true,
       },
     });
 
-    const properties = await this.prismaService.aFLResultProperty.findMany({
+    const properties = await this.prismaService.resultProperty.findMany({
       where: {
+        sportId: match.season.league.sportId,
         parentId: { not: null },
       },
     });
@@ -272,8 +275,7 @@ export class MatchesService {
 
     await Promise.all([
       ..._(homeTeamStats)
-        .keys()
-        .map(async (key) => {
+        .map(async (stats, key) => {
           const player = _.find(match.players, {
             teamId: match.homeTeamId,
             playerNumber: +key.substring(1),
@@ -283,26 +285,23 @@ export class MatchesService {
             return;
           }
 
-          const stats = _.get(homeTeamStats, key);
-
           await this.prismaService.playersOnAFLResults.createMany({
             data: _(stats)
-              .keys()
-              .map((k) => {
+              .map((v, k) => {
                 const property = _.find(properties, {
                   alias: k,
                   type: 'PLAYER',
                 });
 
                 if (_.isNil(property)) {
-                  throw new Error('AFL Result Property not found!');
+                  return;
                 }
 
                 return {
                   aflResultId: homeTeamAFLResult.id,
-                  aflResultPropertyId: property.id,
+                  resultPropertyId: property.id,
                   playerId: player.id,
-                  value: _.get(stats, k),
+                  value: v,
                 };
               })
               .value(),
@@ -310,8 +309,7 @@ export class MatchesService {
         })
         .value(),
       ..._(awayTeamStats)
-        .keys()
-        .map(async (key) => {
+        .map(async (stats, key) => {
           const player = _.find(match.players, {
             teamId: match.awayTeamId,
             playerNumber: +key.substring(1),
@@ -321,26 +319,23 @@ export class MatchesService {
             return;
           }
 
-          const stats = _.get(awayTeamStats, key);
-
           await this.prismaService.playersOnAFLResults.createMany({
             data: _(stats)
-              .keys()
-              .map((k) => {
+              .map((v, k) => {
                 const property = _.find(properties, {
                   alias: k,
                   type: 'PLAYER',
                 });
 
                 if (_.isNil(property)) {
-                  throw new Error('AFL Result Property not found!');
+                  return;
                 }
 
                 return {
                   aflResultId: awayTeamAFLResult.id,
-                  aflResultPropertyId: property.id,
+                  resultPropertyId: property.id,
                   playerId: player.id,
-                  value: _.get(stats, k),
+                  value: v,
                 };
               })
               .value(),
@@ -349,8 +344,14 @@ export class MatchesService {
         .value(),
     ]);
 
-    // Overview: [Home, Away, Diff]
-    const ov: {
+    const sumBy = (
+      stats: { [n: string]: CSVProperty },
+      k: keyof CSVProperty,
+    ): number => _(stats).mapValues(k).values().sum();
+
+    // Overview
+
+    const overview: {
       D: [number, number, number];
       K: [number, number, number];
       HB: [number, number, number];
@@ -388,209 +389,139 @@ export class MatchesService {
       FK: [0, 0, 0],
     };
 
-    ov.D[0] = _(homeTeamStats)
-      .mapValues((s) => s.D)
-      .values()
-      .sum();
-    ov.D[1] = _(awayTeamStats)
-      .mapValues((s) => s.D)
-      .values()
-      .sum();
-    ov.D[2] = ov.D[0] - ov.D[1];
+    const stoppage: {
+      BU: [number, number, number];
+      CSB: [number, number, number];
+      TI: [number, number, number];
+      TCLR: [number, number, number];
+      HO: [number, number, number];
+      HOTA: [number, number, number];
+    } = {
+      BU: [0, 0, 0],
+      CSB: [0, 0, 0],
+      TI: [0, 0, 0],
+      TCLR: [0, 0, 0],
+      HO: [0, 0, 0],
+      HOTA: [0, 0, 0],
+    };
 
-    ov.K[0] = _(homeTeamStats)
-      .mapValues((s) => s.K)
-      .values()
-      .sum();
-    ov.K[1] = _(awayTeamStats)
-      .mapValues((s) => s.K)
-      .values()
-      .sum();
-    ov.K[2] = ov.K[0] - ov.K[1];
+    {
+      overview.D[0] = sumBy(homeTeamStats, 'D');
+      overview.D[1] = sumBy(awayTeamStats, 'D');
+      overview.D[2] = overview.D[0] - overview.D[1];
 
-    ov.HB[0] = _(homeTeamStats)
-      .mapValues((s) => s.HB)
-      .values()
-      .sum();
-    ov.HB[1] = _(awayTeamStats)
-      .mapValues((s) => s.HB)
-      .values()
-      .sum();
-    ov.HB[2] = ov.HB[0] - ov.HB[1];
+      overview.K[0] = sumBy(homeTeamStats, 'K');
+      overview.K[1] = sumBy(awayTeamStats, 'K');
+      overview.K[2] = overview.K[0] - overview.K[1];
 
-    ov.KH[0] = _.round(ov.K[0] / ov.HB[0], 2);
-    ov.KH[1] = _.round(ov.K[1] / ov.HB[1], 2);
-    ov.KH[2] = _.round(ov.KH[0] - ov.KH[1], 2);
+      overview.HB[0] = sumBy(homeTeamStats, 'HB');
+      overview.HB[1] = sumBy(awayTeamStats, 'HB');
+      overview.HB[2] = overview.HB[0] - overview.HB[1];
 
-    const HOME_TOTAL_E = _(homeTeamStats)
-      .mapValues((s) => s.E)
-      .values()
-      .sum();
-    const HOME_TOTAL_D = _(homeTeamStats)
-      .mapValues((s) => s.D)
-      .values()
-      .sum();
-    const AWAY_TOTAL_E = _(awayTeamStats)
-      .mapValues((s) => s.E)
-      .values()
-      .sum();
-    const AWAY_TOTAL_D = _(awayTeamStats)
-      .mapValues((s) => s.D)
-      .values()
-      .sum();
+      overview.KH[0] = _.round(overview.K[0] / overview.HB[0], 2);
+      overview.KH[1] = _.round(overview.K[1] / overview.HB[1], 2);
+      overview.KH[2] = _.round(overview.KH[0] - overview.KH[1], 2);
 
-    ov.D_PER[0] = _.round(HOME_TOTAL_E / HOME_TOTAL_D, 3);
-    ov.D_PER[1] = _.round(AWAY_TOTAL_E / AWAY_TOTAL_D, 3);
-    ov.D_PER[2] = _.round(ov.D_PER[0] - ov.D_PER[1], 3);
+      overview.D_PER[0] = _.round(
+        sumBy(homeTeamStats, 'E') / sumBy(homeTeamStats, 'D'),
+        3,
+      );
+      overview.D_PER[1] = _.round(
+        sumBy(awayTeamStats, 'E') / sumBy(awayTeamStats, 'D'),
+        3,
+      );
+      overview.D_PER[2] = _.round(overview.D_PER[0] - overview.D_PER[1], 3);
 
-    ov.CL[0] = _(homeTeamStats)
-      .mapValues((s) => s.TO)
-      .values()
-      .sum();
-    ov.CL[1] = _(awayTeamStats)
-      .mapValues((s) => s.TO)
-      .values()
-      .sum();
-    ov.CL[2] = ov.CL[0] - ov.CL[1];
+      overview.CL[0] = sumBy(homeTeamStats, 'TO');
+      overview.CL[1] = sumBy(awayTeamStats, 'TO');
+      overview.CL[2] = overview.CL[0] - overview.CL[1];
 
-    ov.I50[0] = _(homeTeamStats)
-      .mapValues((s) => s.I50)
-      .values()
-      .sum();
-    ov.I50[1] = _(awayTeamStats)
-      .mapValues((s) => s.I50)
-      .values()
-      .sum();
-    ov.I50[2] = ov.I50[0] - ov.I50[1];
+      overview.I50[0] = sumBy(homeTeamStats, 'I50');
+      overview.I50[1] = sumBy(awayTeamStats, 'I50');
+      overview.I50[2] = overview.I50[0] - overview.I50[1];
 
-    const HOME_TOTAL_G = _(homeTeamStats)
-      .mapValues((s) => s.G)
-      .values()
-      .sum();
-    const HOME_TOTAL_B = _(homeTeamStats)
-      .mapValues((s) => s.B)
-      .values()
-      .sum();
-    const AWAY_TOTAL_G = _(awayTeamStats)
-      .mapValues((s) => s.G)
-      .values()
-      .sum();
-    const AWAY_TOTAL_B = _(awayTeamStats)
-      .mapValues((s) => s.B)
-      .values()
-      .sum();
+      overview.SC_PER[0] = _.round(
+        (sumBy(homeTeamStats, 'G') + sumBy(homeTeamStats, 'B')) /
+          overview.I50[0],
+        3,
+      );
+      overview.SC_PER[1] = _.round(
+        (sumBy(awayTeamStats, 'G') + sumBy(awayTeamStats, 'B')) /
+          overview.I50[1],
+        3,
+      );
+      overview.SC_PER[2] = _.round(overview.SC_PER[0] - overview.SC_PER[1], 3);
 
-    ov.SC_PER[0] = _.round((HOME_TOTAL_G + HOME_TOTAL_B) / ov.I50[0], 3);
-    ov.SC_PER[1] = _.round((AWAY_TOTAL_G + AWAY_TOTAL_B) / ov.I50[1], 3);
-    ov.SC_PER[2] = _.round(ov.SC_PER[0] - ov.SC_PER[1], 3);
+      overview.CONT_POSS[0] = sumBy(homeTeamStats, 'CP');
+      overview.CONT_POSS[1] = sumBy(awayTeamStats, 'CP');
+      overview.CONT_POSS[2] = overview.CONT_POSS[0] - overview.CONT_POSS[1];
 
-    ov.CONT_POSS[0] = _(homeTeamStats)
-      .mapValues((s) => s.CP)
-      .values()
-      .sum();
-    ov.CONT_POSS[1] = _(awayTeamStats)
-      .mapValues((s) => s.CP)
-      .values()
-      .sum();
-    ov.CONT_POSS[2] = ov.CONT_POSS[0] - ov.CONT_POSS[1];
+      overview.UNCON_POSS[0] = sumBy(homeTeamStats, 'UP');
+      overview.UNCON_POSS[1] = sumBy(awayTeamStats, 'UP');
+      overview.UNCON_POSS[2] = overview.UNCON_POSS[0] - overview.UNCON_POSS[1];
 
-    ov.UNCON_POSS[0] = _(homeTeamStats)
-      .mapValues((s) => s.UP)
-      .values()
-      .sum();
-    ov.UNCON_POSS[1] = _(awayTeamStats)
-      .mapValues((s) => s.UP)
-      .values()
-      .sum();
-    ov.UNCON_POSS[2] = ov.UNCON_POSS[0] - ov.UNCON_POSS[1];
+      overview.M[0] = sumBy(homeTeamStats, 'CM') + sumBy(homeTeamStats, 'UM');
+      overview.M[1] = sumBy(awayTeamStats, 'CM') + sumBy(awayTeamStats, 'UM');
+      overview.M[2] = overview.M[0] - overview.M[1];
 
-    const HOME_TOTAL_CM = _(homeTeamStats)
-      .mapValues((s) => s.CM)
-      .values()
-      .sum();
-    const HOME_TOTAL_UM = _(homeTeamStats)
-      .mapValues((s) => s.UM)
-      .values()
-      .sum();
-    const AWAY_TOTAL_CP = _(awayTeamStats)
-      .mapValues((s) => s.CM)
-      .values()
-      .sum();
-    const AWAY_TOTAL_UM = _(awayTeamStats)
-      .mapValues((s) => s.UM)
-      .values()
-      .sum();
+      overview.F50_M[0] = sumBy(homeTeamStats, 'F50M');
+      overview.F50_M[1] = sumBy(awayTeamStats, 'F50M');
+      overview.F50_M[2] = overview.F50_M[0] - overview.F50_M[1];
 
-    ov.M[0] = HOME_TOTAL_CM + HOME_TOTAL_UM;
-    ov.M[1] = AWAY_TOTAL_CP + AWAY_TOTAL_UM;
-    ov.M[2] = ov.M[0] - ov.M[1];
+      overview.UCM[0] = sumBy(homeTeamStats, 'UM');
+      overview.UCM[1] = sumBy(awayTeamStats, 'UM');
+      overview.UCM[2] = overview.UCM[0] - overview.UCM[1];
 
-    ov.F50_M[0] = _(homeTeamStats)
-      .mapValues((s) => s.F50M)
-      .values()
-      .sum();
-    ov.F50_M[1] = _(awayTeamStats)
-      .mapValues((s) => s.F50M)
-      .values()
-      .sum();
-    ov.F50_M[2] = ov.F50_M[0] - ov.F50_M[1];
+      overview.CM[0] = sumBy(homeTeamStats, 'CM');
+      overview.CM[1] = sumBy(awayTeamStats, 'CM');
+      overview.CM[2] = overview.CM[0] - overview.CM[1];
 
-    ov.UCM[0] = _(homeTeamStats)
-      .mapValues((s) => s.UM)
-      .values()
-      .sum();
-    ov.UCM[1] = _(awayTeamStats)
-      .mapValues((s) => s.UM)
-      .values()
-      .sum();
-    ov.UCM[2] = ov.UCM[0] - ov.UCM[1];
+      overview.IM[0] = sumBy(homeTeamStats, 'INTM');
+      overview.IM[1] = sumBy(awayTeamStats, 'INTM');
+      overview.IM[2] = overview.IM[0] - overview.IM[1];
 
-    ov.CM[0] = _(homeTeamStats)
-      .mapValues((s) => s.CM)
-      .values()
-      .sum();
-    ov.CM[1] = _(awayTeamStats)
-      .mapValues((s) => s.CM)
-      .values()
-      .sum();
-    ov.CM[2] = ov.CM[0] - ov.CM[1];
+      overview.T[0] = sumBy(homeTeamStats, 'T');
+      overview.T[1] = sumBy(awayTeamStats, 'T');
+      overview.T[2] = overview.T[0] - overview.T[1];
 
-    ov.IM[0] = _(homeTeamStats)
-      .mapValues((s) => s.INTM)
-      .values()
-      .sum();
-    ov.IM[1] = _(awayTeamStats)
-      .mapValues((s) => s.INTM)
-      .values()
-      .sum();
-    ov.IM[2] = ov.IM[0] - ov.IM[1];
+      overview.FK[0] = sumBy(homeTeamStats, 'FK_F');
+      overview.FK[1] = sumBy(awayTeamStats, 'FK_F');
+      overview.FK[2] = overview.FK[0] - overview.FK[1];
 
-    ov.T[0] = _(homeTeamStats)
-      .mapValues((s) => s.T)
-      .values()
-      .sum();
-    ov.T[1] = _(awayTeamStats)
-      .mapValues((s) => s.T)
-      .values()
-      .sum();
-    ov.T[2] = ov.T[0] - ov.T[1];
+      this.logger.debug(overview);
+    }
 
-    ov.FK[0] = _(homeTeamStats)
-      .mapValues((s) => s.FK_F)
-      .values()
-      .sum();
-    ov.FK[1] = _(awayTeamStats)
-      .mapValues((s) => s.FK_F)
-      .values()
-      .sum();
-    ov.FK[2] = ov.FK[0] - ov.FK[1];
+    {
+      stoppage.BU[0] = sumBy(homeTeamStats, 'CLR_BU');
+      stoppage.BU[1] = sumBy(awayTeamStats, 'CLR_BU');
+      stoppage.BU[2] = stoppage.BU[0] - stoppage.BU[1];
 
-    // this.logger.debug(ov);
+      stoppage.CSB[0] = sumBy(homeTeamStats, 'CLR_CSB');
+      stoppage.CSB[1] = sumBy(awayTeamStats, 'CLR_CSB');
+      stoppage.CSB[2] = stoppage.CSB[0] - stoppage.CSB[1];
+
+      stoppage.TI[0] = sumBy(homeTeamStats, 'CLR_TI');
+      stoppage.TI[1] = sumBy(awayTeamStats, 'CLR_TI');
+      stoppage.TI[2] = stoppage.TI[0] - stoppage.TI[1];
+
+      stoppage.TCLR[0] = sumBy(homeTeamStats, 'CLR');
+      stoppage.TCLR[1] = sumBy(awayTeamStats, 'CLR');
+      stoppage.TCLR[2] = stoppage.TCLR[0] - stoppage.TCLR[1];
+
+      stoppage.HO[0] = sumBy(homeTeamStats, 'HO');
+      stoppage.HO[1] = sumBy(awayTeamStats, 'HO');
+      stoppage.HO[2] = stoppage.HO[0] - stoppage.HO[1];
+
+      stoppage.HOTA[0] = sumBy(homeTeamStats, 'HOTA');
+      stoppage.HOTA[1] = sumBy(awayTeamStats, 'HOTA');
+      stoppage.HOTA[2] = stoppage.HOTA[0] - stoppage.HOTA[1];
+
+      this.logger.debug(stoppage);
+    }
 
     await this.prismaService.reportsOnMatches.createMany({
-      data: _(ov)
-        .keys()
-        .map((k) => {
+      data: _({ ...overview, ...stoppage })
+        .map((v, k) => {
           const property = _.find(properties, {
             alias: k,
             type: 'MATCH',
@@ -602,8 +533,8 @@ export class MatchesService {
 
           return {
             matchId: match.id,
-            aflResultPropertyId: property.id,
-            value: _.get(ov, k),
+            resultPropertyId: property.id,
+            value: v,
           };
         })
         .value(),
@@ -618,7 +549,7 @@ export class MatchesService {
       include: {
         reportsOnMatches: {
           include: {
-            aflResultProperty: {
+            resultProperty: {
               include: { parent: true },
             },
           },
@@ -628,7 +559,7 @@ export class MatchesService {
             team: true,
             playersOnAFLResults: {
               include: {
-                aflResultProperty: {
+                resultProperty: {
                   include: { parent: true },
                 },
                 player: true,
@@ -700,8 +631,7 @@ export class MatchesService {
           HB_EF,
           HB_IE,
           HB_TO,
-          ,
-          // I50_DEEP,
+          I50_DEEP,
           I50_I,
           ,
           // I50_SHALLOW,
@@ -721,113 +651,67 @@ export class MatchesService {
           // UP_HB__RECEIVE,
         ] = value;
 
+        const data: CSVProperty = {
+          // DISPOSAL STATISTICS
+          E: KICK_EF + HB_EF,
+          IE: KICK_IE + HB_IE,
+          TO: KICK_TO + HB_TO,
+          D: 0, // data.E + data.IE + data.TO,
+          PER: 0, // data.E / data.D,
+          KE: KICK_EF,
+          K_IE: KICK_IE,
+          K_TO: KICK_TO,
+          K: 0, // data.KE + data.K_IE + data.K_TO,
+          K_PER: 0, // data.KE / data.K,
+          HB_E: HB_EF,
+          HB_IE: HB_IE,
+          HB_TO: HB_TO,
+          HB: 0, // data.HB_E + data.HB_IE + data.HB_TO,
+          HB_PER: 0, // data.HB_E / data.HB,
+          // CLEARANCES
+          CLR_BU: CLR_BU,
+          CLR_CSB: CLR_CSB,
+          CLR_TI: CLR_TI,
+          CLR: 0, // data.CLR_BU + data.CLR_CSB + data.CLR_TI,
+          // POSSESSIONS AND MARKING
+          CP: POSSESSION_CONTESTED,
+          UP: POSSESSION_UNCONTESTED,
+          CM: MARK_C,
+          UM: MARK_UC,
+          F50M: MARK_F50,
+          INTM: MARK_INT,
+          // OTHER
+          HO: RUCK_HO,
+          HOTA: RUCK_ADV,
+          T: TACKLE_EF,
+          FK_F: FK_FOR,
+          FK_A: FK_AGAINST,
+          I50_D: I50_DEEP,
+          I50: I50_I,
+          // G: GOAL_HOME,
+          // B: BEHIND_HOME,
+        };
+
         if (team === 'HOME') {
-          const data: CSVProperty = {
-            // DISPOSAL STATISTICS
-            E: KICK_EF + HB_EF,
-            IE: KICK_IE + HB_IE,
-            TO: KICK_TO + HB_TO,
-            D: 0, // data.E + data.IE + data.TO,
-            PER: 0, // data.E / data.D,
-            KE: KICK_EF,
-            K_IE: KICK_IE,
-            K_TO: KICK_TO,
-            K: 0, // data.KE + data.K_IE + data.K_TO,
-            K_PER: 0, // data.KE / data.K,
-            HB_E: HB_EF,
-            HB_IE: HB_IE,
-            HB_TO: HB_TO,
-            HB: 0, // data.HB_E + data.HB_IE + data.HB_TO,
-            HB_PER: 0, // data.HB_E / data.HB,
-            // CLEARANCES
-            CLR_BU: CLR_BU,
-            CLR_CSB: CLR_CSB,
-            CLR_TI: CLR_TI,
-            CLR: 0, // data.CLR_BU + data.CLR_CSB + data.CLR_TI,
-            // POSSESSIONS AND MARKING
-            CP: POSSESSION_CONTESTED,
-            UP: POSSESSION_UNCONTESTED,
-            CM: MARK_C,
-            UM: MARK_UC,
-            F50M: MARK_F50,
-            INTM: MARK_INT,
-            // OTHER
-            HO: RUCK_HO,
-            HOTA: RUCK_ADV,
-            T: TACKLE_EF,
-            FK_F: FK_FOR,
-            FK_A: FK_AGAINST,
-            I50: I50_I,
-            G: GOAL_HOME,
-            B: BEHIND_HOME,
-          };
-
-          data.D = data.E + data.IE + data.TO;
-          data.PER = _.round(data.E / data.D, 3);
-
-          data.K = data.KE + data.K_IE + data.K_TO;
-          data.K_PER = _.round(data.KE / data.K, 3);
-
-          data.HB = data.HB_E + data.HB_IE + data.HB_TO;
-          data.HB_PER = _.round(data.HB_E / data.HB, 3) || 0;
-
-          data.CLR = data.CLR_BU + data.CLR_CSB + data.CLR_TI;
-
-          _.assign(result, { [key]: data });
+          data.G = GOAL_HOME;
+          data.B = BEHIND_HOME;
         } else {
-          const data: CSVProperty = {
-            // DISPOSAL STATISTICS
-            E: KICK_EF + HB_EF,
-            IE: KICK_IE + HB_IE,
-            TO: KICK_TO + HB_TO,
-            D: 0, // data.E + data.IE + data.TO,
-            PER: 0, // data.E / data.D,
-            KE: KICK_EF,
-            K_IE: KICK_IE,
-            K_TO: KICK_TO,
-            K: 0, // data.KE + data.K_IE + data.K_TO,
-            K_PER: 0, // data.KE / data.K,
-            HB_E: HB_EF,
-            HB_IE: HB_IE,
-            HB_TO: HB_TO,
-            HB: 0, // data.HB_E + data.HB_IE + data.HB_TO,
-            HB_PER: 0, // data.HB_E / data.HB,
-            // CLEARANCES
-            CLR_BU: CLR_BU,
-            CLR_CSB: CLR_CSB,
-            CLR_TI: CLR_TI,
-            CLR: 0, // data.CLR_BU + data.CLR_CSB + data.CLR_TI,
-            // POSSESSIONS AND MARKING
-            CP: POSSESSION_CONTESTED,
-            UP: POSSESSION_UNCONTESTED,
-            CM: MARK_C,
-            UM: MARK_UC,
-            F50M: MARK_F50,
-            INTM: MARK_INT,
-            // OTHER
-            HO: RUCK_HO,
-            HOTA: RUCK_ADV,
-            T: TACKLE_EF,
-            FK_F: FK_FOR,
-            FK_A: FK_AGAINST,
-            I50: I50_I,
-            G: GOAL_AWAY,
-            B: BEHIND_AWAY,
-          };
-
-          data.D = data.E + data.IE + data.TO;
-          data.PER = _.round(data.E / data.D, 3);
-
-          data.K = data.KE + data.K_IE + data.K_TO;
-          data.K_PER = _.round(data.KE / data.K, 3);
-
-          data.HB = data.HB_E + data.HB_IE + data.HB_TO;
-          data.HB_PER = _.round(data.HB_E / data.HB, 3) || 0;
-
-          data.CLR = data.CLR_BU + data.CLR_CSB + data.CLR_TI;
-
-          _.assign(result, { [key]: data });
+          data.G = GOAL_AWAY;
+          data.B = BEHIND_AWAY;
         }
+
+        data.D = data.E + data.IE + data.TO;
+        data.PER = _.round(data.E / data.D, 3);
+
+        data.K = data.KE + data.K_IE + data.K_TO;
+        data.K_PER = _.round(data.KE / data.K, 3);
+
+        data.HB = data.HB_E + data.HB_IE + data.HB_TO;
+        data.HB_PER = _.round(data.HB_E / data.HB, 3) || 0;
+
+        data.CLR = data.CLR_BU + data.CLR_CSB + data.CLR_TI;
+
+        _.assign(result, { [key]: data });
       }, {})
       .value();
   }
