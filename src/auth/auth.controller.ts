@@ -11,6 +11,8 @@ import {
 } from '@nestjs/common';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { Request } from 'express';
+import { Role } from 'src/users/entities/role.enum';
+import { Roles } from 'src/users/roles.decorator';
 
 import { ExcludePasswordInterceptor } from '../common/interceptors/exclude-password.interceptor';
 import { UserEntity } from '../users/entities/user.entity';
@@ -27,6 +29,13 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   public login(@CurrentUser() user: UserEntity): UserEntity {
     return user;
+  }
+
+  @Get('/roles')
+  @UseGuards(SessionAuthGuard)
+  @Roles(Role.ADMIN)
+  public async getRoles(): Promise<Role[]> {
+    return Promise.resolve(Object.values(Role));
   }
 
   @Get('/check')
