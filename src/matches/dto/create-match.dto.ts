@@ -1,6 +1,6 @@
 import { MatchType } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsDate, IsEnum, IsNumber } from 'class-validator';
+import { IsDate, IsEnum, IsNumber, IsObject } from 'class-validator';
 
 export class CreateMatchDto {
   @IsEnum(MatchType)
@@ -29,4 +29,12 @@ export class CreateMatchDto {
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 0 })
   locationId: number;
+
+  @Type(() => Object)
+  @IsObject()
+  homePlayerIds: { [key: string]: number };
+
+  @Type(() => Object)
+  @IsObject()
+  awayPlayerIds: { [key: string]: number };
 }

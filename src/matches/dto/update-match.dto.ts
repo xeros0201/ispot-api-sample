@@ -4,12 +4,4 @@ import { IsObject } from 'class-validator';
 
 import { CreateMatchDto } from './create-match.dto';
 
-export class UpdateMatchDto extends PartialType(CreateMatchDto) {
-  @Type(() => Object)
-  @IsObject()
-  homePlayerIds: { [key: string]: number };
-
-  @Type(() => Object)
-  @IsObject()
-  awayPlayerIds: { [key: string]: number };
-}
+export class UpdateMatchDto extends PartialType(CreateMatchDto) {}

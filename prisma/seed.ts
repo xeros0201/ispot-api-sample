@@ -84,154 +84,154 @@ const main = async (): Promise<void> => {
   const awayPlayer01 = await prisma.player.create({
     data: {
       name: 'Player 01',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 1,
     },
   });
   const awayPlayer03 = await prisma.player.create({
     data: {
       name: 'Player 03',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 3,
     },
   });
   const awayPlayer04 = await prisma.player.create({
     data: {
       name: 'Player 04',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 4,
     },
   });
   const awayPlayer06 = await prisma.player.create({
     data: {
       name: 'Player 06',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 6,
     },
   });
   const awayPlayer07 = await prisma.player.create({
     data: {
       name: 'Player 07',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 7,
     },
   });
   const awayPlayer09 = await prisma.player.create({
     data: {
       name: 'Player 09',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 9,
     },
   });
   const awayPlayer10 = await prisma.player.create({
     data: {
       name: 'Player 10',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 10,
     },
   });
   const awayPlayer11 = await prisma.player.create({
     data: {
       name: 'Player 11',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 11,
     },
   });
   const awayPlayer12 = await prisma.player.create({
     data: {
       name: 'Player 12',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 12,
     },
   });
   const awayPlayer13 = await prisma.player.create({
     data: {
       name: 'Player 13',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 13,
     },
   });
   const awayPlayer14 = await prisma.player.create({
     data: {
       name: 'Player 14',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 14,
     },
   });
   const awayPlayer18 = await prisma.player.create({
     data: {
       name: 'Player 18',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 18,
     },
   });
   const awayPlayer20 = await prisma.player.create({
     data: {
       name: 'Player 20',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 20,
     },
   });
   const awayPlayer22 = await prisma.player.create({
     data: {
       name: 'Player 22',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 22,
     },
   });
   const awayPlayer24 = await prisma.player.create({
     data: {
       name: 'Player 24',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 24,
     },
   });
   const awayPlayer25 = await prisma.player.create({
     data: {
       name: 'Player 25',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 25,
     },
   });
   const awayPlayer28 = await prisma.player.create({
     data: {
       name: 'Player 28',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 28,
     },
   });
   const awayPlayer33 = await prisma.player.create({
     data: {
       name: 'Player 33',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 33,
     },
   });
   const awayPlayer39 = await prisma.player.create({
     data: {
       name: 'Player 39',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 39,
     },
   });
   const awayPlayer43 = await prisma.player.create({
     data: {
       name: 'Player 43',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 43,
     },
   });
   const awayPlayer44 = await prisma.player.create({
     data: {
       name: 'Player 44',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 44,
     },
   });
   const awayPlayer45 = await prisma.player.create({
     data: {
       name: 'Player 45',
-      teamId: broadbeach.id,
+      teamId: aspley.id,
       playerNumber: 45,
     },
   });
