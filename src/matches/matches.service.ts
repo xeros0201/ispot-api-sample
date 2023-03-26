@@ -12,43 +12,7 @@ import { SeasonEntity } from '../seasons/entities/season.entity';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { MatchEntity } from './entities/match.entity';
-
-type CSVProperty = {
-  D?: number;
-  E?: number;
-  IE?: number;
-  TO?: number;
-  PER?: number;
-  K?: number;
-  KE?: number;
-  K_IE?: number;
-  K_TO?: number;
-  K_PER?: number;
-  HB?: number;
-  HB_E?: number;
-  HB_IE?: number;
-  HB_TO?: number;
-  HB_PER?: number;
-  CLR_BU?: number;
-  CLR_CSB?: number;
-  CLR_TI?: number;
-  CLR?: number;
-  CP?: number;
-  UP?: number;
-  CM?: number;
-  UM?: number;
-  F50M?: number;
-  INTM?: number;
-  HO?: number;
-  HOTA?: number;
-  T?: number;
-  FK_F?: number;
-  FK_A?: number;
-  I50_D?: number;
-  I50?: number;
-  G?: number;
-  B?: number;
-};
+import { CSVProperty } from './matches.types';
 
 @Injectable()
 export class MatchesService {
@@ -78,9 +42,7 @@ export class MatchesService {
         awayTeam: true,
         location: true,
         players: {
-          include: {
-            player: true,
-          },
+          include: { player: true },
         },
       },
     });
@@ -100,24 +62,42 @@ export class MatchesService {
       this.playersService.findAllByTeamId(data.awayTeamId),
     ]);
 
+    const refHomeTeamPlayers = homeTeamPlayers.reduce(
+      (obj, item) => ({ ...obj, [item.id]: item }),
+      {},
+    );
+
+    const refAwayTeamPlayers = awayTeamPlayers.reduce(
+      (obj, item) => ({ ...obj, [item.id]: item }),
+      {},
+    );
+
+    const homePlayers = Object.keys(data.homePlayerIds).map((key) => {
+      const playerId = +data.homePlayerIds[key];
+
+      return {
+        playerId,
+        teamId: refHomeTeamPlayers[playerId].teamId,
+        playerNumber: +key.substring(1),
+      };
+    });
+    const awayPlayers = Object.keys(data.awayPlayerIds).map((key) => {
+      const playerId = +data.awayPlayerIds[key];
+
+      return {
+        playerId,
+        teamId: refAwayTeamPlayers[playerId].teamId,
+        playerNumber: +key.substring(1),
+      };
+    });
+
     return this.prismaService.match.create({
       data: {
-        ...data,
+        ..._.omit(data, ['homePlayerIds', 'awayPlayerIds']),
         homeTeamCsv,
         awayTeamCsv,
         players: {
-          create: [
-            ..._.map(homeTeamPlayers, (player) => ({
-              playerId: player.id,
-              teamId: player.teamId,
-              playerNumber: player.playerNumber,
-            })),
-            ..._.map(awayTeamPlayers, (player) => ({
-              playerId: player.id,
-              teamId: player.teamId,
-              playerNumber: player.playerNumber,
-            })),
-          ],
+          create: [...homePlayers, ...awayPlayers],
         },
       },
     });
@@ -129,50 +109,51 @@ export class MatchesService {
     { homeTeamCsv, awayTeamCsv }: { homeTeamCsv: string; awayTeamCsv: string },
   ): Promise<MatchEntity> {
     const match = await this.prismaService.match.findFirst({ where: { id } });
+    if (homeTeamCsv)
+      homeTeamCsv = await this.uploadCsvToS3(
+        'csv',
+        homeTeamCsv,
+        match.homeTeamCsv,
+      );
 
-    homeTeamCsv = await this.uploadCsvToS3(
-      'csv',
-      homeTeamCsv,
-      match.homeTeamCsv,
-    );
-
-    awayTeamCsv = await this.uploadCsvToS3(
-      'csv',
-      awayTeamCsv,
-      match.awayTeamCsv,
-    );
-
-    const homePlayerIds = _(data.homePlayerIds)
-      .transform<
-        {
-          playerNumber: number;
-          playerId: PlayerEntity['id'];
-        }[]
-      >((result, value, key) => {
-        result.push({
-          playerNumber: +key.substring(1),
-          playerId: +value,
-        });
-      }, [])
-      .value();
-    const awayPlayerIds = _(data.awayPlayerIds)
-      .transform<
-        {
-          playerNumber: number;
-          playerId: PlayerEntity['id'];
-        }[]
-      >((result, value, key) => {
-        result.push({
-          playerNumber: +key.substring(1),
-          playerId: +value,
-        });
-      }, [])
-      .value();
+    if (awayTeamCsv)
+      awayTeamCsv = await this.uploadCsvToS3(
+        'csv',
+        awayTeamCsv,
+        match.awayTeamCsv,
+      );
 
     const [homeTeamPlayers, awayTeamPlayers] = await Promise.all([
       this.playersService.findAllByTeamId(data.homeTeamId),
       this.playersService.findAllByTeamId(data.awayTeamId),
     ]);
+
+    const refHomeTeamPlayers = homeTeamPlayers.reduce(
+      (obj, item) => ({ ...obj, [item.id]: item }),
+      {},
+    );
+
+    const refAwayTeamPlayers = awayTeamPlayers.reduce(
+      (obj, item) => ({ ...obj, [item.id]: item }),
+      {},
+    );
+
+    const homePlayers = Object.keys(data.homePlayerIds).map((key) => {
+      const playerId = +data.homePlayerIds[key];
+      return {
+        playerId,
+        teamId: refHomeTeamPlayers[playerId].teamId,
+        playerNumber: +key.substring(1),
+      };
+    });
+    const awayPlayers = Object.keys(data.awayPlayerIds).map((key) => {
+      const playerId = +data.awayPlayerIds[key];
+      return {
+        playerId,
+        teamId: refAwayTeamPlayers[playerId].teamId,
+        playerNumber: +key.substring(1),
+      };
+    });
 
     return this.prismaService.match.update({
       where: { id },
@@ -181,37 +162,8 @@ export class MatchesService {
         homeTeamCsv,
         awayTeamCsv,
         players: {
-          deleteMany: {
-            teamId: {
-              in: [data.homeTeamId, data.awayTeamId],
-            },
-          },
-          create: [
-            ..._.map(homeTeamPlayers, (player) => {
-              const { playerNumber } = _.find(
-                homePlayerIds,
-                (s) => s.playerId === player.id,
-              ) || { playerNumber: player.playerNumber };
-
-              return {
-                playerId: player.id,
-                teamId: player.teamId,
-                playerNumber,
-              };
-            }),
-            ..._.map(awayTeamPlayers, (player) => {
-              const { playerNumber } = _.find(
-                awayPlayerIds,
-                (s) => s.playerId === player.id,
-              ) || { playerNumber: player.playerNumber };
-
-              return {
-                playerId: player.id,
-                teamId: player.teamId,
-                playerNumber,
-              };
-            }),
-          ],
+          deleteMany: {},
+          create: [...homePlayers, ...awayPlayers],
         },
       },
     });
@@ -219,6 +171,20 @@ export class MatchesService {
 
   public async delete(id: number): Promise<MatchEntity> {
     return this.prismaService.match.delete({ where: { id } });
+  }
+
+  public async removePlayer(
+    id: number,
+    playerId: number,
+  ): Promise<MatchEntity> {
+    return this.prismaService.match.update({
+      where: { id },
+      data: {
+        players: {
+          delete: { id: playerId },
+        },
+      },
+    });
   }
 
   public async publish(id: number): Promise<void> {
@@ -581,9 +547,22 @@ export class MatchesService {
     return this.prismaService.match.findMany({
       where: { seasonId },
       include: {
+        season: {
+          select: {
+            id: true,
+            name: true,
+            league: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
         awayTeam: true,
         homeTeam: true,
         location: true,
+        aflResults: true,
       },
     });
   }

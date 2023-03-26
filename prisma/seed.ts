@@ -33,6 +33,7 @@ const main = async (): Promise<void> => {
         email: 'tyler.beutel@blackbook.ai',
         firstName: 'Tyler',
         lastName: 'Beutel',
+        role: 'ADMIN',
         password,
         active: true,
       },
