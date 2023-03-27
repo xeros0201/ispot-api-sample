@@ -45,7 +45,7 @@
         "name": "Users",
         "containerId": "",
         "created": "2023-03-09T04:40:59.837Z",
-        "sortNum": 60000
+        "sortNum": 15000
       },
       {
         "_id": "622ae513-acbe-45da-a475-3a8483d41d1e",
@@ -59,7 +59,7 @@
         "name": "Teams",
         "containerId": "",
         "created": "2023-03-16T03:48:03.249Z",
-        "sortNum": 100000
+        "sortNum": 65000
       }
     ],
     "settings": {

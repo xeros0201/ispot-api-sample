@@ -20,8 +20,7 @@ ALTER COLUMN "home_team_id" DROP NOT NULL,
 ALTER COLUMN "away_team_id" DROP NOT NULL,
 ALTER COLUMN "round" DROP NOT NULL,
 ALTER COLUMN "date" DROP NOT NULL,
-ALTER COLUMN "location_id" DROP NOT NULL,
-ALTER COLUMN "type" DROP NOT NULL;
+ALTER COLUMN "location_id" DROP NOT NULL;
 
 -- AddForeignKey
 ALTER TABLE "matches" ADD CONSTRAINT "matches_season_id_fkey" FOREIGN KEY ("season_id") REFERENCES "seasons"("id") ON DELETE SET NULL ON UPDATE CASCADE;
