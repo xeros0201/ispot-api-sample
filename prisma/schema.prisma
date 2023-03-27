@@ -22,6 +22,11 @@ enum MatchType {
   FINAL
 }
 
+enum ResultPropertyType {
+  MATCH
+  PLAYER
+}
+
 model Session {
   id        String   @id
   sid       String   @unique
@@ -52,9 +57,10 @@ model User {
 }
 
 model Sport {
-  id      Int      @id @default(autoincrement())
-  name    String   @unique
-  leagues League[]
+  id               Int              @id @default(autoincrement())
+  name             String           @unique
+  leagues          League[]
+  resultProperties ResultProperty[]
 
   @@map("sports")
 }
@@ -111,33 +117,35 @@ model Team {
 }
 
 model Player {
-  id           Int                @id @default(autoincrement())
-  teamId       Int                @map("team_id")
-  team         Team?              @relation(fields: [teamId], references: [id])
-  name         String
-  playerNumber Int                @map("player_number")
-  matches      PlayersOnMatches[]
+  id                  Int                   @id @default(autoincrement())
+  teamId              Int                   @map("team_id")
+  team                Team?                 @relation(fields: [teamId], references: [id])
+  name                String
+  playerNumber        Int                   @map("player_number")
+  matches             PlayersOnMatches[]
+  playersOnAFLResults PlayersOnAFLResults[]
 
   @@map("players")
 }
 
 model Match {
-  id          Int                @id @default(autoincrement())
-  type        MatchType          @default(REGULAR)
-  seasonId    Int                @map("season_id")
-  season      Season?            @relation(fields: [seasonId], references: [id])
-  homeTeamId  Int                @map("home_team_id")
-  homeTeam    Team?              @relation(fields: [homeTeamId], references: [id], name: "homeTeam")
-  homeTeamCsv String?            @map("home_team_csv")
-  awayTeamId  Int                @map("away_team_id")
-  awayTeam    Team?              @relation(fields: [awayTeamId], references: [id], name: "awayTeam")
-  awayTeamCsv String?            @map("away_team_csv")
-  round       Int
-  date        DateTime
-  locationId  Int                @map("location_id")
-  location    Location?          @relation(fields: [locationId], references: [id])
-  players     PlayersOnMatches[]
-  aflResults  AFLResult[]
+  id               Int                @id @default(autoincrement())
+  type             MatchType          @default(REGULAR)
+  seasonId         Int                @map("season_id")
+  season           Season?            @relation(fields: [seasonId], references: [id])
+  homeTeamId       Int                @map("home_team_id")
+  homeTeam         Team?              @relation(fields: [homeTeamId], references: [id], name: "homeTeam")
+  homeTeamCsv      String?            @map("home_team_csv")
+  awayTeamId       Int                @map("away_team_id")
+  awayTeam         Team?              @relation(fields: [awayTeamId], references: [id], name: "awayTeam")
+  awayTeamCsv      String?            @map("away_team_csv")
+  round            Int
+  date             DateTime
+  locationId       Int                @map("location_id")
+  location         Location?          @relation(fields: [locationId], references: [id])
+  reportsOnMatches ReportsOnMatches[]
+  players          PlayersOnMatches[]
+  aflResults       AFLResult[]
 
   @@map("matches")
 }
@@ -165,13 +173,57 @@ model Location {
 }
 
 model AFLResult {
-  id             Int     @id @default(autoincrement())
-  matchId        Int     @map("match_id")
-  match          Match?  @relation(fields: [matchId], references: [id])
-  teamId         Int     @map("team_id")
-  team           Team?   @relation(fields: [teamId], references: [id])
-  scorePrimary   Int     @default(0) @map("score_primary")
-  scoreSecondary String? @map("score_secondary")
+  id             Int    @id @default(autoincrement())
+  matchId        Int    @map("match_id")
+  match          Match? @relation(fields: [matchId], references: [id])
+  teamId         Int    @map("team_id")
+  team           Team?  @relation(fields: [teamId], references: [id])
+  scorePrimary   Float  @default(0) @map("score_primary")
+  scoreSecondary Float? @default(0) @map("score_secondary")
+
+  playersOnAFLResults PlayersOnAFLResults[]
 
   @@map("afl_results")
+}
+
+model ResultProperty {
+  id                  Int                   @id @default(autoincrement())
+  type                ResultPropertyType
+  name                String
+  alias               String?
+  sportId             Int                   @map("sport_id")
+  sport               Sport?                @relation(fields: [sportId], references: [id])
+  parentId            Int?                  @map("parent_id")
+  parent              ResultProperty?       @relation(fields: [parentId], references: [id], name: "parent")
+  children            ResultProperty[]      @relation("parent")
+  reportsOnMatches    ReportsOnMatches[]
+  playersOnAFLResults PlayersOnAFLResults[]
+
+  @@map("result_properties")
+}
+
+model ReportsOnMatches {
+  id               Int             @id @default(autoincrement())
+  matchId          Int             @map("match_id")
+  match            Match?          @relation(fields: [matchId], references: [id])
+  resultPropertyId Int             @map("result_property_id")
+  resultProperty   ResultProperty? @relation(fields: [resultPropertyId], references: [id])
+  value            Float[]
+
+  @@index([matchId, resultPropertyId])
+  @@map("reports_on_matches")
+}
+
+model PlayersOnAFLResults {
+  id               Int             @id @default(autoincrement())
+  aflResultId      Int             @map("afl_result_id")
+  aflResult        AFLResult?      @relation(fields: [aflResultId], references: [id])
+  resultPropertyId Int             @map("result_property_id")
+  resultProperty   ResultProperty? @relation(fields: [resultPropertyId], references: [id])
+  playerId         Int             @map("player_id")
+  player           Player?         @relation(fields: [playerId], references: [id])
+  value            Float
+
+  @@index([aflResultId, resultPropertyId, playerId])
+  @@map("players_on_afl_results")
 }
