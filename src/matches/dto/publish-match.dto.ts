@@ -1,4 +1,4 @@
-import { MatchStatus, MatchType } from '@prisma/client';
+import { MatchType } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   IsDate,
@@ -8,52 +8,39 @@ import {
   IsOptional,
 } from 'class-validator';
 
-export class CreateMatchDto {
-  @IsEnum(MatchStatus)
-  @IsOptional()
-  status?: MatchStatus;
-
+export class PublishMatchDto {
   @IsEnum(MatchType)
-  @IsOptional()
-  type?: MatchType;
+  type: MatchType;
 
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 0 })
-  @IsOptional()
-  seasonId?: number;
+  seasonId: number;
 
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 0 })
-  @IsOptional()
-  homeTeamId?: number;
+  homeTeamId: number;
 
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 0 })
-  @IsOptional()
-  awayTeamId?: number;
+  awayTeamId: number;
 
   @Type(() => Number)
   @IsNumber()
-  @IsOptional()
-  round?: number;
+  round: number;
 
   @Type(() => Date)
   @IsDate()
-  @IsOptional()
-  date?: Date;
+  date: Date;
 
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 0 })
-  @IsOptional()
-  locationId?: number;
+  locationId: number;
 
   @Type(() => Object)
   @IsObject()
-  @IsOptional()
-  homePlayerIds?: { [key: string]: number };
+  homePlayerIds: { [key: string]: number };
 
   @Type(() => Object)
   @IsObject()
-  @IsOptional()
-  awayPlayerIds?: { [key: string]: number };
+  awayPlayerIds: { [key: string]: number };
 }

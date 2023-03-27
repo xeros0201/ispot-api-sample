@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { MatchStatus } from '@prisma/client';
 import { readFileSync, unlinkSync } from 'fs';
 import * as _ from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
@@ -51,42 +52,49 @@ export class MatchesService {
     data: CreateMatchDto,
     { homeTeamCsv, awayTeamCsv }: { homeTeamCsv: string; awayTeamCsv: string },
   ): Promise<MatchEntity> {
-    [homeTeamCsv, awayTeamCsv] = await Promise.all([
-      this.uploadCsvToS3('csv', homeTeamCsv),
-      this.uploadCsvToS3('csv', awayTeamCsv),
-    ]);
+    const uploadReqests = [];
+    if (homeTeamCsv) uploadReqests.push(this.uploadCsvToS3('csv', homeTeamCsv));
+    if (awayTeamCsv) uploadReqests.push(this.uploadCsvToS3('csv', awayTeamCsv));
+
+    if (uploadReqests.length)
+      [homeTeamCsv, awayTeamCsv] = await Promise.all(uploadReqests);
 
     const [homeTeamPlayers, awayTeamPlayers] = await Promise.all([
       this.playersService.findAllByTeamId(data.homeTeamId),
       this.playersService.findAllByTeamId(data.awayTeamId),
     ]);
 
-    const refHomeTeamPlayers = homeTeamPlayers.reduce(
-      (obj, item) => ({ ...obj, [item.id]: item }),
-      {},
-    );
+    let homePlayers = [],
+      awayPlayers = [];
+    if (data.homePlayerIds) {
+      const refHomeTeamPlayers = homeTeamPlayers.reduce(
+        (obj, item) => ({ ...obj, [item.id]: item }),
+        {},
+      );
+      homePlayers = Object.keys(data.homePlayerIds).map((key) => {
+        const playerId = +data.homePlayerIds[key];
+        return {
+          playerId,
+          teamId: refHomeTeamPlayers[playerId].teamId,
+          playerNumber: +key.substring(1),
+        };
+      });
+    }
 
-    const refAwayTeamPlayers = awayTeamPlayers.reduce(
-      (obj, item) => ({ ...obj, [item.id]: item }),
-      {},
-    );
-
-    const homePlayers = Object.keys(data.homePlayerIds).map((key) => {
-      const playerId = +data.homePlayerIds[key];
-      return {
-        playerId,
-        teamId: refHomeTeamPlayers[playerId].teamId,
-        playerNumber: +key.substring(1),
-      };
-    });
-    const awayPlayers = Object.keys(data.awayPlayerIds).map((key) => {
-      const playerId = +data.awayPlayerIds[key];
-      return {
-        playerId,
-        teamId: refAwayTeamPlayers[playerId].teamId,
-        playerNumber: +key.substring(1),
-      };
-    });
+    if (data.awayPlayerIds) {
+      const refAwayTeamPlayers = awayTeamPlayers.reduce(
+        (obj, item) => ({ ...obj, [item.id]: item }),
+        {},
+      );
+      awayPlayers = Object.keys(data.awayPlayerIds).map((key) => {
+        const playerId = +data.awayPlayerIds[key];
+        return {
+          playerId,
+          teamId: refAwayTeamPlayers[playerId].teamId,
+          playerNumber: +key.substring(1),
+        };
+      });
+    }
 
     return this.prismaService.match.create({
       data: {
@@ -106,6 +114,12 @@ export class MatchesService {
     { homeTeamCsv, awayTeamCsv }: { homeTeamCsv: string; awayTeamCsv: string },
   ): Promise<MatchEntity> {
     const match = await this.prismaService.match.findFirst({ where: { id } });
+
+    // check if match published or not
+    if (match.status === MatchStatus.PUBLISHED) {
+      throw new BadRequestException('You cannot edit PUBLISHED match');
+    }
+
     if (homeTeamCsv)
       homeTeamCsv = await this.uploadCsvToS3(
         'csv',
@@ -125,32 +139,37 @@ export class MatchesService {
       this.playersService.findAllByTeamId(data.awayTeamId),
     ]);
 
-    const refHomeTeamPlayers = homeTeamPlayers.reduce(
-      (obj, item) => ({ ...obj, [item.id]: item }),
-      {},
-    );
+    let homePlayers = [],
+      awayPlayers = [];
+    if (data.homePlayerIds) {
+      const refHomeTeamPlayers = homeTeamPlayers.reduce(
+        (obj, item) => ({ ...obj, [item.id]: item }),
+        {},
+      );
+      homePlayers = Object.keys(data.homePlayerIds).map((key) => {
+        const playerId = +data.homePlayerIds[key];
+        return {
+          playerId,
+          teamId: refHomeTeamPlayers[playerId].teamId,
+          playerNumber: +key.substring(1),
+        };
+      });
+    }
 
-    const refAwayTeamPlayers = awayTeamPlayers.reduce(
-      (obj, item) => ({ ...obj, [item.id]: item }),
-      {},
-    );
-
-    const homePlayers = Object.keys(data.homePlayerIds).map((key) => {
-      const playerId = +data.homePlayerIds[key];
-      return {
-        playerId,
-        teamId: refHomeTeamPlayers[playerId].teamId,
-        playerNumber: +key.substring(1),
-      };
-    });
-    const awayPlayers = Object.keys(data.awayPlayerIds).map((key) => {
-      const playerId = +data.awayPlayerIds[key];
-      return {
-        playerId,
-        teamId: refAwayTeamPlayers[playerId].teamId,
-        playerNumber: +key.substring(1),
-      };
-    });
+    if (data.awayPlayerIds) {
+      const refAwayTeamPlayers = awayTeamPlayers.reduce(
+        (obj, item) => ({ ...obj, [item.id]: item }),
+        {},
+      );
+      awayPlayers = Object.keys(data.awayPlayerIds).map((key) => {
+        const playerId = +data.awayPlayerIds[key];
+        return {
+          playerId,
+          teamId: refAwayTeamPlayers[playerId].teamId,
+          playerNumber: +key.substring(1),
+        };
+      });
+    }
 
     return this.prismaService.match.update({
       where: { id },
