@@ -157,11 +157,11 @@ export class MatchesController {
   }
 
   @Delete('/:id/players/:playerId')
-  public async deletePlayer(
+  public async removePlayer(
     @Param('id', ParseIntPipe) id: number,
     @Param('playerId', ParseIntPipe) playerId: number,
   ): Promise<MatchEntity> {
-    return this.matchesService.deletePlayer(id, playerId);
+    return this.matchesService.removePlayer(id, playerId);
   }
 
   @Get('/:id/players')
@@ -172,9 +172,7 @@ export class MatchesController {
   }
 
   @Get('/:id/_stats')
-  public async getStats(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<MatchEntity> {
+  public async getStats(@Param('id', ParseIntPipe) id: number): Promise<any> {
     return this.matchesService.getStats(id);
   }
 }

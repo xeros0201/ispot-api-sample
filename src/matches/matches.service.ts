@@ -73,20 +73,20 @@ export class MatchesService {
     );
 
     const homePlayers = Object.keys(data.homePlayerIds).map((key) => {
-      const playerId = +data.homePlayerIds[key];
+      const playerId = _.get(data.homePlayerIds, key); // +data.homePlayerIds[key];
 
       return {
         playerId,
-        teamId: refHomeTeamPlayers[playerId].teamId,
+        teamId: refHomeTeamPlayers[+playerId].teamId,
         playerNumber: +key.substring(1),
       };
     });
     const awayPlayers = Object.keys(data.awayPlayerIds).map((key) => {
-      const playerId = +data.awayPlayerIds[key];
+      const playerId = _.get(data.awayPlayerIds, key);
 
       return {
         playerId,
-        teamId: refAwayTeamPlayers[playerId].teamId,
+        teamId: refAwayTeamPlayers[+playerId].teamId,
         playerNumber: +key.substring(1),
       };
     });
@@ -139,18 +139,20 @@ export class MatchesService {
     );
 
     const homePlayers = Object.keys(data.homePlayerIds).map((key) => {
-      const playerId = +data.homePlayerIds[key];
+      const playerId = _.get(data.homePlayerIds, key); // +data.homePlayerIds[key];
+
       return {
         playerId,
-        teamId: refHomeTeamPlayers[playerId].teamId,
+        teamId: refHomeTeamPlayers[+playerId].teamId,
         playerNumber: +key.substring(1),
       };
     });
     const awayPlayers = Object.keys(data.awayPlayerIds).map((key) => {
-      const playerId = +data.awayPlayerIds[key];
+      const playerId = _.get(data.awayPlayerIds, key); // +data.awayPlayerIds[key];
+
       return {
         playerId,
-        teamId: refAwayTeamPlayers[playerId].teamId,
+        teamId: refAwayTeamPlayers[+playerId].teamId,
         playerNumber: +key.substring(1),
       };
     });
@@ -509,7 +511,10 @@ export class MatchesService {
     this.logger.debug(`Publish report of match #${match.id} successful.`);
   }
 
-  public async getStats(id: number): Promise<MatchEntity> {
+  public async getStats(id: number): Promise<{
+    reports: any;
+    aflResults: any;
+  }> {
     const match = await this.prismaService.match.findFirst({
       where: { id },
       include: {
@@ -536,9 +541,63 @@ export class MatchesService {
       },
     });
 
-    // this.logger.debug(match);
+    const reports = _(match.reportsOnMatches)
+      .groupBy((report) => report.resultProperty.parent.name)
+      .mapValues((reports) =>
+        _(reports)
+          .map((r) => ({
+            resultProperty: r.resultProperty,
+            value: _(r.value)
+              .transform((s, n, i) => {
+                switch (i) {
+                  case 1:
+                    _.assign(s, { away: n });
+                    break;
+                  case 2:
+                    _.assign(s, { diff: n });
+                    break;
+                  default:
+                    _.assign(s, { home: n });
+                    break;
+                }
+              }, {})
+              .value(),
+          }))
+          .value(),
+      )
+      .value();
 
-    return match;
+    const aflResults = _(match.aflResults)
+      .map((aflResult) => ({
+        team: aflResult.team,
+        players: _(aflResult.playersOnAFLResults)
+          .groupBy((s) => s.playerId)
+          .map((results, playerId) => {
+            const { player } = _.find(results, (r) => r.playerId === +playerId);
+
+            return {
+              player,
+              results: _(results)
+                .map((r) => ({
+                  resultProperty: r.resultProperty,
+                  value: r.value,
+                }))
+                .groupBy((r) => r.resultProperty.parent.name)
+                .value(),
+            };
+          })
+          .value(),
+      }))
+      // .transform((results, aflResult) => {
+      //   if (aflResult.team.id === match.homeTeamId) {
+      //     _.assign(results, { home: aflResult });
+      //   } else {
+      //     _.assign(results, { away: aflResult });
+      //   }
+      // }, {})
+      .value();
+
+    return { reports, aflResults };
   }
 
   public async findAllBySeasonId(
