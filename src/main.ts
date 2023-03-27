@@ -53,6 +53,8 @@ async function bootstrap() {
       'http://localhost:5173',
       'http://isports.local:3000',
       'http://isports.local:5173',
+      'https://isports-dev.bbfoundry.io',
+      'https://isports.bbfoundry.io',
       'https://isports-prod.bbfoundry.io',
     ],
     credentials: true,
