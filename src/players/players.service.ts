@@ -14,7 +14,7 @@ export class PlayersService {
 
   public async findAll(): Promise<PlayerEntity[]> {
     return this.prismaService.player.findMany({
-      include: { team: true },
+      include: { team: { include: { season: { include: { league: true } } } } },
     });
   }
 
