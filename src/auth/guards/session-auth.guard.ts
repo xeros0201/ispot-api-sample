@@ -5,13 +5,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import * as _ from 'lodash';
-import { UsersService } from 'src/users/users.service';
 
+import { AuthService } from '../auth.service';
 @Injectable()
 export class SessionAuthGuard implements CanActivate {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly authService: AuthService) {}
   private async getCurrentUser(req): Promise<boolean> {
-    req.user = await this.usersService.findById(req.user.id);
+    req.user = await this.authService.getCurrentUser(req.user.id);
     return true;
   }
   public canActivate(ctx: ExecutionContext): boolean | Promise<boolean> {

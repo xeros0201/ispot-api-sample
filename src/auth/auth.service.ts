@@ -40,4 +40,8 @@ export class AuthService {
 
     return user;
   }
+
+  public async getCurrentUser(id): Promise<UserEntity> {
+    return await this.usersService.findById(id);
+  }
 }
