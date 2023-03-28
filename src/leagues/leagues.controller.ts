@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UploadedFiles,
   UseGuards,
 } from '@nestjs/common';
 
@@ -46,9 +47,24 @@ export class LeaguesController {
   @UseGuards(SessionAuthGuard)
   public async create(
     @Body() data: CreateLeagueDto,
+    @UploadedFiles()
+    files: {
+      logo?: Express.Multer.File[];
+    },
     @CurrentUser() user: UserEntity,
   ): Promise<LeagueEntity> {
-    return this.leaguesService.create(data, user.id);
+    let logo: string;
+    if (files.logo && files.logo.length > 0) {
+      logo = files.logo[0].path;
+    }
+
+    return this.leaguesService.create(
+      data,
+      {
+        logo,
+      },
+      user.id,
+    );
   }
 
   @Patch('/:id')

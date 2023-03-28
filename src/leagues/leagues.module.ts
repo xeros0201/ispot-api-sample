@@ -4,6 +4,7 @@ import { MatchesService } from '../matches/matches.service';
 import { PlayersService } from '../players/players.service';
 import { SeasonsService } from '../seasons/seasons.service';
 import { TeamsService } from '../teams/teams.service';
+import { UploadToS3Service } from './../common/uploadToS3/uploadToS3.service';
 import { LeaguesController } from './leagues.controller';
 import { LeaguesService } from './leagues.service';
 
@@ -15,6 +16,7 @@ import { LeaguesService } from './leagues.service';
     TeamsService,
     PlayersService,
     MatchesService,
+    UploadToS3Service,
   ],
   exports: [LeaguesService],
 })
