@@ -330,11 +330,12 @@ export class MatchesService {
                   return {
                     aflResultId: homeTeamAFLResult.id,
                     resultPropertyId: property.id,
-                    playerId: player.id,
+                    playerId: player.playerId,
                     value: v,
                   };
                 })
-                .value(),
+                .value()
+                .filter((item) => !!item),
             });
           })
           .value(),
@@ -364,11 +365,12 @@ export class MatchesService {
                   return {
                     aflResultId: awayTeamAFLResult.id,
                     resultPropertyId: property.id,
-                    playerId: player.id,
+                    playerId: player.playerId,
                     value: v,
                   };
                 })
-                .value(),
+                .value()
+                .filter((item) => !!item),
             });
           })
           .value(),
@@ -572,6 +574,13 @@ export class MatchesService {
             };
           })
           .value(),
+      });
+
+      await tx.match.update({
+        where: { id },
+        data: {
+          status: 'PUBLISHED',
+        },
       });
 
       this.logger.debug(`Publish report of match #${match.id} successful.`);
