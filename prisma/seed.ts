@@ -486,14 +486,9 @@ const main = async (): Promise<void> => {
       aflResults: {
         createMany: {
           data: [
-            {
-              scorePrimary: 0,
-              teamId: broadbeach.id,
-            },
-            {
-              scorePrimary: 0,
-              teamId: aspley.id,
-            },
+            //
+            { teamId: broadbeach.id },
+            { teamId: aspley.id },
           ],
         },
       },
