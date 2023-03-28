@@ -76,18 +76,6 @@ export class MatchesController {
       awayTeamCsv?: Express.Multer.File[];
     },
   ): Promise<MatchEntity> {
-    if (formData.status === 'PUBLISHED') {
-      const publishMatch = new PublishMatchDto();
-      Object.keys(formData).forEach(
-        (key) => (publishMatch[key] = formData[key]),
-      );
-
-      const errors = await validate(publishMatch);
-
-      if (errors && errors.length)
-        throw new BadRequestException(Object.values(errors[0].constraints));
-    }
-
     let homeTeamCsv: string;
     let awayTeamCsv: string;
 
@@ -145,16 +133,6 @@ export class MatchesController {
       awayTeamCsv: Express.Multer.File[];
     },
   ): Promise<MatchEntity> {
-    if (data.status === 'PUBLISHED') {
-      const publishMatch = new PublishMatchDto();
-      Object.keys(data).forEach((key) => (publishMatch[key] = data[key]));
-
-      const errors = await validate(publishMatch);
-
-      if (errors && errors.length)
-        throw new BadRequestException(Object.values(errors[0].constraints));
-    }
-
     let homeTeamCsv: string;
     let awayTeamCsv: string;
 
@@ -170,8 +148,15 @@ export class MatchesController {
   }
 
   @Get('/:id/_publish')
-  public async publish(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  public async publish(@Param('id', ParseIntPipe) id: number): Promise<any> {
     return this.matchesService.publish(id);
+  }
+
+  @Get('/:id/_valid')
+  public async getValidToPublish(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<any> {
+    return this.matchesService.validateToPublish(id);
   }
 
   @Delete('/:id')

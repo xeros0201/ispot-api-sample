@@ -35,12 +35,4 @@ export class PublishMatchDto {
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 0 })
   locationId: number;
-
-  @Type(() => Object)
-  @IsObject()
-  homePlayerIds: { [key: string]: number };
-
-  @Type(() => Object)
-  @IsObject()
-  awayPlayerIds: { [key: string]: number };
 }

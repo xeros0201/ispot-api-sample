@@ -9,10 +9,6 @@ import {
 } from 'class-validator';
 
 export class CreateMatchDto {
-  @IsEnum(MatchStatus)
-  @IsOptional()
-  status?: MatchStatus;
-
   @IsEnum(MatchType)
   @IsOptional()
   type?: MatchType;
