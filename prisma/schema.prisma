@@ -25,7 +25,7 @@ enum MatchType {
 model Session {
   id        String   @id
   sid       String   @unique
-  data      String
+  data      Json
   expiresAt DateTime @map("expires_at")
 
   @@map("sessions")

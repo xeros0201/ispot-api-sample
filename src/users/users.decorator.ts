@@ -8,7 +8,6 @@ export const CurrentUser = createParamDecorator(
     const { user } = ctx
       .switchToHttp()
       .getRequest<Request & { user: UserEntity }>();
-
     return data ? user && user[parseInt(data, 10)] : user;
   },
 );
