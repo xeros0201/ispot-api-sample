@@ -48,6 +48,8 @@ model User {
   updatedLeagues League[] @relation("updatedUser")
   createdSeasons Season[] @relation("createdUser")
   updatedSeasons Season[] @relation("updatedUser")
+  createdPlayers Player[] @relation("createdUser")
+  updatedPlayers Player[] @relation("updatedUser")
   createdDate    DateTime @default(now()) @map("created_date")
   createdUserId  String?  @map("created_user_id") @db.Uuid
   updatedDate    DateTime @default(now()) @updatedAt @map("updated_date")
@@ -124,6 +126,12 @@ model Player {
   playerNumber        Int                   @map("player_number")
   matches             PlayersOnMatches[]
   playersOnAFLResults PlayersOnAFLResults[]
+  createdDate         DateTime              @default(now()) @map("created_date")
+  createdUserId       String?               @map("created_user_id") @db.Uuid
+  createdUser         User?                 @relation(fields: [createdUserId], references: [id], name: "createdUser")
+  updatedDate         DateTime              @updatedAt @map("updated_date")
+  updatedUserId       String?               @map("updated_user_id") @db.Uuid
+  updatedUser         User?                 @relation(fields: [updatedUserId], references: [id], name: "updatedUser")
 
   @@map("players")
 }
