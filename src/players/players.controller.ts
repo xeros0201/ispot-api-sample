@@ -9,6 +9,8 @@ import {
   Put,
 } from '@nestjs/common';
 
+import { UserEntity } from '../users/entities/user.entity';
+import { CurrentUser } from '../users/users.decorator';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 import { PlayerEntity } from './entities/player.entity';
@@ -31,18 +33,20 @@ export class PlayersController {
   }
 
   @Post('/')
-  public async create(@Body() data: CreatePlayerDto): Promise<PlayerEntity> {
-    return this.playersService.create(data);
+  public async create(
+    @Body() data: CreatePlayerDto,
+    @CurrentUser() user: UserEntity,
+  ): Promise<PlayerEntity> {
+    return this.playersService.create(data, user.id);
   }
 
   @Put('/:id')
   public async update(
-    @Param('id', ParseIntPipe)
-    id: number,
-    @Body()
-    data: UpdatePlayerDto,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: UpdatePlayerDto,
+    @CurrentUser() user: UserEntity,
   ): Promise<PlayerEntity> {
-    return this.playersService.update(id, data);
+    return this.playersService.update(id, data, user.id);
   }
 
   @Delete('/:id')

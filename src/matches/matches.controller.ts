@@ -145,7 +145,14 @@ export class MatchesController {
   }
 
   @Get('/:id/_publish')
-  public async publish(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  public async publish(@Param('id', ParseIntPipe) id: number): Promise<any> {
+    return this.matchesService.publish(id);
+  }
+
+  @Get('/:id/_valid')
+  public async getValidToPublish(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<any> {
     return this.matchesService.publish(id);
   }
 
