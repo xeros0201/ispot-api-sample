@@ -7,9 +7,13 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Put,
   UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { diskStorage, MulterError } from 'multer';
 
 import { SessionAuthGuard } from '../auth/guards/session-auth.guard';
 import { UserEntity } from '../users/entities/user.entity';
@@ -44,6 +48,28 @@ export class LeaguesController {
   }
 
   @Post('/')
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        {
+          name: 'logo',
+          maxCount: 1,
+        },
+      ],
+      {
+        fileFilter: (_, file, cb: (e: Error, a: boolean) => void): void => {
+          const { mimetype, fieldname } = file;
+
+          if (mimetype.includes('image')) {
+            cb(null, true);
+          } else {
+            cb(new MulterError('LIMIT_UNEXPECTED_FILE', fieldname), false);
+          }
+        },
+        storage: diskStorage({ destination: './uploads/' }),
+      },
+    ),
+  )
   @UseGuards(SessionAuthGuard)
   public async create(
     @Body() data: CreateLeagueDto,
@@ -53,28 +79,56 @@ export class LeaguesController {
     },
     @CurrentUser() user: UserEntity,
   ): Promise<LeagueEntity> {
-    let logo: string;
-    if (files.logo && files.logo.length > 0) {
-      logo = files.logo[0].path;
-    }
-
     return this.leaguesService.create(
       data,
       {
-        logo,
+        logo: files?.logo?.[0],
       },
       user.id,
     );
   }
 
-  @Patch('/:id')
+  @Put('/:id')
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        {
+          name: 'logo',
+          maxCount: 1,
+        },
+      ],
+      {
+        fileFilter: (_, file, cb: (e: Error, a: boolean) => void): void => {
+          const { mimetype, fieldname } = file;
+
+          if (mimetype.includes('image')) {
+            cb(null, true);
+          } else {
+            cb(new MulterError('LIMIT_UNEXPECTED_FILE', fieldname), false);
+          }
+        },
+        storage: diskStorage({ destination: './uploads/' }),
+      },
+    ),
+  )
   @UseGuards(SessionAuthGuard)
   public async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdateLeagueDto,
+    @UploadedFiles()
+    files: {
+      logo?: Express.Multer.File[];
+    },
     @CurrentUser() user: UserEntity,
   ): Promise<LeagueEntity> {
-    return this.leaguesService.update(id, data, user.id);
+    return this.leaguesService.update(
+      id,
+      data,
+      {
+        logo: files?.logo?.[0],
+      },
+      user.id,
+    );
   }
 
   @Delete('/:id')

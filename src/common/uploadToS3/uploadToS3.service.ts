@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { readFileSync, unlinkSync } from 'fs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
 import { InjectS3, S3 } from 'nestjs-s3';
 import { v4 as uuid } from 'uuid';

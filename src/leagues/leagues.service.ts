@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import * as _ from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
 
 import { SeasonEntity } from '../seasons/entities/season.entity';
@@ -39,16 +40,22 @@ export class LeaguesService {
 
   public async create(
     { name, sportId }: CreateLeagueDto,
-    { logo }: { logo: string },
+    { logo }: { logo?: Express.Multer.File },
     userId: UserEntity['id'],
   ): Promise<LeagueEntity> {
+    let logoKey: string;
+
     if (logo)
-      logo = await this.uploadToS3Service.uploadImageToS3('image', logo, 'png');
+      logoKey = await this.uploadToS3Service.uploadImageToS3(
+        'image',
+        logo.path,
+        _.last(logo.originalname.split('.')),
+      );
 
     return this.prismaService.league.create({
       data: {
         name: name,
-        logo: logo,
+        logo: logoKey,
         sport: { connect: { id: sportId } },
         createdUser: { connect: { id: userId } },
       },
@@ -58,11 +65,21 @@ export class LeaguesService {
   public async update(
     id: number,
     data: UpdateLeagueDto,
+    { logo }: { logo?: Express.Multer.File },
     userId: UserEntity['id'],
   ): Promise<LeagueEntity> {
+    let logoKey: string;
+
+    if (logo)
+      logoKey = await this.uploadToS3Service.uploadImageToS3(
+        'image',
+        logo.path,
+        _.last(logo.originalname.split('.')),
+      );
+
     return this.prismaService.league.update({
       where: { id },
-      data: { ...data, updatedUserId: userId },
+      data: { ...data, logo: logoKey, updatedUserId: userId },
     });
   }
 
