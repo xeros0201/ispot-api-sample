@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import * as _ from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
 
+import { AWSS3Service } from '../aws-s3/aws-s3.service';
 import { SeasonEntity } from '../seasons/entities/season.entity';
 import { SeasonsService } from '../seasons/seasons.service';
 import { SportEntity } from '../sports/entities/sport.entity';
 import { UserEntity } from '../users/entities/user.entity';
-import { UploadToS3Service } from './../common/uploadToS3/uploadToS3.service';
 import { CreateLeagueDto } from './dto/create-league.dto';
 import { UpdateLeagueDto } from './dto/update-league.dto';
 import { LeagueEntity } from './entities/league.entity';
@@ -16,7 +16,7 @@ export class LeaguesService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly seasonService: SeasonsService,
-    private readonly uploadToS3Service: UploadToS3Service,
+    private readonly awsS3Service: AWSS3Service,
   ) {}
 
   public async findAll(): Promise<LeagueEntity[]> {
@@ -40,17 +40,18 @@ export class LeaguesService {
 
   public async create(
     { name, sportId }: CreateLeagueDto,
-    { logo }: { logo?: Express.Multer.File },
+    logo: Express.Multer.File,
     userId: UserEntity['id'],
   ): Promise<LeagueEntity> {
     let logoKey: string;
 
-    if (logo)
-      logoKey = await this.uploadToS3Service.uploadImageToS3(
+    if (!_.isNil(logo)) {
+      logoKey = await this.awsS3Service.put(
         'image',
         logo.path,
         _.last(logo.originalname.split('.')),
       );
+    }
 
     return this.prismaService.league.create({
       data: {
@@ -65,17 +66,18 @@ export class LeaguesService {
   public async update(
     id: number,
     data: UpdateLeagueDto,
-    { logo }: { logo?: Express.Multer.File },
+    logo: Express.Multer.File,
     userId: UserEntity['id'],
   ): Promise<LeagueEntity> {
     let logoKey: string;
 
-    if (logo)
-      logoKey = await this.uploadToS3Service.uploadImageToS3(
+    if (!_.isNil(logo)) {
+      logoKey = await this.awsS3Service.put(
         'image',
         logo.path,
         _.last(logo.originalname.split('.')),
       );
+    }
 
     return this.prismaService.league.update({
       where: { id },

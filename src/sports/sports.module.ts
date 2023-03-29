@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { UploadToS3Service } from 'src/common/uploadToS3/uploadToS3.service';
 
+import { AWSS3Service } from '../aws-s3/aws-s3.service';
 import { LeaguesService } from '../leagues/leagues.service';
 import { MatchesService } from '../matches/matches.service';
 import { PlayersService } from '../players/players.service';
@@ -18,7 +18,7 @@ import { SportsService } from './sports.service';
     TeamsService,
     MatchesService,
     PlayersService,
-    UploadToS3Service,
+    AWSS3Service,
   ],
 })
 export class SportsModule {}
