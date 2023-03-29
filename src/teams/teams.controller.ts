@@ -5,10 +5,16 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Put,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage, MulterError } from 'multer';
 
 import { PlayerEntity } from '../players/entities/player.entity';
 import { CreateTeamDto } from './dto/create-team.dto';
+import { UpdateTeamDto } from './dto/update-team.dto';
 import { TeamEntity } from './entities/team.entity';
 import { TeamsService } from './teams.service';
 
@@ -29,8 +35,52 @@ export class TeamsController {
   }
 
   @Post('/')
-  public async create(@Body() data: CreateTeamDto): Promise<TeamEntity> {
-    return this.teamsService.create(data);
+  @UseInterceptors(
+    FileInterceptor('logo', {
+      fileFilter: (
+        _,
+        { mimetype, fieldname },
+        cb: (e: Error, a: boolean) => void,
+      ): void => {
+        if (['image/jpeg', 'image/jpg', 'image/png'].includes(mimetype)) {
+          cb(null, true);
+        } else {
+          cb(new MulterError('LIMIT_UNEXPECTED_FILE', fieldname), false);
+        }
+      },
+      storage: diskStorage({ destination: './uploads/' }),
+    }),
+  )
+  public async create(
+    @Body() data: CreateTeamDto,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<TeamEntity> {
+    return this.teamsService.create(data, file);
+  }
+
+  @Put('/:id')
+  @UseInterceptors(
+    FileInterceptor('logo', {
+      fileFilter: (
+        _,
+        { mimetype, fieldname },
+        cb: (e: Error, a: boolean) => void,
+      ): void => {
+        if (['image/jpeg', 'image/jpg', 'image/png'].includes(mimetype)) {
+          cb(null, true);
+        } else {
+          cb(new MulterError('LIMIT_UNEXPECTED_FILE', fieldname), false);
+        }
+      },
+      storage: diskStorage({ destination: './uploads/' }),
+    }),
+  )
+  public async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() data: UpdateTeamDto,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<TeamEntity> {
+    return this.teamsService.update(id, data, file);
   }
 
   @Get('/:id/players')

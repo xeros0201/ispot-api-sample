@@ -1,12 +1,6 @@
 import { MatchType } from '@prisma/client';
 import { Type } from 'class-transformer';
-import {
-  IsDate,
-  IsEnum,
-  IsNumber,
-  IsObject,
-  IsOptional,
-} from 'class-validator';
+import { IsDate, IsEnum, IsNumber } from 'class-validator';
 
 export class PublishMatchDto {
   @IsEnum(MatchType)

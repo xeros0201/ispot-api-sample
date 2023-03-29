@@ -1,4 +1,4 @@
-import { MatchStatus, MatchType } from '@prisma/client';
+import { MatchType } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
   IsDate,

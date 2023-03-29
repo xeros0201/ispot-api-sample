@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import * as _ from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
 
+import { AWSS3Service } from '../aws-s3/aws-s3.service';
 import { SeasonEntity } from '../seasons/entities/season.entity';
 import { SeasonsService } from '../seasons/seasons.service';
 import { SportEntity } from '../sports/entities/sport.entity';
@@ -14,6 +16,7 @@ export class LeaguesService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly seasonService: SeasonsService,
+    private readonly awsS3Service: AWSS3Service,
   ) {}
 
   public async findAll(): Promise<LeagueEntity[]> {
@@ -36,13 +39,24 @@ export class LeaguesService {
   }
 
   public async create(
-    { name, logo, sportId }: CreateLeagueDto,
+    { name, sportId }: CreateLeagueDto,
+    logo: Express.Multer.File,
     userId: UserEntity['id'],
   ): Promise<LeagueEntity> {
+    let logoKey: string;
+
+    if (!_.isNil(logo)) {
+      logoKey = await this.awsS3Service.put(
+        'image',
+        logo.path,
+        _.last(logo.originalname.split('.')),
+      );
+    }
+
     return this.prismaService.league.create({
       data: {
         name: name,
-        logo: logo,
+        logo: logoKey,
         sport: { connect: { id: sportId } },
         createdUser: { connect: { id: userId } },
       },
@@ -52,11 +66,22 @@ export class LeaguesService {
   public async update(
     id: number,
     data: UpdateLeagueDto,
+    logo: Express.Multer.File,
     userId: UserEntity['id'],
   ): Promise<LeagueEntity> {
+    let logoKey: string;
+
+    if (!_.isNil(logo)) {
+      logoKey = await this.awsS3Service.put(
+        'image',
+        logo.path,
+        _.last(logo.originalname.split('.')),
+      );
+    }
+
     return this.prismaService.league.update({
       where: { id },
-      data: { ...data, updatedUserId: userId },
+      data: { ...data, logo: logoKey, updatedUserId: userId },
     });
   }
 
