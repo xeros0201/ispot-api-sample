@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import * as _ from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
-import { UploadToS3Service } from 'src/common/uploadToS3/uploadToS3.service';
 
+import { AWSS3Service } from '../aws-s3/aws-s3.service';
 import { PlayerEntity } from '../players/entities/player.entity';
 import { PlayersService } from '../players/players.service';
 import { SeasonEntity } from '../seasons/entities/season.entity';
-import { UserEntity } from './../users/entities/user.entity';
 import { CreateTeamDto } from './dto/create-team.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { TeamEntity } from './entities/team.entity';
@@ -16,7 +15,7 @@ export class TeamsService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly playersService: PlayersService,
-    private readonly uploadToS3Service: UploadToS3Service,
+    private readonly awsS3Service: AWSS3Service,
   ) {}
 
   public async findAll(): Promise<TeamEntity[]> {
@@ -42,32 +41,35 @@ export class TeamsService {
 
   public async create(
     data: CreateTeamDto,
-    { logo }: { logo?: Express.Multer.File },
+    logo?: Express.Multer.File,
   ): Promise<TeamEntity> {
     let logoKey: string;
 
-    if (logo)
-      logoKey = await this.uploadToS3Service.uploadImageToS3(
+    if (!_.isNil(logo)) {
+      logoKey = await this.awsS3Service.put(
         'image',
         logo.path,
         _.last(logo.originalname.split('.')),
       );
+    }
+
     return this.prismaService.team.create({ data: { ...data, logo: logoKey } });
   }
 
   public async update(
     id: number,
     data: UpdateTeamDto,
-    { logo }: { logo?: Express.Multer.File },
+    logo?: Express.Multer.File,
   ): Promise<TeamEntity> {
     let logoKey: string;
 
-    if (logo)
-      logoKey = await this.uploadToS3Service.uploadImageToS3(
+    if (!_.isNil(logo)) {
+      logoKey = await this.awsS3Service.put(
         'image',
         logo.path,
         _.last(logo.originalname.split('.')),
       );
+    }
 
     return this.prismaService.team.update({
       where: { id },

@@ -6,10 +6,10 @@ import {
   ParseIntPipe,
   Post,
   Put,
-  UploadedFiles,
+  UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage, MulterError } from 'multer';
 
 import { PlayerEntity } from '../players/entities/player.entity';
@@ -36,73 +36,51 @@ export class TeamsController {
 
   @Post('/')
   @UseInterceptors(
-    FileFieldsInterceptor(
-      [
-        {
-          name: 'logo',
-          maxCount: 1,
-        },
-      ],
-      {
-        fileFilter: (_, file, cb: (e: Error, a: boolean) => void): void => {
-          const { mimetype, fieldname } = file;
-
-          if (mimetype.includes('image')) {
-            cb(null, true);
-          } else {
-            cb(new MulterError('LIMIT_UNEXPECTED_FILE', fieldname), false);
-          }
-        },
-        storage: diskStorage({ destination: './uploads/' }),
+    FileInterceptor('logo', {
+      fileFilter: (
+        _,
+        { mimetype, fieldname },
+        cb: (e: Error, a: boolean) => void,
+      ): void => {
+        if (['image/jpeg', 'image/jpg', 'image/png'].includes(mimetype)) {
+          cb(null, true);
+        } else {
+          cb(new MulterError('LIMIT_UNEXPECTED_FILE', fieldname), false);
+        }
       },
-    ),
+      storage: diskStorage({ destination: './uploads/' }),
+    }),
   )
   public async create(
     @Body() data: CreateTeamDto,
-    @UploadedFiles()
-    files: {
-      logo?: Express.Multer.File[];
-    },
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<TeamEntity> {
-    return this.teamsService.create(data, {
-      logo: files?.logo?.[0],
-    });
+    return this.teamsService.create(data, file);
   }
 
   @Put('/:id')
   @UseInterceptors(
-    FileFieldsInterceptor(
-      [
-        {
-          name: 'logo',
-          maxCount: 1,
-        },
-      ],
-      {
-        fileFilter: (_, file, cb: (e: Error, a: boolean) => void): void => {
-          const { mimetype, fieldname } = file;
-
-          if (mimetype.includes('image')) {
-            cb(null, true);
-          } else {
-            cb(new MulterError('LIMIT_UNEXPECTED_FILE', fieldname), false);
-          }
-        },
-        storage: diskStorage({ destination: './uploads/' }),
+    FileInterceptor('logo', {
+      fileFilter: (
+        _,
+        { mimetype, fieldname },
+        cb: (e: Error, a: boolean) => void,
+      ): void => {
+        if (['image/jpeg', 'image/jpg', 'image/png'].includes(mimetype)) {
+          cb(null, true);
+        } else {
+          cb(new MulterError('LIMIT_UNEXPECTED_FILE', fieldname), false);
+        }
       },
-    ),
+      storage: diskStorage({ destination: './uploads/' }),
+    }),
   )
   public async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdateTeamDto,
-    @UploadedFiles()
-    files: {
-      logo?: Express.Multer.File[];
-    },
+    @UploadedFile() file: Express.Multer.File,
   ): Promise<TeamEntity> {
-    return this.teamsService.update(id, data, {
-      logo: files?.logo?.[0],
-    });
+    return this.teamsService.update(id, data, file);
   }
 
   @Get('/:id/players')

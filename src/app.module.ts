@@ -4,8 +4,8 @@ import { PrismaModule } from 'nestjs-prisma';
 import { S3Module } from 'nestjs-s3';
 
 import { AuthModule } from './auth/auth.module';
+import { AWSS3Module } from './aws-s3/aws-s3.module';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
-import { UploadToS3Module } from './common/uploadToS3/uploadToS3.module';
 import { HealthModule } from './health/health.module';
 import { LeaguesModule } from './leagues/leagues.module';
 import { LocationsModule } from './locations/locations.module';
@@ -35,7 +35,7 @@ import { UsersModule } from './users/users.module';
     }),
     HealthModule,
     AuthModule,
-    UploadToS3Module,
+    AWSS3Module,
     SportsModule,
     LeaguesModule,
     SeasonsModule,
