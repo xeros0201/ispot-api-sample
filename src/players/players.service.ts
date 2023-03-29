@@ -4,6 +4,7 @@ import { PrismaService } from 'nestjs-prisma';
 import { MatchEntity } from '../matches/entities/match.entity';
 import { SeasonEntity } from '../seasons/entities/season.entity';
 import { TeamEntity } from '../teams/entities/team.entity';
+import { UserEntity } from '../users/entities/user.entity';
 import { CreatePlayerDto } from './dto/create-player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 import { PlayerEntity } from './entities/player.entity';
@@ -14,26 +15,51 @@ export class PlayersService {
 
   public async findAll(): Promise<PlayerEntity[]> {
     return this.prismaService.player.findMany({
-      include: { team: { include: { season: { include: { league: true } } } } },
+      include: {
+        team: {
+          include: { season: { include: { league: true } } },
+        },
+        createdUser: true,
+        updatedUser: true,
+      },
     });
   }
 
   public async findById(id: number): Promise<PlayerEntity> {
     return this.prismaService.player.findFirst({
       where: { id },
-      include: { team: true },
+      include: {
+        team: true,
+        createdUser: true,
+        updatedUser: true,
+      },
     });
   }
 
-  public async create(data: CreatePlayerDto): Promise<PlayerEntity> {
-    return this.prismaService.player.create({ data });
+  public async create(
+    data: CreatePlayerDto,
+    userId: UserEntity['id'],
+  ): Promise<PlayerEntity> {
+    return this.prismaService.player.create({
+      data: {
+        ...data,
+        createdUserId: userId,
+      },
+    });
   }
 
   public async update(
     id: number,
     data: UpdatePlayerDto,
+    userId: UserEntity['id'],
   ): Promise<PlayerEntity> {
-    return this.prismaService.player.update({ where: { id }, data });
+    return this.prismaService.player.update({
+      where: { id },
+      data: {
+        ...data,
+        updatedUserId: userId,
+      },
+    });
   }
 
   public async delete(id: number): Promise<PlayerEntity> {

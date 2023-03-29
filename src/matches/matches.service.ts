@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { MatchStatus } from '@prisma/client';
-import { validate } from 'class-validator';
 import { parse } from 'csv-parse/sync';
 import { readFileSync, unlinkSync } from 'fs';
 import * as _ from 'lodash';
@@ -12,7 +11,6 @@ import { PlayerEntity } from '../players/entities/player.entity';
 import { PlayersService } from '../players/players.service';
 import { SeasonEntity } from '../seasons/entities/season.entity';
 import { CreateMatchDto } from './dto/create-match.dto';
-import { PublishMatchDto } from './dto/publish-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { MatchEntity } from './entities/match.entity';
 import { CSVProperty } from './matches.types';
@@ -212,89 +210,51 @@ export class MatchesService {
     });
   }
 
-  public async validateToPublish(id: number) {
+  public async publish(id: number): Promise<any> {
     const match = await this.prismaService.match.findFirst({
       where: { id },
       include: {
+        season: { include: { league: true } },
         players: true,
+        aflResults: true,
       },
     });
 
-    const publishMatch = match as PublishMatchDto;
+    const properties = await this.prismaService.resultProperty.findMany({
+      where: {
+        sportId: match.season.league.sportId,
+        parentId: { not: null },
+      },
+    });
 
-    const errors = await validate(publishMatch);
+    const [homeTeamStats, awayTeamStats] = await Promise.all([
+      this.getStatsFromCsv(match.homeTeamCsv, 'HOME'),
+      this.getStatsFromCsv(match.awayTeamCsv, 'AWAY'),
+    ]);
 
-    let isValid = !(errors && errors.length);
-
-    if (isValid) {
-      const homeTeamPlayers = match.players.filter(
-        (item) => item.teamId === match.homeTeamId,
-      );
-      const awayTeamPlayers = match.players.filter(
-        (item) => item.teamId === match.awayTeamId,
-      );
-
-      isValid =
-        isValid && homeTeamPlayers.length >= 18 && awayTeamPlayers.length >= 18;
-    }
-
-    return {
-      isValid,
-      errors,
-    };
-  }
-
-  public async publish(id: number): Promise<any> {
-    const { isValid, errors } = await this.validateToPublish(id);
-
-    if (!isValid) {
-      return { isValid, errors };
-    }
-
-    await this.prismaService.$transaction(async (tx) => {
-      const match = await tx.match.findFirst({
-        where: { id },
-        include: {
-          season: { include: { league: true } },
-          players: true,
-          aflResults: true,
-        },
-      });
-
-      const properties = await tx.resultProperty.findMany({
+    const [homeTeamAFLResult, awayTeamAFLResult] = await Promise.all([
+      this.prismaService.aFLResult.findFirst({
         where: {
-          sportId: match.season.league.sportId,
-          parentId: { not: null },
+          matchId: match.id,
+          teamId: match.homeTeamId,
         },
-      });
+      }),
+      this.prismaService.aFLResult.findFirst({
+        where: {
+          matchId: match.id,
+          teamId: match.awayTeamId,
+        },
+      }),
+    ]);
 
-      const [homeTeamStats, awayTeamStats] = await Promise.all([
-        this.getStatsFromCsv(match.homeTeamCsv, 'HOME'),
-        this.getStatsFromCsv(match.awayTeamCsv, 'AWAY'),
-      ]);
-
-      const [homeTeamAFLResult, awayTeamAFLResult] = await Promise.all([
-        tx.aFLResult.findFirst({
-          where: {
-            matchId: match.id,
-            teamId: match.homeTeamId,
-          },
-        }),
-        tx.aFLResult.findFirst({
-          where: {
-            matchId: match.id,
-            teamId: match.awayTeamId,
-          },
-        }),
-      ]);
-
+    await this.prismaService.$transaction(async (client) => {
       await Promise.all([
-        tx.reportsOnMatches.deleteMany({
+        client.reportsOnMatches.deleteMany({
           where: {
             matchId: match.id,
           },
         }),
-        tx.playersOnAFLResults.deleteMany({
+        client.playersOnAFLResults.deleteMany({
           where: {
             aflResultId: {
               in: [homeTeamAFLResult.id, awayTeamAFLResult.id],
@@ -315,7 +275,7 @@ export class MatchesService {
               return;
             }
 
-            await tx.playersOnAFLResults.createMany({
+            await client.playersOnAFLResults.createMany({
               data: _(stats)
                 .map((v, k) => {
                   const property = _.find(properties, {
@@ -350,7 +310,7 @@ export class MatchesService {
               return;
             }
 
-            await tx.playersOnAFLResults.createMany({
+            await client.playersOnAFLResults.createMany({
               data: _(stats)
                 .map((v, k) => {
                   const property = _.find(properties, {
@@ -555,7 +515,7 @@ export class MatchesService {
         this.logger.debug(stoppage);
       }
 
-      await tx.reportsOnMatches.createMany({
+      await client.reportsOnMatches.createMany({
         data: _({ ...overview, ...stoppage })
           .map((v, k) => {
             const property = _.find(properties, {
@@ -576,11 +536,9 @@ export class MatchesService {
           .value(),
       });
 
-      await tx.match.update({
+      await client.match.update({
         where: { id },
-        data: {
-          status: 'PUBLISHED',
-        },
+        data: { status: 'PUBLISHED' },
       });
 
       this.logger.debug(`Publish report of match #${match.id} successful.`);

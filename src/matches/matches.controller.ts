@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -12,12 +11,10 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { validate } from 'class-validator';
 import { diskStorage, MulterError } from 'multer';
 
 import { PlayerEntity } from '../players/entities/player.entity';
 import { CreateMatchDto } from './dto/create-match.dto';
-import { PublishMatchDto } from './dto/publish-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { MatchEntity } from './entities/match.entity';
 import { MatchesService } from './matches.service';
@@ -156,7 +153,7 @@ export class MatchesController {
   public async getValidToPublish(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<any> {
-    return this.matchesService.validateToPublish(id);
+    return this.matchesService.publish(id);
   }
 
   @Delete('/:id')

@@ -11,11 +11,11 @@ import {
 } from '@nestjs/common';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { Request } from 'express';
-import { Role } from 'src/users/entities/role.enum';
-import { Roles } from 'src/users/roles.decorator';
 
 import { ExcludePasswordInterceptor } from '../common/interceptors/exclude-password.interceptor';
+import { Role } from '../users/entities/role.enum';
 import { UserEntity } from '../users/entities/user.entity';
+import { Roles } from '../users/roles.decorator';
 import { CurrentUser } from '../users/users.decorator';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { SessionAuthGuard } from './guards/session-auth.guard';
