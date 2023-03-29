@@ -41,7 +41,7 @@ export class TeamsService {
 
   public async create(
     data: CreateTeamDto,
-    logo?: Express.Multer.File,
+    logo: Express.Multer.File,
   ): Promise<TeamEntity> {
     let logoKey: string;
 
@@ -59,7 +59,7 @@ export class TeamsService {
   public async update(
     id: number,
     data: UpdateTeamDto,
-    logo?: Express.Multer.File,
+    logo: Express.Multer.File,
   ): Promise<TeamEntity> {
     let logoKey: string;
 
