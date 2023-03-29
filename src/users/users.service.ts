@@ -34,7 +34,6 @@ export class UsersService {
 
   public async update(id: string, data: UpdateUserDto): Promise<UserEntity> {
     data.password = await this.hashPassword(data.password);
-
     return this.prismaService.user.update({ where: { id }, data });
   }
 

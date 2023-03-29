@@ -144,6 +144,18 @@ export class MatchesController {
     return this.matchesService.update(id, data, { homeTeamCsv, awayTeamCsv });
   }
 
+  @Get('/:id/_publish')
+  public async publish(@Param('id', ParseIntPipe) id: number): Promise<any> {
+    return this.matchesService.publish(id);
+  }
+
+  @Get('/:id/_valid')
+  public async getValidToPublish(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<any> {
+    return this.matchesService.publish(id);
+  }
+
   @Delete('/:id')
   public async delete(
     @Param('id', ParseIntPipe) id: number,
@@ -152,11 +164,11 @@ export class MatchesController {
   }
 
   @Delete('/:id/players/:playerId')
-  public async deletePlayer(
+  public async removePlayer(
     @Param('id', ParseIntPipe) id: number,
     @Param('playerId', ParseIntPipe) playerId: number,
   ): Promise<MatchEntity> {
-    return this.matchesService.deletePlayer(id, playerId);
+    return this.matchesService.removePlayer(id, playerId);
   }
 
   @Get('/:id/players')
@@ -164,5 +176,10 @@ export class MatchesController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<PlayerEntity[]> {
     return this.matchesService.findAllPlayers(id);
+  }
+
+  @Get('/:id/_stats')
+  public async getStats(@Param('id', ParseIntPipe) id: number): Promise<any> {
+    return this.matchesService.getStats(id);
   }
 }

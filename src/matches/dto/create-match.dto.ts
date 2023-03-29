@@ -1,40 +1,55 @@
-import { MatchType } from '@prisma/client';
+import { MatchStatus, MatchType } from '@prisma/client';
 import { Type } from 'class-transformer';
-import { IsDate, IsEnum, IsNumber, IsObject } from 'class-validator';
+import {
+  IsDate,
+  IsEnum,
+  IsNumber,
+  IsObject,
+  IsOptional,
+} from 'class-validator';
 
 export class CreateMatchDto {
   @IsEnum(MatchType)
-  type: MatchType;
+  @IsOptional()
+  type?: MatchType;
 
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 0 })
-  seasonId: number;
+  @IsOptional()
+  seasonId?: number;
 
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 0 })
-  homeTeamId: number;
+  @IsOptional()
+  homeTeamId?: number;
 
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 0 })
-  awayTeamId: number;
+  @IsOptional()
+  awayTeamId?: number;
 
   @Type(() => Number)
   @IsNumber()
-  round: number;
+  @IsOptional()
+  round?: number;
 
   @Type(() => Date)
   @IsDate()
-  date: Date;
+  @IsOptional()
+  date?: Date;
 
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 0 })
-  locationId: number;
+  @IsOptional()
+  locationId?: number;
 
   @Type(() => Object)
   @IsObject()
-  homePlayerIds: { [key: string]: number };
+  @IsOptional()
+  homePlayerIds?: { [key: string]: number };
 
   @Type(() => Object)
   @IsObject()
-  awayPlayerIds: { [key: string]: number };
+  @IsOptional()
+  awayPlayerIds?: { [key: string]: number };
 }
