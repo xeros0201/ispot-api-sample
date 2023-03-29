@@ -86,16 +86,16 @@
     "method": "GET",
     "sortNum": 60000,
     "created": "2023-03-09T04:40:59.837Z",
-    "modified": "2023-03-09T04:40:59.837Z",
+    "modified": "2023-03-27T04:17:36.529Z",
     "headers": [],
     "params": [
       {
         "name": "id",
         "value": "1",
-        "isDisabled": false,
         "isPath": true
       }
-    ]
+    ],
+    "tests": []
   },
   {
     "_id": "4cf39118-424e-4a3a-8068-e2c1e847a411",
@@ -154,12 +154,15 @@
     "method": "POST",
     "sortNum": 100000,
     "created": "2023-03-09T04:40:59.842Z",
-    "modified": "2023-03-09T04:40:59.842Z",
+    "modified": "2023-03-27T09:11:01.242Z",
     "headers": [],
+    "params": [],
     "body": {
       "type": "json",
-      "raw": "{\r\n    \"name\": \"QAFLW\",\r\n    \"sportId\": 1\r\n}"
-    }
+      "raw": "{\n    \"name\": \"QAFLW\",\n    \"sportId\": 1\n}",
+      "form": []
+    },
+    "tests": []
   },
   {
     "_id": "8958ad55-dec3-414a-887f-c77d53587759",

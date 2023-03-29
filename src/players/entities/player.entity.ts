@@ -8,4 +8,12 @@ export class PlayerEntity implements Player {
   name: string;
 
   playerNumber: number;
+
+  createdDate: Date;
+
+  createdUserId: string;
+
+  updatedDate: Date;
+
+  updatedUserId: string;
 }
