@@ -51,7 +51,7 @@ const main = async (): Promise<void> => {
     }),
     prisma.user.create({
       data: {
-        email: 'user@isports,net',
+        email: 'user@isports.net',
         firstName: 'User',
         lastName: 'iSports',
         role: 'STAFF',
