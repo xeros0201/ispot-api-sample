@@ -483,12 +483,11 @@ const main = async (): Promise<void> => {
       location: {
         create: { name: 'Broadbeach AFL Ground' },
       },
-      aflResults: {
+      teamReports: {
         createMany: {
           data: [
-            //
-            { teamId: broadbeach.id },
-            { teamId: aspley.id },
+            { teamId: broadbeach.id, score: 0 },
+            { teamId: aspley.id, score: 0 },
           ],
         },
       },

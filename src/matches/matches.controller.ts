@@ -146,14 +146,9 @@ export class MatchesController {
 
   @Get('/:id/_publish')
   public async publish(@Param('id', ParseIntPipe) id: number): Promise<any> {
-    return this.matchesService.publish(id);
-  }
+    console.log(id);
 
-  @Get('/:id/_valid')
-  public async getValidToPublish(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<any> {
-    return this.matchesService.publish(id);
+    // return this.matchesService.publish(id);
   }
 
   @Delete('/:id')
@@ -180,6 +175,8 @@ export class MatchesController {
 
   @Get('/:id/_stats')
   public async getStats(@Param('id', ParseIntPipe) id: number): Promise<any> {
-    return this.matchesService.getStats(id);
+    console.log(id);
+
+    // return this.matchesService.getStats(id);
   }
 }
