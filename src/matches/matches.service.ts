@@ -22,7 +22,7 @@ export class MatchesService {
     @InjectS3() private readonly s3: S3,
     private readonly prismaService: PrismaService,
     private readonly playersService: PlayersService,
-  ) {}
+  ) { }
 
   public async findAll(): Promise<MatchEntity[]> {
     return this.prismaService.match.findMany({
@@ -39,6 +39,11 @@ export class MatchesService {
     return this.prismaService.match.findFirst({
       where: { id },
       include: {
+        season: {
+          include: {
+            league: true
+          }
+        },
         homeTeam: true,
         awayTeam: true,
         location: true,
@@ -434,12 +439,12 @@ export class MatchesService {
 
         overview.SC_PER[0] = _.round(
           (sumBy(homeTeamStats, 'G') + sumBy(homeTeamStats, 'B')) /
-            overview.I50[0],
+          overview.I50[0],
           3,
         );
         overview.SC_PER[1] = _.round(
           (sumBy(awayTeamStats, 'G') + sumBy(awayTeamStats, 'B')) /
-            overview.I50[1],
+          overview.I50[1],
           3,
         );
         overview.SC_PER[2] = _.round(
@@ -603,6 +608,8 @@ export class MatchesService {
 
     const aflResults = _(match.aflResults)
       .map((aflResult) => ({
+        scorePrimary: aflResult.scorePrimary,
+        scoreSecondary: aflResult.scoreSecondary,
         team: aflResult.team,
         players: _(aflResult.playersOnAFLResults)
           .groupBy((s) => s.playerId)
@@ -622,13 +629,13 @@ export class MatchesService {
           })
           .value(),
       }))
-      // .transform((results, aflResult) => {
-      //   if (aflResult.team.id === match.homeTeamId) {
-      //     _.assign(results, { home: aflResult });
-      //   } else {
-      //     _.assign(results, { away: aflResult });
-      //   }
-      // }, {})
+      .transform((results, aflResult) => {
+        if (aflResult.team.id === match.homeTeamId) {
+          _.assign(results, { home: aflResult });
+        } else {
+          _.assign(results, { away: aflResult });
+        }
+      }, {})
       .value();
 
     return { reports, aflResults };
