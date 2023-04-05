@@ -5,9 +5,6 @@ export class CreateTeamDto {
   @IsString()
   name: string;
 
-  @IsString()
-  logo: string;
-
   @Type(() => Number)
   @IsNumber({ maxDecimalPlaces: 0 })
   seasonId: number;

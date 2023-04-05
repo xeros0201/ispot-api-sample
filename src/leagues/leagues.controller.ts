@@ -5,10 +5,14 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
+  Put,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage, MulterError } from 'multer';
 
 import { SessionAuthGuard } from '../auth/guards/session-auth.guard';
 import { UserEntity } from '../users/entities/user.entity';
@@ -43,22 +47,56 @@ export class LeaguesController {
   }
 
   @Post('/')
+  @UseInterceptors(
+    FileInterceptor('logo', {
+      fileFilter: (
+        _,
+        { mimetype, fieldname },
+        cb: (e: Error, a: boolean) => void,
+      ): void => {
+        if (['image/jpeg', 'image/jpg', 'image/png'].includes(mimetype)) {
+          cb(null, true);
+        } else {
+          cb(new MulterError('LIMIT_UNEXPECTED_FILE', fieldname), false);
+        }
+      },
+      storage: diskStorage({ destination: './uploads/' }),
+    }),
+  )
   @UseGuards(SessionAuthGuard)
   public async create(
     @Body() data: CreateLeagueDto,
+    @UploadedFile() file: Express.Multer.File,
     @CurrentUser() user: UserEntity,
   ): Promise<LeagueEntity> {
-    return this.leaguesService.create(data, user.id);
+    return this.leaguesService.create(data, file, user.id);
   }
 
-  @Patch('/:id')
+  @Put('/:id')
+  @UseInterceptors(
+    FileInterceptor('logo', {
+      fileFilter: (
+        _,
+        { mimetype, fieldname },
+        cb: (e: Error, a: boolean) => void,
+      ): void => {
+        if (['image/jpeg', 'image/jpg', 'image/png'].includes(mimetype)) {
+          cb(null, true);
+        } else {
+          cb(new MulterError('LIMIT_UNEXPECTED_FILE', fieldname), false);
+        }
+      },
+      storage: diskStorage({ destination: './uploads/' }),
+    }),
+  )
   @UseGuards(SessionAuthGuard)
   public async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() data: UpdateLeagueDto,
+    @UploadedFile() file: Express.Multer.File,
     @CurrentUser() user: UserEntity,
   ): Promise<LeagueEntity> {
-    return this.leaguesService.update(id, data, user.id);
+    return this.leaguesService.update(id, data, file, user.id);
   }
 
   @Delete('/:id')
