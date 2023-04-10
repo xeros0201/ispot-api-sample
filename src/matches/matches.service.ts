@@ -39,6 +39,11 @@ export class MatchesService {
     return this.prismaService.match.findFirst({
       where: { id },
       include: {
+        season: {
+          include: {
+            league: true,
+          },
+        },
         homeTeam: true,
         awayTeam: true,
         location: true,
