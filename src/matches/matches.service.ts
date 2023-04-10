@@ -478,9 +478,11 @@ export class MatchesService {
     this.logger.debug(`Publish report of match #${match.id} successful.`);
   }
 
-  public async getStats(
-    id: number,
-  ): Promise<{ reports: any; teamReports: any }> {
+  public async getStats(id: number): Promise<{
+    reports: any;
+    teamReports: any;
+    leaders: any;
+  }> {
     const match = await this.prismaService.match.findFirst({
       where: { id },
       include: {
@@ -536,7 +538,7 @@ export class MatchesService {
 
     const teamReports = _(match.teamReports)
       .map((teamReport) => ({
-        ...teamReport,
+        // ...teamReport,
         team: _.pick(teamReport.team, ['id', 'name', 'logo']),
         score: teamReport.score,
         meta: teamReport.meta,
@@ -584,7 +586,36 @@ export class MatchesService {
       }, {})
       .value();
 
-    return { reports, teamReports };
+    const leaders = _(match.teamReports)
+      .map((teamReport) => ({
+        teamId: teamReport.teamId,
+        reports: _(teamReport.playersOnTeamReports)
+          .groupBy((p) => p.resultProperty.alias)
+          .mapValues((p) => {
+            return _(p)
+              .map((r) => {
+                return {
+                  name: r.resultProperty.name,
+                  player: _.pick(r.player, ['id', 'name']),
+                  value: r.value,
+                };
+              })
+              .orderBy((r) => r.value, 'desc')
+              .take(4)
+              .value();
+          })
+          .value(),
+      }))
+      .transform((results, value) => {
+        if (value.teamId === match.homeTeamId) {
+          _.assign(results, { home: value });
+        } else {
+          _.assign(results, { away: value });
+        }
+      }, {})
+      .value();
+
+    return { reports, teamReports, leaders };
   }
 
   private async getDataFromCsv(filePath: string): Promise<{

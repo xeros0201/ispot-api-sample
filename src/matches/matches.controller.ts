@@ -176,9 +176,11 @@ export class MatchesController {
   }
 
   @Get('/:id/_stats')
-  public async getStats(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<{ reports: any; teamReports: any }> {
+  public async getStats(@Param('id', ParseIntPipe) id: number): Promise<{
+    reports: any;
+    teamReports: any;
+    leaders: any;
+  }> {
     return this.matchesService.getStats(id);
   }
 }
