@@ -406,6 +406,7 @@ export class MatchesService {
           matchId: match.id,
           teamId: match.homeTeamId,
           score: 0,
+          meta: homeTeamData.meta,
           playersOnTeamReports: {
             createMany: {
               data: _.transform(
@@ -440,6 +441,7 @@ export class MatchesService {
           matchId: match.id,
           teamId: match.awayTeamId,
           score: 0,
+          meta: homeTeamData.meta,
           playersOnTeamReports: {
             createMany: {
               data: _.transform(
@@ -534,7 +536,10 @@ export class MatchesService {
 
     const teamReports = _(match.teamReports)
       .map((teamReport) => ({
-        team: _.pick(teamReport.team, ['id', 'name']),
+        ...teamReport,
+        team: _.pick(teamReport.team, ['id', 'name', 'logo']),
+        score: teamReport.score,
+        meta: teamReport.meta,
         players: _(teamReport.playersOnTeamReports)
           .groupBy((s) => s.playerId)
           .map((values, playerId) => {
