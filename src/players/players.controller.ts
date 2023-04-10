@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 
 import { UserEntity } from '../users/entities/user.entity';
@@ -23,6 +24,13 @@ export class PlayersController {
   @Get('/')
   public async findAll(): Promise<PlayerEntity[]> {
     return this.playersService.findAll();
+  }
+
+  @Get('/_stats')
+  public async getStatsByProperty(
+    @Query('property') property: string,
+  ): Promise<any> {
+    return this.playersService.getStats(property);
   }
 
   @Get('/:id')

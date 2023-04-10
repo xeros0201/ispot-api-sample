@@ -32,6 +32,7 @@ CREATE TABLE "team_reports" (
     "match_id" INTEGER NOT NULL,
     "team_id" INTEGER NOT NULL,
     "score" INTEGER NOT NULL,
+    "meta" JSONB,
 
     CONSTRAINT "team_reports_pkey" PRIMARY KEY ("id")
 );
@@ -60,7 +61,7 @@ ALTER TABLE "team_reports" ADD CONSTRAINT "team_reports_team_id_fkey" FOREIGN KE
 ALTER TABLE "players_on_team_reports" ADD CONSTRAINT "players_on_team_reports_player_id_fkey" FOREIGN KEY ("player_id") REFERENCES "players"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "players_on_team_reports" ADD CONSTRAINT "players_on_team_reports_team_report_id_fkey" FOREIGN KEY ("team_report_id") REFERENCES "team_reports"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "players_on_team_reports" ADD CONSTRAINT "players_on_team_reports_team_report_id_fkey" FOREIGN KEY ("team_report_id") REFERENCES "team_reports"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "players_on_team_reports" ADD CONSTRAINT "players_on_team_reports_result_property_id_fkey" FOREIGN KEY ("result_property_id") REFERENCES "result_properties"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

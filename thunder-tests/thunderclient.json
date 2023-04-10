@@ -444,7 +444,7 @@
     "method": "POST",
     "sortNum": 260000,
     "created": "2023-03-09T04:40:59.858Z",
-    "modified": "2023-03-20T03:34:42.059Z",
+    "modified": "2023-04-05T16:59:00.017Z",
     "headers": [],
     "params": [],
     "body": {
@@ -478,16 +478,24 @@
         {
           "name": "locationId",
           "value": "1"
+        },
+        {
+          "name": "homePlayerIds[H01]",
+          "value": "1"
+        },
+        {
+          "name": "homePlayerIds[H02]",
+          "value": "3"
         }
       ],
       "files": [
         {
           "name": "homeTeamCsv",
-          "value": "../../../../../Downloads/HOME.csv"
+          "value": "../../../../../Downloads/Maroochydore R1.csv"
         },
         {
           "name": "awayTeamCsv",
-          "value": "../../../../../Downloads/AWAY.csv"
+          "value": "../../../../../Downloads/Matrix Labrador.csv"
         }
       ]
     },
@@ -694,6 +702,26 @@
         }
       ]
     },
+    "tests": []
+  },
+  {
+    "_id": "4fada5cd-4c7a-4903-a889-bb1265f39260",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "17ac7faa-ae07-4483-879d-34cc16f031b8",
+    "name": "Stats",
+    "url": "/players/_stats?property=D",
+    "method": "GET",
+    "sortNum": 235000,
+    "created": "2023-04-09T19:28:06.061Z",
+    "modified": "2023-04-09T19:29:35.971Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "property",
+        "value": "D",
+        "isPath": false
+      }
+    ],
     "tests": []
   }
 ]

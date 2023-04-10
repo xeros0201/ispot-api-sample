@@ -1,4 +1,4 @@
-import { TeamReport } from '@prisma/client';
+import { Prisma, TeamReport } from '@prisma/client';
 
 export class TeamReportEntity implements TeamReport {
   id: number;
@@ -8,4 +8,6 @@ export class TeamReportEntity implements TeamReport {
   teamId: number;
 
   score: number;
+
+  meta: Prisma.JsonValue & { RUSHED?: number };
 }

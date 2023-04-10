@@ -11,6 +11,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import * as _ from 'lodash';
 import { diskStorage, MulterError } from 'multer';
 
 import { PlayerEntity } from '../players/entities/player.entity';
@@ -76,12 +77,12 @@ export class MatchesController {
     let homeTeamCsv: string;
     let awayTeamCsv: string;
 
-    if (files.homeTeamCsv && files.homeTeamCsv.length > 0) {
-      homeTeamCsv = files.homeTeamCsv[0].path;
+    if (!_.isEmpty(files.homeTeamCsv)) {
+      homeTeamCsv = _.head(files.homeTeamCsv).path;
     }
 
-    if (files.awayTeamCsv && files.awayTeamCsv.length > 0) {
-      awayTeamCsv = files.awayTeamCsv[0].path;
+    if (!_.isEmpty(files.awayTeamCsv)) {
+      awayTeamCsv = _.head(files.awayTeamCsv).path;
     }
 
     return this.matchesService.create(formData, {
@@ -133,22 +134,23 @@ export class MatchesController {
     let homeTeamCsv: string;
     let awayTeamCsv: string;
 
-    if (files.homeTeamCsv && files.homeTeamCsv.length > 0) {
-      homeTeamCsv = files.homeTeamCsv[0].path;
+    if (!_.isEmpty(files.homeTeamCsv)) {
+      homeTeamCsv = _.head(files.homeTeamCsv).path;
     }
 
-    if (files.awayTeamCsv && files.awayTeamCsv.length > 0) {
-      awayTeamCsv = files.awayTeamCsv[0].path;
+    if (!_.isEmpty(files.awayTeamCsv)) {
+      awayTeamCsv = _.head(files.awayTeamCsv).path;
     }
 
-    return this.matchesService.update(id, data, { homeTeamCsv, awayTeamCsv });
+    return this.matchesService.update(id, data, {
+      homeTeamCsv,
+      awayTeamCsv,
+    });
   }
 
   @Get('/:id/_publish')
   public async publish(@Param('id', ParseIntPipe) id: number): Promise<any> {
-    console.log(id);
-
-    // return this.matchesService.publish(id);
+    return this.matchesService.publish(id);
   }
 
   @Delete('/:id')
@@ -174,9 +176,9 @@ export class MatchesController {
   }
 
   @Get('/:id/_stats')
-  public async getStats(@Param('id', ParseIntPipe) id: number): Promise<any> {
-    console.log(id);
-
-    // return this.matchesService.getStats(id);
+  public async getStats(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<{ reports: any; teamReports: any }> {
+    return this.matchesService.getStats(id);
   }
 }

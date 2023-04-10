@@ -144,7 +144,7 @@ model Player {
   updatedDate          DateTime               @updatedAt @map("updated_date")
   updatedUserId        String?                @map("updated_user_id") @db.Uuid
   updatedUser          User?                  @relation(fields: [updatedUserId], references: [id], name: "updatedUser")
-  PlayersOnTeamReports PlayersOnTeamReports[]
+  playersOnTeamReports PlayersOnTeamReports[]
 
   @@map("players")
 }
@@ -195,6 +195,7 @@ model TeamReport {
   teamId               Int                    @map("team_id")
   team                 Team?                  @relation(fields: [teamId], references: [id])
   score                Int
+  meta                 Json?
   playersOnTeamReports PlayersOnTeamReports[]
 
   @@map("team_reports")
@@ -231,7 +232,7 @@ model PlayersOnTeamReports {
   playerId         Int             @map("player_id")
   player           Player?         @relation(fields: [playerId], references: [id])
   teamReportId     Int             @map("team_report_id")
-  teamReport       TeamReport?     @relation(fields: [teamReportId], references: [id])
+  teamReport       TeamReport?     @relation(fields: [teamReportId], references: [id], onDelete: Cascade)
   resultPropertyId Int             @map("result_property_id")
   resultProperty   ResultProperty? @relation(fields: [resultPropertyId], references: [id])
   value            Float
