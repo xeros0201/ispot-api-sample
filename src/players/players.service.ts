@@ -96,7 +96,10 @@ export class PlayersService {
     });
   }
 
-  public async getStats(alias: string): Promise<any> {
+  public async getStats(
+    alias: string,
+    { teamId }: { teamId?: number },
+  ): Promise<any> {
     const resultProperty = await this.prismaService.resultProperty.findFirst({
       where: { alias },
     });
@@ -107,7 +110,10 @@ export class PlayersService {
 
     const results = await this.prismaService.playersOnTeamReports.groupBy({
       by: ['playerId'],
-      where: { resultPropertyId: resultProperty.id },
+      where: {
+        resultPropertyId: resultProperty.id,
+        ...(!_.isNil(teamId) ? { player: { teamId } } : {}),
+      },
       _sum: { value: true },
       orderBy: [{ _sum: { value: 'desc' } }],
       take: 10,

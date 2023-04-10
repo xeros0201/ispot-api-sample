@@ -709,16 +709,21 @@
     "colId": "946616f3-12a2-4489-a612-965150521279",
     "containerId": "17ac7faa-ae07-4483-879d-34cc16f031b8",
     "name": "Stats",
-    "url": "/players/_stats?property=D",
+    "url": "/players/_stats?property=D&teamId=1",
     "method": "GET",
     "sortNum": 235000,
     "created": "2023-04-09T19:28:06.061Z",
-    "modified": "2023-04-09T19:29:35.971Z",
+    "modified": "2023-04-10T05:03:37.120Z",
     "headers": [],
     "params": [
       {
         "name": "property",
         "value": "D",
+        "isPath": false
+      },
+      {
+        "name": "teamId",
+        "value": "1",
         "isPath": false
       }
     ],

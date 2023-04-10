@@ -9,6 +9,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import * as _ from 'lodash';
 
 import { UserEntity } from '../users/entities/user.entity';
 import { CurrentUser } from '../users/users.decorator';
@@ -29,8 +30,11 @@ export class PlayersController {
   @Get('/_stats')
   public async getStatsByProperty(
     @Query('property') property: string,
+    @Query('teamId') teamId?: string,
   ): Promise<any> {
-    return this.playersService.getStats(property);
+    return this.playersService.getStats(property, {
+      teamId: _.toNumber(teamId) || undefined,
+    });
   }
 
   @Get('/:id')
