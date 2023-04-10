@@ -376,7 +376,7 @@ const main = async (): Promise<void> => {
         matchId: match.id,
         teamId: homeTeam.id,
         score: _.sample([10, 15, 20]),
-        meta: { RUSHED: 0 },
+        meta: { RUSHED: 0, BEHIND: 0 },
         playersOnTeamReports: {
           createMany: {
             data: _.transform<
@@ -410,7 +410,7 @@ const main = async (): Promise<void> => {
         matchId: match.id,
         teamId: awayTeam.id,
         score: _.sample([10, 15, 20]),
-        meta: { RUSHED: 0 },
+        meta: { RUSHED: 0, BEHIND: 0 },
         playersOnTeamReports: {
           createMany: {
             data: _.transform<

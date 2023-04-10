@@ -9,5 +9,8 @@ export class TeamReportEntity implements TeamReport {
 
   score: number;
 
-  meta: Prisma.JsonValue & { RUSHED?: number };
+  meta: Prisma.JsonValue & {
+    RUSHED?: number;
+    BEHIND?: number;
+  };
 }
