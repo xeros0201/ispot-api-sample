@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -25,6 +26,13 @@ export class TeamsController {
   @Get('/')
   public async findAll(): Promise<TeamEntity[]> {
     return this.teamsService.findAll();
+  }
+
+  @Get('/_stats')
+  public async getStats(
+    @Query('round', ParseIntPipe) round: number,
+  ): Promise<any> {
+    return this.teamsService.getStats(round);
   }
 
   @Get('/:id')
