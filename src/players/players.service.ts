@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import * as _ from 'lodash';
 import { PrismaService } from 'nestjs-prisma';
 
 import { MatchEntity } from '../matches/entities/match.entity';
@@ -90,8 +91,62 @@ export class PlayersService {
     matchId: MatchEntity['id'],
   ): Promise<PlayerEntity[]> {
     return this.prismaService.player.findMany({
-      where: { matches: { some: { matchId } } },
+      where: { playersOnMatches: { some: { matchId } } },
       include: { team: true },
     });
+  }
+
+  public async getStats(
+    alias: string,
+    { teamId }: { teamId?: number },
+  ): Promise<any> {
+    const resultProperty = await this.prismaService.resultProperty.findFirst({
+      where: { alias },
+    });
+
+    if (_.isNil(resultProperty)) {
+      throw new BadRequestException('No Property found!');
+    }
+
+    const results = await this.prismaService.playersOnTeamReports.groupBy({
+      by: ['playerId'],
+      where: {
+        resultPropertyId: resultProperty.id,
+        ...(!_.isNil(teamId) ? { player: { teamId } } : {}),
+      },
+      _sum: { value: true },
+      orderBy: [{ _sum: { value: 'desc' } }],
+      take: 10,
+    });
+
+    const players = await this.prismaService.player.findMany({
+      where: {
+        id: { in: _.map(results, (r) => r.playerId) },
+      },
+      include: {
+        team: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    return _(players)
+      .map((player) => {
+        const p = _.find(results, (r) => r.playerId === player.id);
+
+        _.assign(player, { total: p._sum.value });
+
+        return _.omit(player, [
+          'createdDate',
+          'createdUserId',
+          'updatedDate',
+          'updatedUserId',
+        ]);
+      })
+      .orderBy('total', 'desc')
+      .value();
   }
 }

@@ -88,4 +88,71 @@ export class TeamsService {
   public async findAllPlayers(id: number): Promise<PlayerEntity[]> {
     return this.playersService.findAllByTeamId(id);
   }
+
+  public async getStats(seasonId: number, round: number): Promise<any> {
+    const matches = await this.prismaService.match.findMany({
+      where: { seasonId, round },
+    });
+
+    const teamReports = await this.prismaService.teamReport.findMany({
+      where: {
+        matchId: { in: _.map(matches, (m) => m.id) },
+      },
+      include: {
+        team: true,
+        playersOnTeamReports: {
+          include: {
+            resultProperty: {
+              include: { parent: true },
+            },
+            player: true,
+          },
+        },
+      },
+    });
+
+    return _(teamReports)
+      .map((teamReport) => {
+        return {
+          team: _.pick(teamReport.team, ['id', 'name']),
+          score: teamReport.score,
+          meta: teamReport.meta,
+          players: _(teamReport.playersOnTeamReports)
+            .groupBy((s) => s.playerId)
+            .map((values, playerId) => {
+              const { player } = _.find(
+                values,
+                (r) => r.playerId === _.toNumber(playerId),
+              );
+
+              return {
+                player: _.pick(player, ['id', 'name']),
+                values: _(values)
+                  .map((r) => ({
+                    resultProperty: r.resultProperty,
+                    value: r.value,
+                  }))
+                  .groupBy((r) => r.resultProperty.parent.name)
+                  .mapValues((v) => {
+                    return _.transform(
+                      v,
+                      (r, p) => {
+                        _.assign(r, {
+                          [p.resultProperty.alias]: {
+                            name: p.resultProperty.name,
+                            value: p.value,
+                          },
+                        });
+                      },
+                      {},
+                    );
+                  })
+                  .value(),
+              };
+            })
+            .value(),
+        };
+      })
+      .value();
+  }
 }

@@ -1,13 +1,16 @@
-import { AFLResult } from '@prisma/client';
+import { Prisma, TeamReport } from '@prisma/client';
 
-export class AFLResultEntity implements AFLResult {
+export class TeamReportEntity implements TeamReport {
   id: number;
 
   matchId: number;
 
   teamId: number;
 
-  scorePrimary: number;
+  score: number;
 
-  scoreSecondary: number;
+  meta: Prisma.JsonValue & {
+    RUSHED?: number;
+    BEHIND?: number;
+  };
 }

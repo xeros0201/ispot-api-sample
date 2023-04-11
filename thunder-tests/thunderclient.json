@@ -444,7 +444,7 @@
     "method": "POST",
     "sortNum": 260000,
     "created": "2023-03-09T04:40:59.858Z",
-    "modified": "2023-03-20T03:34:42.059Z",
+    "modified": "2023-04-05T16:59:00.017Z",
     "headers": [],
     "params": [],
     "body": {
@@ -478,16 +478,24 @@
         {
           "name": "locationId",
           "value": "1"
+        },
+        {
+          "name": "homePlayerIds[H01]",
+          "value": "1"
+        },
+        {
+          "name": "homePlayerIds[H02]",
+          "value": "3"
         }
       ],
       "files": [
         {
           "name": "homeTeamCsv",
-          "value": "../../../../../Downloads/HOME.csv"
+          "value": "../../../../../Downloads/Maroochydore R1.csv"
         },
         {
           "name": "awayTeamCsv",
-          "value": "../../../../../Downloads/AWAY.csv"
+          "value": "../../../../../Downloads/Matrix Labrador.csv"
         }
       ]
     },
@@ -694,6 +702,70 @@
         }
       ]
     },
+    "tests": []
+  },
+  {
+    "_id": "4fada5cd-4c7a-4903-a889-bb1265f39260",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "17ac7faa-ae07-4483-879d-34cc16f031b8",
+    "name": "Stats",
+    "url": "/players/_stats?property=D&teamId=1",
+    "method": "GET",
+    "sortNum": 235000,
+    "created": "2023-04-09T19:28:06.061Z",
+    "modified": "2023-04-10T05:03:37.120Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "property",
+        "value": "D",
+        "isPath": false
+      },
+      {
+        "name": "teamId",
+        "value": "1",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  },
+  {
+    "_id": "892a534b-b7af-4124-a7c7-76fc36c05658",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "622ae513-acbe-45da-a475-3a8483d41d1e",
+    "name": "Find By ID",
+    "url": "/matches/1",
+    "method": "GET",
+    "sortNum": 195000,
+    "created": "2023-04-10T04:45:02.405Z",
+    "modified": "2023-04-10T04:45:06.445Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "670c5da5-7e70-4a00-a68e-6fc38bc2f89a",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "50a9d6e7-8d74-4e86-bd99-b6368ef6c9d2",
+    "name": "Stats",
+    "url": "/teams/_stats?round=1&seasonId=1",
+    "method": "GET",
+    "sortNum": 17500,
+    "created": "2023-04-11T01:14:00.210Z",
+    "modified": "2023-04-11T01:35:25.478Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "round",
+        "value": "1",
+        "isPath": false
+      },
+      {
+        "name": "seasonId",
+        "value": "1",
+        "isPath": false
+      }
+    ],
     "tests": []
   }
 ]
