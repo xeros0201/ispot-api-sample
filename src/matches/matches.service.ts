@@ -851,29 +851,29 @@ export class MatchesService {
         POSSESSION.HARD_BALL[1],
       );
 
-      POSSESSION.FREES_FOR[0] = 0;
-      POSSESSION.FREES_FOR[1] = 0;
+      POSSESSION.FREES_FOR[0] = sumBy(homeTeamStats, 'FK_F');
+      POSSESSION.FREES_FOR[1] = sumBy(awayTeamStats, 'FK_F');
       POSSESSION.FREES_FOR[2] = _.subtract(
         POSSESSION.FREES_FOR[0],
         POSSESSION.FREES_FOR[1],
       );
 
-      POSSESSION.COUNT_M[0] = 0;
-      POSSESSION.COUNT_M[1] = 0;
+      POSSESSION.COUNT_M[0] = sumBy(homeTeamStats, 'CM');
+      POSSESSION.COUNT_M[1] = sumBy(awayTeamStats, 'CM');
       POSSESSION.COUNT_M[2] = _.subtract(
         POSSESSION.COUNT_M[0],
         POSSESSION.COUNT_M[1],
       );
 
-      POSSESSION.TOTAL_CONT[0] = 0;
-      POSSESSION.TOTAL_CONT[1] = 0;
+      POSSESSION.TOTAL_CONT[0] = sumBy(homeTeamStats, 'CP');
+      POSSESSION.TOTAL_CONT[1] = sumBy(awayTeamStats, 'CP');
       POSSESSION.TOTAL_CONT[2] = _.subtract(
         POSSESSION.TOTAL_CONT[0],
         POSSESSION.TOTAL_CONT[1],
       );
 
-      POSSESSION.HB_REC[0] = 0;
-      POSSESSION.HB_REC[1] = 0;
+      POSSESSION.HB_REC[0] = sumBy(homeTeamStats, 'UM');
+      POSSESSION.HB_REC[1] = sumBy(awayTeamStats, 'UM');
       POSSESSION.HB_REC[2] = _.subtract(
         POSSESSION.HB_REC[0],
         POSSESSION.HB_REC[1],
@@ -886,15 +886,15 @@ export class MatchesService {
         POSSESSION.GATHERS[1],
       );
 
-      POSSESSION.UNCON_M[0] = 0;
-      POSSESSION.UNCON_M[1] = 0;
+      POSSESSION.UNCON_M[0] = sumBy(homeTeamStats, 'UM');
+      POSSESSION.UNCON_M[1] = sumBy(awayTeamStats, 'UM');
       POSSESSION.UNCON_M[2] = _.subtract(
         POSSESSION.UNCON_M[0],
         POSSESSION.UNCON_M[1],
       );
 
-      POSSESSION.TOTAL_UNCON[0] = 0;
-      POSSESSION.TOTAL_UNCON[1] = 0;
+      POSSESSION.TOTAL_UNCON[0] = sumBy(homeTeamStats, 'UP');
+      POSSESSION.TOTAL_UNCON[1] = sumBy(awayTeamStats, 'UP');
       POSSESSION.TOTAL_UNCON[2] = _.subtract(
         POSSESSION.TOTAL_UNCON[0],
         POSSESSION.TOTAL_UNCON[1],
