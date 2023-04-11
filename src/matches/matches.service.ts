@@ -21,8 +21,8 @@ import { PlayersService } from '../players/players.service';
 import { SeasonEntity } from '../seasons/entities/season.entity';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
-import { TeamReportEntity } from './entities/afl-result.entity';
 import { MatchEntity } from './entities/match.entity';
+import { TeamReportEntity } from './entities/team-report.entity';
 import { CSVProperty, PlayerStatsProperty } from './matches.types';
 
 @Injectable()
@@ -139,11 +139,11 @@ export class MatchesService {
     id: number,
     data: UpdateMatchDto,
     { homeTeamCsv, awayTeamCsv }: { homeTeamCsv: string; awayTeamCsv: string },
-  ): Promise<MatchEntity> {
+  ): Promise<MatchEntity & { isCanPublish: boolean }> {
     const match = await this.prismaService.match.findFirst({ where: { id } });
 
     if (match.status === MatchStatus.PUBLISHED) {
-      throw new BadRequestException();
+      throw new BadRequestException('This match could not be published.');
     }
 
     if (!_.isNil(homeTeamCsv)) {
@@ -167,7 +167,7 @@ export class MatchesService {
       this.playersService.findAllByTeamId(data.awayTeamId),
     ]);
 
-    return this.prismaService.match.update({
+    const record = await this.prismaService.match.update({
       where: { id },
       data: {
         ..._.omit(data, ['homePlayerIds', 'awayPlayerIds']),
@@ -200,6 +200,28 @@ export class MatchesService {
         },
       },
     });
+
+    const [homeTeamData, awayTeamData] = await Promise.all([
+      this.getDataFromCsv(homeTeamCsv),
+      this.getDataFromCsv(awayTeamCsv),
+    ]);
+
+    return {
+      ...record,
+      isCanPublish: !_([
+        record.type,
+        record.seasonId,
+        record.homeTeamId,
+        record.homeTeamCsv,
+        record.awayTeamId,
+        record.awayTeamCsv,
+        record.round,
+        record.date,
+        record.locationId,
+        homeTeamData.stats,
+        awayTeamData.stats,
+      ]).some((v) => _.isNil(v)),
+    };
   }
 
   public async delete(id: number): Promise<MatchEntity> {
@@ -439,12 +461,27 @@ export class MatchesService {
         },
       );
 
+      const sumByStats = (
+        data: { [id: string]: { [p: string]: CSVProperty } },
+        key: string,
+      ) => {
+        return _(data)
+          .transform((r, v) => {
+            r.push(_.get(v, key));
+          }, [])
+          .sum();
+      };
+
       [homeTeamReport, awayTeamReport] = await Promise.all([
         this.prismaService.teamReport.create({
           data: {
             matchId: match.id,
             teamId: match.homeTeamId,
-            score: 0,
+            score: _.sum([
+              _.multiply(sumByStats(homeTeamStats, 'OTHER.G'), 6),
+              sumByStats(homeTeamStats, 'OTHER.B'),
+              homeTeamData.meta.RUSHED,
+            ]),
             meta: homeTeamData.meta,
             playersOnTeamReports: {
               createMany: {
@@ -484,8 +521,12 @@ export class MatchesService {
           data: {
             matchId: match.id,
             teamId: match.awayTeamId,
-            score: 0,
-            meta: homeTeamData.meta,
+            score: _.sum([
+              _.multiply(sumByStats(awayTeamStats, 'OTHER.G'), 6),
+              sumByStats(awayTeamStats, 'OTHER.B'),
+              awayTeamData.meta.RUSHED,
+            ]),
+            meta: awayTeamData.meta,
             playersOnTeamReports: {
               createMany: {
                 data: _.transform(
@@ -811,45 +852,45 @@ export class MatchesService {
 
       // ## `OFFENCE`
 
-      OFFENCE.I50S[0] = OVERVIEW.I50S[0];
-      OFFENCE.I50S[1] = OVERVIEW.I50S[1];
-      OFFENCE.I50S[2] = OVERVIEW.I50S[2];
+      // OFFENCE.I50S[0] = OVERVIEW.I50S[0];
+      // OFFENCE.I50S[1] = OVERVIEW.I50S[1];
+      // OFFENCE.I50S[2] = OVERVIEW.I50S[2];
 
-      OFFENCE.SC_PER_I50[0] = OVERVIEW.SC_PER_I50[0];
-      OFFENCE.SC_PER_I50[1] = OVERVIEW.SC_PER_I50[1];
-      OFFENCE.SC_PER_I50[2] = OVERVIEW.SC_PER_I50[2];
+      // OFFENCE.SC_PER_I50[0] = OVERVIEW.SC_PER_I50[0];
+      // OFFENCE.SC_PER_I50[1] = OVERVIEW.SC_PER_I50[1];
+      // OFFENCE.SC_PER_I50[2] = OVERVIEW.SC_PER_I50[2];
 
-      OFFENCE.DEEP[0] = 0;
-      OFFENCE.DEEP[1] = 0;
-      OFFENCE.DEEP[2] = _.subtract(OFFENCE.DEEP[0], OFFENCE.DEEP[1]);
+      // OFFENCE.DEEP[0] = 0;
+      // OFFENCE.DEEP[1] = 0;
+      // OFFENCE.DEEP[2] = _.subtract(OFFENCE.DEEP[0], OFFENCE.DEEP[1]);
 
-      OFFENCE.SHALLOW[0] = 0;
-      OFFENCE.SHALLOW[1] = 0;
-      OFFENCE.SHALLOW[2] = _.subtract(OFFENCE.SHALLOW[0], OFFENCE.SHALLOW[1]);
+      // OFFENCE.SHALLOW[0] = 0;
+      // OFFENCE.SHALLOW[1] = 0;
+      // OFFENCE.SHALLOW[2] = _.subtract(OFFENCE.SHALLOW[0], OFFENCE.SHALLOW[1]);
 
-      OFFENCE.F50_MARKS[0] = OVERVIEW.F50_MARKS[0];
-      OFFENCE.F50_MARKS[1] = OVERVIEW.F50_MARKS[1];
-      OFFENCE.F50_MARKS[2] = OVERVIEW.F50_MARKS[2];
+      // OFFENCE.F50_MARKS[0] = OVERVIEW.F50_MARKS[0];
+      // OFFENCE.F50_MARKS[1] = OVERVIEW.F50_MARKS[1];
+      // OFFENCE.F50_MARKS[2] = OVERVIEW.F50_MARKS[2];
 
-      OFFENCE.R_BEHINDS[0] = 0;
-      OFFENCE.R_BEHINDS[1] = 0;
-      OFFENCE.R_BEHINDS[2] = 0;
+      // OFFENCE.R_BEHINDS[0] = homeTeamData.meta.RUSHED || 0;
+      // OFFENCE.R_BEHINDS[1] = awayTeamData.meta.RUSHED || 0;
+      // OFFENCE.R_BEHINDS[2] = 0;
 
       // ## `POSSESSION`
 
-      POSSESSION.LOOSE_BALL[0] = 0;
-      POSSESSION.LOOSE_BALL[1] = 0;
-      POSSESSION.LOOSE_BALL[2] = _.subtract(
-        POSSESSION.LOOSE_BALL[0],
-        POSSESSION.LOOSE_BALL[1],
-      );
+      // POSSESSION.LOOSE_BALL[0] = 0;
+      // POSSESSION.LOOSE_BALL[1] = 0;
+      // POSSESSION.LOOSE_BALL[2] = _.subtract(
+      //   POSSESSION.LOOSE_BALL[0],
+      //   POSSESSION.LOOSE_BALL[1],
+      // );
 
-      POSSESSION.HARD_BALL[0] = 0;
-      POSSESSION.HARD_BALL[1] = 0;
-      POSSESSION.HARD_BALL[2] = _.subtract(
-        POSSESSION.HARD_BALL[0],
-        POSSESSION.HARD_BALL[1],
-      );
+      // POSSESSION.HARD_BALL[0] = 0;
+      // POSSESSION.HARD_BALL[1] = 0;
+      // POSSESSION.HARD_BALL[2] = _.subtract(
+      //   POSSESSION.HARD_BALL[0],
+      //   POSSESSION.HARD_BALL[1],
+      // );
 
       POSSESSION.FREES_FOR[0] = sumBy(homeTeamStats, 'FK_F');
       POSSESSION.FREES_FOR[1] = sumBy(awayTeamStats, 'FK_F');
@@ -879,12 +920,12 @@ export class MatchesService {
         POSSESSION.HB_REC[1],
       );
 
-      POSSESSION.GATHERS[0] = 0;
-      POSSESSION.GATHERS[1] = 0;
-      POSSESSION.GATHERS[2] = _.subtract(
-        POSSESSION.GATHERS[0],
-        POSSESSION.GATHERS[1],
-      );
+      // POSSESSION.GATHERS[0] = 0;
+      // POSSESSION.GATHERS[1] = 0;
+      // POSSESSION.GATHERS[2] = _.subtract(
+      //   POSSESSION.GATHERS[0],
+      //   POSSESSION.GATHERS[1],
+      // );
 
       POSSESSION.UNCON_M[0] = sumBy(homeTeamStats, 'UM');
       POSSESSION.UNCON_M[1] = sumBy(awayTeamStats, 'UM');
@@ -1084,7 +1125,7 @@ export class MatchesService {
   }
 
   private async getDataFromCsv(filePath: string): Promise<{
-    meta: { [n: 'RUSHED' | 'BEHIND' | string]: number };
+    meta: TeamReportEntity['meta'];
     stats: { [n: number]: CSVProperty };
   }> {
     const buffer = await this.readCsvFromS3('csv', filePath);
@@ -1131,7 +1172,7 @@ export class MatchesService {
         }
 
         if (/[a-zA-Z\s]RUSHED/.test(key)) {
-          meta.RUSHED = args[0];
+          meta.RUSHED = _.values(args)[0];
 
           return;
         }

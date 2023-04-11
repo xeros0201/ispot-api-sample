@@ -20,6 +20,7 @@ async function bootstrap() {
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
   app.useGlobalPipes(
     new ValidationPipe({
+      whitelist: true,
       enableDebugMessages: true,
       transform: true,
       skipNullProperties: true,

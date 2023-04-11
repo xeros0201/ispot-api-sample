@@ -224,14 +224,14 @@ const main = async (): Promise<void> => {
               'TO|TO_1',
               '%|PER_1',
               'K',
-              'E|E_2',
-              'IE|IE_2',
-              'TO|TO_2',
+              'K E|E_2',
+              'K IE|IE_2',
+              'K TO|TO_2',
               '%|PER_2',
               'HB',
-              'E|E_3',
-              'IE|IE_3',
-              'TO|TO_3',
+              'HB E|E_3',
+              'HB IE|IE_3',
+              'HB TO|TO_3',
               '%|PER_3',
             ].map((s) => ({
               name: s.split('|')[0],
@@ -376,7 +376,7 @@ const main = async (): Promise<void> => {
         matchId: match.id,
         teamId: homeTeam.id,
         score: _.sample([10, 15, 20]),
-        meta: { RUSHED: 0, BEHIND: 0 },
+        meta: { RUSHED: 0 },
         playersOnTeamReports: {
           createMany: {
             data: _.transform<
@@ -410,7 +410,7 @@ const main = async (): Promise<void> => {
         matchId: match.id,
         teamId: awayTeam.id,
         score: _.sample([10, 15, 20]),
-        meta: { RUSHED: 0, BEHIND: 0 },
+        meta: { RUSHED: 0 },
         playersOnTeamReports: {
           createMany: {
             data: _.transform<

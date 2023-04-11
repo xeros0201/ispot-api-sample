@@ -15,6 +15,7 @@ import { diskStorage, MulterError } from 'multer';
 
 import { PlayerEntity } from '../players/entities/player.entity';
 import { CreateTeamDto } from './dto/create-team.dto';
+import { GetStatsDto } from './dto/get-stats.dto';
 import { UpdateTeamDto } from './dto/update-team.dto';
 import { TeamEntity } from './entities/team.entity';
 import { TeamsService } from './teams.service';
@@ -30,8 +31,7 @@ export class TeamsController {
 
   @Get('/_stats')
   public async getStats(
-    @Query('seasonId', ParseIntPipe) seasonId: number,
-    @Query('round', ParseIntPipe) round: number,
+    @Query() { seasonId, round }: GetStatsDto,
   ): Promise<any> {
     return this.teamsService.getStats(seasonId, round);
   }

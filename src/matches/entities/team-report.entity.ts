@@ -11,6 +11,5 @@ export class TeamReportEntity implements TeamReport {
 
   meta: Prisma.JsonValue & {
     RUSHED?: number;
-    BEHIND?: number;
   };
 }
