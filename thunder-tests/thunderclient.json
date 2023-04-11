@@ -748,15 +748,20 @@
     "colId": "946616f3-12a2-4489-a612-965150521279",
     "containerId": "50a9d6e7-8d74-4e86-bd99-b6368ef6c9d2",
     "name": "Stats",
-    "url": "/teams/_stats?round=1",
+    "url": "/teams/_stats?round=1&seasonId=1",
     "method": "GET",
     "sortNum": 17500,
     "created": "2023-04-11T01:14:00.210Z",
-    "modified": "2023-04-11T01:30:43.552Z",
+    "modified": "2023-04-11T01:35:25.478Z",
     "headers": [],
     "params": [
       {
         "name": "round",
+        "value": "1",
+        "isPath": false
+      },
+      {
+        "name": "seasonId",
         "value": "1",
         "isPath": false
       }

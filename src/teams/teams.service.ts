@@ -89,16 +89,14 @@ export class TeamsService {
     return this.playersService.findAllByTeamId(id);
   }
 
-  public async getStats(round: number): Promise<any> {
+  public async getStats(seasonId: number, round: number): Promise<any> {
     const matches = await this.prismaService.match.findMany({
-      where: { round },
+      where: { seasonId, round },
     });
 
     const teamReports = await this.prismaService.teamReport.findMany({
       where: {
-        matchId: {
-          in: _.map(matches, (m) => m.id),
-        },
+        matchId: { in: _.map(matches, (m) => m.id) },
       },
       include: {
         team: true,

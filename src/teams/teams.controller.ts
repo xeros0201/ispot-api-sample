@@ -30,9 +30,10 @@ export class TeamsController {
 
   @Get('/_stats')
   public async getStats(
+    @Query('seasonId', ParseIntPipe) seasonId: number,
     @Query('round', ParseIntPipe) round: number,
   ): Promise<any> {
-    return this.teamsService.getStats(round);
+    return this.teamsService.getStats(seasonId, round);
   }
 
   @Get('/:id')
