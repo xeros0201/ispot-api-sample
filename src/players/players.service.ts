@@ -12,7 +12,7 @@ import { PlayerEntity } from './entities/player.entity';
 
 @Injectable()
 export class PlayersService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) { }
 
   public async findAll(): Promise<PlayerEntity[]> {
     return this.prismaService.player.findMany({
@@ -126,6 +126,8 @@ export class PlayersService {
       include: {
         team: {
           select: {
+            season: true,
+            seasonId: true,
             id: true,
             name: true,
           },
