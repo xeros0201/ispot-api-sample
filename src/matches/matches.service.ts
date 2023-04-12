@@ -8,6 +8,7 @@ import {
   MatchStatus,
   PlayersOnTeamReports,
   ResultProperty,
+  TeamReport,
 } from '@prisma/client';
 import { parse } from 'csv-parse/sync';
 import { readFileSync, unlinkSync } from 'fs';
@@ -22,7 +23,6 @@ import { SeasonEntity } from '../seasons/entities/season.entity';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { MatchEntity } from './entities/match.entity';
-import { TeamReportEntity } from './entities/team-report.entity';
 import { CSVProperty, PlayerStatsProperty } from './matches.types';
 
 @Injectable()
@@ -276,12 +276,12 @@ export class MatchesService {
       },
     });
 
-    let homeTeamReport: TeamReportEntity & {
+    let homeTeamReport: TeamReport & {
       playersOnTeamReports: (PlayersOnTeamReports & {
         resultProperty: ResultProperty;
       })[];
     };
-    let awayTeamReport: TeamReportEntity & {
+    let awayTeamReport: TeamReport & {
       playersOnTeamReports: (PlayersOnTeamReports & {
         resultProperty: ResultProperty;
       })[];
@@ -482,7 +482,10 @@ export class MatchesService {
               sumByStats(homeTeamStats, 'OTHER.B'),
               homeTeamData.meta.RUSHED,
             ]),
-            meta: homeTeamData.meta,
+            meta: _.merge(homeTeamData.meta, {
+              TOTAL_GOAL: 0,
+              TOTAL_BEHIND: 0,
+            }),
             playersOnTeamReports: {
               createMany: {
                 data: _.transform(
@@ -526,7 +529,10 @@ export class MatchesService {
               sumByStats(awayTeamStats, 'OTHER.B'),
               awayTeamData.meta.RUSHED,
             ]),
-            meta: awayTeamData.meta,
+            meta: _.merge(awayTeamData.meta, {
+              TOTAL_GOAL: 0,
+              TOTAL_BEHIND: 0,
+            }),
             playersOnTeamReports: {
               createMany: {
                 data: _.transform(
@@ -1125,7 +1131,7 @@ export class MatchesService {
   }
 
   private async getDataFromCsv(filePath: string): Promise<{
-    meta: TeamReportEntity['meta'];
+    meta: { RUSHED: number }; // TeamReportEntity['meta'];
     stats: { [n: number]: CSVProperty };
   }> {
     const buffer = await this.readCsvFromS3('csv', filePath);
