@@ -46,7 +46,7 @@ export class MatchesService {
   }
 
   public async findById(id: number): Promise<MatchEntity> {
-    return this.prismaService.match.findFirst({
+    const match = await this.prismaService.match.findFirst({
       where: { id },
       include: {
         season: {
@@ -61,6 +61,10 @@ export class MatchesService {
           include: { player: true },
         },
       },
+    });
+
+    return _.merge(match, {
+      isCanPublish: this._getIsCanPublish(match),
     });
   }
 
@@ -90,11 +94,11 @@ export class MatchesService {
     },
   ): Promise<MatchEntity> {
     if (!_.isNil(homeTeamCsv)) {
-      homeTeamCsv = await this.uploadCsvToS3('csv', homeTeamCsv);
+      homeTeamCsv = await this._uploadCsvToS3('csv', homeTeamCsv);
     }
 
     if (!_.isNil(awayTeamCsv)) {
-      awayTeamCsv = await this.uploadCsvToS3('csv', awayTeamCsv);
+      awayTeamCsv = await this._uploadCsvToS3('csv', awayTeamCsv);
     }
 
     const [homeTeamPlayers, awayTeamPlayers] = await Promise.all([
@@ -139,7 +143,7 @@ export class MatchesService {
     id: number,
     data: UpdateMatchDto,
     { homeTeamCsv, awayTeamCsv }: { homeTeamCsv: string; awayTeamCsv: string },
-  ): Promise<MatchEntity & { isCanPublish: boolean }> {
+  ): Promise<MatchEntity> {
     const match = await this.prismaService.match.findFirst({ where: { id } });
 
     if (match.status === MatchStatus.PUBLISHED) {
@@ -147,7 +151,7 @@ export class MatchesService {
     }
 
     if (!_.isNil(homeTeamCsv)) {
-      homeTeamCsv = await this.uploadCsvToS3(
+      homeTeamCsv = await this._uploadCsvToS3(
         'csv',
         homeTeamCsv,
         match.homeTeamCsv,
@@ -155,7 +159,7 @@ export class MatchesService {
     }
 
     if (!_.isNil(awayTeamCsv)) {
-      awayTeamCsv = await this.uploadCsvToS3(
+      awayTeamCsv = await this._uploadCsvToS3(
         'csv',
         awayTeamCsv,
         match.awayTeamCsv,
@@ -167,7 +171,7 @@ export class MatchesService {
       this.playersService.findAllByTeamId(data.awayTeamId),
     ]);
 
-    const record = await this.prismaService.match.update({
+    return this.prismaService.match.update({
       where: { id },
       data: {
         ..._.omit(data, ['homePlayerIds', 'awayPlayerIds']),
@@ -200,28 +204,6 @@ export class MatchesService {
         },
       },
     });
-
-    const [homeTeamData, awayTeamData] = await Promise.all([
-      this.getDataFromCsv(homeTeamCsv),
-      this.getDataFromCsv(awayTeamCsv),
-    ]);
-
-    return {
-      ...record,
-      isCanPublish: !_([
-        record.type,
-        record.seasonId,
-        record.homeTeamId,
-        record.homeTeamCsv,
-        record.awayTeamId,
-        record.awayTeamCsv,
-        record.round,
-        record.date,
-        record.locationId,
-        homeTeamData.stats,
-        awayTeamData.stats,
-      ]).some((v) => _.isNil(v)),
-    };
   }
 
   public async delete(id: number): Promise<MatchEntity> {
@@ -246,11 +228,25 @@ export class MatchesService {
     return this.playersService.findAllByMatchId(id);
   }
 
+  private _getIsCanPublish(match: MatchEntity): boolean {
+    return !_([
+      match.type,
+      match.seasonId,
+      match.homeTeamId,
+      match.homeTeamCsv,
+      match.awayTeamId,
+      match.awayTeamCsv,
+      match.round,
+      match.date,
+      match.locationId,
+    ]).some((v) => _.isNil(v));
+  }
+
   public async publish(id: number): Promise<any> {
     const match = await this.prismaService.match.findFirst({
       where: {
         id,
-        // status: 'DRAFT',
+        status: 'DRAFT',
       },
       include: {
         season: { include: { league: true } },
@@ -263,9 +259,13 @@ export class MatchesService {
       throw new NotFoundException();
     }
 
+    if (!this._getIsCanPublish(match)) {
+      throw new BadRequestException();
+    }
+
     const [homeTeamData, awayTeamData] = await Promise.all([
-      this.getDataFromCsv(match.homeTeamCsv),
-      this.getDataFromCsv(match.awayTeamCsv),
+      this._getDataFromCsv(match.homeTeamCsv),
+      this._getDataFromCsv(match.awayTeamCsv),
     ]);
 
     await this.prismaService.match.update({
@@ -1130,7 +1130,7 @@ export class MatchesService {
     return { reports, teamReports, leaders };
   }
 
-  private async getDataFromCsv(filePath: string): Promise<{
+  private async _getDataFromCsv(filePath: string): Promise<{
     meta: { RUSHED: number }; // TeamReportEntity['meta'];
     stats: { [n: number]: CSVProperty };
   }> {
@@ -1192,7 +1192,7 @@ export class MatchesService {
     return { meta, stats };
   }
 
-  private async uploadCsvToS3(
+  private async _uploadCsvToS3(
     bucket: string,
     filePath: string,
     oldKey?: string,
