@@ -129,7 +129,7 @@ export class TeamsService {
               );
 
               return {
-                player: _.pick(player, ['id', 'name']),
+                player: _.pick(player, ['id', 'name', 'playerNumber']),
                 values: _(values)
                   .map((r) => ({
                     resultProperty: r.resultProperty,

@@ -1063,7 +1063,7 @@ export class MatchesService {
             );
 
             return {
-              player: _.pick(player, ['id', 'name']),
+              player: _.pick(player, ['id', 'name', 'playerNumber']),
               values: _(values)
                 .map((r) => ({
                   resultProperty: r.resultProperty,
@@ -1108,7 +1108,7 @@ export class MatchesService {
               .map((r) => {
                 return {
                   name: r.resultProperty.name,
-                  player: _.pick(r.player, ['id', 'name']),
+                  player: _.pick(r.player, ['id', 'name', 'playerNumber']),
                   value: r.value,
                 };
               })
