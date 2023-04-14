@@ -331,6 +331,12 @@ export class MatchesService {
                 (p) => p.playerNumber === _.toNumber(k),
               );
 
+              if (_.isNil(player)) {
+                throw new BadRequestException(
+                  `Could not find a player whose number is ${k}.`,
+                );
+              }
+
               const {
                 DISPOSAL_STATISTICS,
                 CLEARANCES,
@@ -483,8 +489,8 @@ export class MatchesService {
               homeTeamData.meta.RUSHED,
             ]),
             meta: _.merge(homeTeamData.meta, {
-              TOTAL_GOAL: 0,
-              TOTAL_BEHIND: 0,
+              TOTAL_GOAL: sumByStats(homeTeamStats, 'OTHER.G'),
+              TOTAL_BEHIND: sumByStats(homeTeamStats, 'OTHER.B'),
             }),
             playersOnTeamReports: {
               createMany: {
@@ -530,8 +536,8 @@ export class MatchesService {
               awayTeamData.meta.RUSHED,
             ]),
             meta: _.merge(awayTeamData.meta, {
-              TOTAL_GOAL: 0,
-              TOTAL_BEHIND: 0,
+              TOTAL_GOAL: sumByStats(awayTeamStats, 'OTHER.G'),
+              TOTAL_BEHIND: sumByStats(awayTeamStats, 'OTHER.B'),
             }),
             playersOnTeamReports: {
               createMany: {
@@ -1146,12 +1152,18 @@ export class MatchesService {
           headers.push(..._.map(args, (s) => s.replace(/[:|\s+]/g, '_')));
         }
 
-        if (!/[a-zA-Z\s]RUSHED/.test(k) && !/[A|H][0-9]{1,2}/.test(k)) {
+        const key = k.trim();
+
+        console.log(key);
+
+        if (!/[a-zA-Z\s]RUSHED/.test(key) && !/[A|H][0-9]{1,2}$/.test(key)) {
           return;
         }
 
+        console.log(key, '\n');
+
         _.assign(results, {
-          [k.trim()]: _(args)
+          [key]: _(args)
             .map((s) => _.toNumber(s))
             .map((n) => (!_.isNaN(n) ? n : 0))
             .transform((r, v, i) => {
@@ -1173,7 +1185,7 @@ export class MatchesService {
 
     const stats = _(rows)
       .transform<{ [n: string]: CSVProperty }>((result, args, key) => {
-        if (!/[a-zA-Z\s]RUSHED/.test(key) && !/[A|H][0-9]{1,2}/.test(key)) {
+        if (!/[a-zA-Z\s]RUSHED/.test(key) && !/[A|H][0-9]{1,2}$/.test(key)) {
           return;
         }
 
