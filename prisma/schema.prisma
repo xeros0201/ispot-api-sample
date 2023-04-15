@@ -167,20 +167,20 @@ model ResultProperty {
 
 model Match {
   id               Int                @id @default(autoincrement())
-  status           MatchStatus        @default(DRAFT)
   type             MatchType          @default(REGULAR)
   seasonId         Int?               @map("season_id")
-  season           Season?            @relation(fields: [seasonId], references: [id])
+  season           Season?            @relation(fields: [seasonId], references: [id], onDelete: Cascade)
   homeTeamId       Int?               @map("home_team_id")
-  homeTeam         Team?              @relation(fields: [homeTeamId], references: [id], name: "homeTeam")
+  homeTeam         Team?              @relation(fields: [homeTeamId], references: [id], name: "homeTeam", onDelete: Cascade)
   homeTeamCsv      String?            @map("home_team_csv")
   awayTeamId       Int?               @map("away_team_id")
-  awayTeam         Team?              @relation(fields: [awayTeamId], references: [id], name: "awayTeam")
+  awayTeam         Team?              @relation(fields: [awayTeamId], references: [id], name: "awayTeam", onDelete: Cascade)
   awayTeamCsv      String?            @map("away_team_csv")
+  locationId       Int?               @map("location_id")
+  location         Location?          @relation(fields: [locationId], references: [id], onDelete: Cascade)
   round            Int?
   date             DateTime?
-  locationId       Int?               @map("location_id")
-  location         Location?          @relation(fields: [locationId], references: [id])
+  status           MatchStatus        @default(DRAFT)
   teamReports      TeamReport[]
   reportsOnMatches ReportsOnMatches[]
   players          PlayersOnMatches[]
@@ -191,9 +191,9 @@ model Match {
 model TeamReport {
   id                   Int                    @id @default(autoincrement())
   matchId              Int                    @map("match_id")
-  match                Match?                 @relation(fields: [matchId], references: [id])
+  match                Match?                 @relation(fields: [matchId], references: [id], onDelete: Cascade)
   teamId               Int                    @map("team_id")
-  team                 Team?                  @relation(fields: [teamId], references: [id])
+  team                 Team?                  @relation(fields: [teamId], references: [id], onDelete: Cascade)
   score                Int
   meta                 Json?
   playersOnTeamReports PlayersOnTeamReports[]
@@ -204,11 +204,11 @@ model TeamReport {
 model PlayersOnMatches {
   id           Int     @id @default(autoincrement())
   matchId      Int     @map("match_id")
-  match        Match?  @relation(fields: [matchId], references: [id])
+  match        Match?  @relation(fields: [matchId], references: [id], onDelete: Cascade)
   playerId     Int     @map("player_id")
-  player       Player? @relation(fields: [playerId], references: [id])
+  player       Player? @relation(fields: [playerId], references: [id], onDelete: Cascade)
   teamId       Int     @map("team_id")
-  team         Team?   @relation(fields: [teamId], references: [id])
+  team         Team?   @relation(fields: [teamId], references: [id], onDelete: Cascade)
   playerNumber Int     @map("player_number")
 
   @@index([matchId, playerId, teamId])
@@ -218,9 +218,9 @@ model PlayersOnMatches {
 model ReportsOnMatches {
   id               Int             @id @default(autoincrement())
   matchId          Int             @map("match_id")
-  match            Match?          @relation(fields: [matchId], references: [id])
+  match            Match?          @relation(fields: [matchId], references: [id], onDelete: Cascade)
   resultPropertyId Int             @map("result_property_id")
-  resultProperty   ResultProperty? @relation(fields: [resultPropertyId], references: [id])
+  resultProperty   ResultProperty? @relation(fields: [resultPropertyId], references: [id], onDelete: Cascade)
   value            Float[]
 
   @@index([matchId, resultPropertyId])
@@ -230,11 +230,11 @@ model ReportsOnMatches {
 model PlayersOnTeamReports {
   id               Int             @id @default(autoincrement())
   playerId         Int             @map("player_id")
-  player           Player?         @relation(fields: [playerId], references: [id])
+  player           Player?         @relation(fields: [playerId], references: [id], onDelete: Cascade)
   teamReportId     Int             @map("team_report_id")
   teamReport       TeamReport?     @relation(fields: [teamReportId], references: [id], onDelete: Cascade)
   resultPropertyId Int             @map("result_property_id")
-  resultProperty   ResultProperty? @relation(fields: [resultPropertyId], references: [id])
+  resultProperty   ResultProperty? @relation(fields: [resultPropertyId], references: [id], onDelete: Cascade)
   value            Float
 
   @@index([playerId, teamReportId, resultPropertyId])

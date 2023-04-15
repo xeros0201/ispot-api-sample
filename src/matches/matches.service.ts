@@ -326,9 +326,11 @@ export class MatchesService {
           >(
             stats,
             (results, v, k) => {
+              const teamId = i === 0 ? match.homeTeamId : match.awayTeamId;
+
               const player = _.find(
                 match.players,
-                (p) => p.playerNumber === _.toNumber(k),
+                (p) => p.teamId === teamId && p.playerNumber === _.toNumber(k),
               );
 
               if (_.isNil(player)) {
@@ -477,6 +479,9 @@ export class MatchesService {
           }, [])
           .sum();
       };
+
+      // console.log(_(homeTeamStats).keys().value());
+      // console.log(_(awayTeamStats).keys().value());
 
       [homeTeamReport, awayTeamReport] = await Promise.all([
         this.prismaService.teamReport.create({
@@ -1154,13 +1159,9 @@ export class MatchesService {
 
         const key = k.trim();
 
-        console.log(key);
-
         if (!/[a-zA-Z\s]RUSHED/.test(key) && !/[A|H][0-9]{1,2}$/.test(key)) {
           return;
         }
-
-        console.log(key, '\n');
 
         _.assign(results, {
           [key]: _(args)
