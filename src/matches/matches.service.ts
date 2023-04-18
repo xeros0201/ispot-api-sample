@@ -246,7 +246,7 @@ export class MatchesService {
     const match = await this.prismaService.match.findFirst({
       where: {
         id,
-        // status: 'DRAFT',
+        status: 'DRAFT',
       },
       include: {
         season: { include: { league: true } },
