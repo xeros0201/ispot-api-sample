@@ -653,11 +653,11 @@
     "colId": "946616f3-12a2-4489-a612-965150521279",
     "containerId": "622ae513-acbe-45da-a475-3a8483d41d1e",
     "name": "Publish",
-    "url": "/matches/2/_publish",
+    "url": "/matches/4/_publish",
     "method": "GET",
     "sortNum": 275000,
     "created": "2023-03-16T15:21:37.880Z",
-    "modified": "2023-04-15T12:21:06.147Z",
+    "modified": "2023-04-18T04:08:49.646Z",
     "headers": [],
     "params": [],
     "tests": []
@@ -667,11 +667,11 @@
     "colId": "946616f3-12a2-4489-a612-965150521279",
     "containerId": "622ae513-acbe-45da-a475-3a8483d41d1e",
     "name": "Stats",
-    "url": "/matches/1/_stats",
+    "url": "/matches/4/_stats",
     "method": "GET",
     "sortNum": 285000,
     "created": "2023-03-21T02:29:02.555Z",
-    "modified": "2023-03-21T02:29:07.343Z",
+    "modified": "2023-04-15T13:20:42.257Z",
     "headers": [],
     "params": [],
     "tests": []
@@ -774,6 +774,20 @@
         "isPath": false
       }
     ],
+    "tests": []
+  },
+  {
+    "_id": "f00831b0-1a4e-4bbb-a81f-2c6e22e5b076",
+    "colId": "946616f3-12a2-4489-a612-965150521279",
+    "containerId": "622ae513-acbe-45da-a475-3a8483d41d1e",
+    "name": "Delete",
+    "url": "/matches/1",
+    "method": "DELETE",
+    "sortNum": 270000,
+    "created": "2023-04-17T18:14:48.076Z",
+    "modified": "2023-04-17T18:15:41.718Z",
+    "headers": [],
+    "params": [],
     "tests": []
   }
 ]
