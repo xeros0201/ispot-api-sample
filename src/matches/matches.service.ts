@@ -246,11 +246,11 @@ export class MatchesService {
     const match = await this.prismaService.match.findFirst({
       where: {
         id,
-        status: 'DRAFT',
+        // status: 'DRAFT',
       },
       include: {
         season: { include: { league: true } },
-        players: true,
+        players: { include: { player: true } },
         teamReports: true,
       },
     });
@@ -456,12 +456,15 @@ export class MatchesService {
               OTHER.B = i === 0 ? v.BEHIND_HOME : v.BEHIND_AWAY;
 
               _.assign(results, {
-                [player.id.toString()]: _.merge(_.cloneDeep(allProperties), {
-                  DISPOSAL_STATISTICS,
-                  CLEARANCES,
-                  POSSESSIONS_MARKING,
-                  OTHER,
-                }),
+                [player.playerId.toString()]: _.merge(
+                  _.cloneDeep(allProperties),
+                  {
+                    DISPOSAL_STATISTICS,
+                    CLEARANCES,
+                    POSSESSIONS_MARKING,
+                    OTHER,
+                  },
+                ),
               });
             },
             {},
@@ -479,9 +482,6 @@ export class MatchesService {
           }, [])
           .sum();
       };
-
-      // console.log(_(homeTeamStats).keys().value());
-      // console.log(_(awayTeamStats).keys().value());
 
       [homeTeamReport, awayTeamReport] = await Promise.all([
         this.prismaService.teamReport.create({
@@ -869,13 +869,13 @@ export class MatchesService {
 
       // ## `OFFENCE`
 
-      // OFFENCE.I50S[0] = OVERVIEW.I50S[0];
-      // OFFENCE.I50S[1] = OVERVIEW.I50S[1];
-      // OFFENCE.I50S[2] = OVERVIEW.I50S[2];
+      OFFENCE.I50S[0] = OVERVIEW.I50S[0];
+      OFFENCE.I50S[1] = OVERVIEW.I50S[1];
+      OFFENCE.I50S[2] = OVERVIEW.I50S[2];
 
-      // OFFENCE.SC_PER_I50[0] = OVERVIEW.SC_PER_I50[0];
-      // OFFENCE.SC_PER_I50[1] = OVERVIEW.SC_PER_I50[1];
-      // OFFENCE.SC_PER_I50[2] = OVERVIEW.SC_PER_I50[2];
+      OFFENCE.SC_PER_I50[0] = OVERVIEW.SC_PER_I50[0];
+      OFFENCE.SC_PER_I50[1] = OVERVIEW.SC_PER_I50[1];
+      OFFENCE.SC_PER_I50[2] = OVERVIEW.SC_PER_I50[2];
 
       // OFFENCE.DEEP[0] = 0;
       // OFFENCE.DEEP[1] = 0;
@@ -885,13 +885,13 @@ export class MatchesService {
       // OFFENCE.SHALLOW[1] = 0;
       // OFFENCE.SHALLOW[2] = _.subtract(OFFENCE.SHALLOW[0], OFFENCE.SHALLOW[1]);
 
-      // OFFENCE.F50_MARKS[0] = OVERVIEW.F50_MARKS[0];
-      // OFFENCE.F50_MARKS[1] = OVERVIEW.F50_MARKS[1];
-      // OFFENCE.F50_MARKS[2] = OVERVIEW.F50_MARKS[2];
+      OFFENCE.F50_MARKS[0] = OVERVIEW.F50_MARKS[0];
+      OFFENCE.F50_MARKS[1] = OVERVIEW.F50_MARKS[1];
+      OFFENCE.F50_MARKS[2] = OVERVIEW.F50_MARKS[2];
 
-      // OFFENCE.R_BEHINDS[0] = homeTeamData.meta.RUSHED || 0;
-      // OFFENCE.R_BEHINDS[1] = awayTeamData.meta.RUSHED || 0;
-      // OFFENCE.R_BEHINDS[2] = 0;
+      OFFENCE.R_BEHINDS[0] = homeTeamData.meta.RUSHED || 0;
+      OFFENCE.R_BEHINDS[1] = awayTeamData.meta.RUSHED || 0;
+      OFFENCE.R_BEHINDS[2] = 0;
 
       // ## `POSSESSION`
 
