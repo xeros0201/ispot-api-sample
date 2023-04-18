@@ -1,5 +1,7 @@
 trigger:
+  - 'develop'
   - 'staging'
+  - 'production'
 pool:
   vmImage: 'ubuntu-latest'
 steps:
