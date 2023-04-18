@@ -47,7 +47,7 @@ export class TeamsService {
 
     if (!_.isNil(logo)) {
       logoKey = await this.awsS3Service.put(
-        'image',
+        'images',
         logo.path,
         _.last(logo.originalname.split('.')),
       );
@@ -65,7 +65,7 @@ export class TeamsService {
 
     if (!_.isNil(logo)) {
       logoKey = await this.awsS3Service.put(
-        'image',
+        'images',
         logo.path,
         _.last(logo.originalname.split('.')),
       );
