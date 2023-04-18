@@ -47,7 +47,7 @@ export class LeaguesService {
 
     if (!_.isNil(logo)) {
       logoKey = await this.awsS3Service.put(
-        'image',
+        'images',
         logo.path,
         _.last(logo.originalname.split('.')),
       );
@@ -73,7 +73,7 @@ export class LeaguesService {
 
     if (!_.isNil(logo)) {
       logoKey = await this.awsS3Service.put(
-        'image',
+        'images',
         logo.path,
         _.last(logo.originalname.split('.')),
       );
