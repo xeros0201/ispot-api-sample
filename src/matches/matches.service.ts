@@ -669,7 +669,7 @@ export class MatchesService {
             TI: [0, 0, 0],
             TOTAL_CLR: [0, 0, 0],
             HIT_OUTS: [0, 0, 0],
-            HIT_OUTS_TA: [0, 0, 0],
+            // HIT_OUTS_TA: [0, 0, 0],
           },
           OFFENCE: {
             I50S: [0, 0, 0],
