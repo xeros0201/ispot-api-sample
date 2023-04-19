@@ -63,10 +63,8 @@
       }
     ],
     "settings": {
-      "headers": [],
-      "tests": [],
       "options": {
-        "baseUrl": "http://localhost:3000/api"
+        "baseUrl": "https://isports.bbfoundry.io/api"
       }
     }
   }

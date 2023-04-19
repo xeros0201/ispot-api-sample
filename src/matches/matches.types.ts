@@ -54,7 +54,7 @@ export type PlayerStatsProperty = {
   CLR_TI: number;
   CLR: number;
   HO: number;
-  HOTA: number;
+  // HOTA: number;
   T: number;
   FK_F: number;
   FK_A: number;

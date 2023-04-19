@@ -378,7 +378,7 @@ export class MatchesService {
                 },
                 OTHER: {
                   HO: 0,
-                  HOTA: 0,
+                  // HOTA: 0,
                   T: 0,
                   FK_F: 0,
                   FK_A: 0,
@@ -860,12 +860,12 @@ export class MatchesService {
         STOPPAGE.HIT_OUTS[1],
       );
 
-      STOPPAGE.HIT_OUTS_TA[0] = sumBy(homeTeamStats, 'HOTA');
-      STOPPAGE.HIT_OUTS_TA[1] = sumBy(awayTeamStats, 'HOTA');
-      STOPPAGE.HIT_OUTS_TA[2] = _.subtract(
-        STOPPAGE.HIT_OUTS_TA[0],
-        STOPPAGE.HIT_OUTS_TA[1],
-      );
+      // STOPPAGE.HIT_OUTS_TA[0] = sumBy(homeTeamStats, 'HOTA');
+      // STOPPAGE.HIT_OUTS_TA[1] = sumBy(awayTeamStats, 'HOTA');
+      // STOPPAGE.HIT_OUTS_TA[2] = _.subtract(
+      //   STOPPAGE.HIT_OUTS_TA[0],
+      //   STOPPAGE.HIT_OUTS_TA[1],
+      // );
 
       // ## `OFFENCE`
 
