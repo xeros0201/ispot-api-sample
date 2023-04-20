@@ -128,6 +128,7 @@ export class PlayersService {
           select: {
             id: true,
             name: true,
+            logo: true,
             season: true,
             seasonId: true,
           },
