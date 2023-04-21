@@ -404,7 +404,10 @@ export class MatchesService {
                 3,
               );
               if (DISPOSAL_STATISTICS.PER_1 > 0) {
-                DISPOSAL_STATISTICS.PER_1 = DISPOSAL_STATISTICS.PER_1 * 100;
+                DISPOSAL_STATISTICS.PER_1 = _.round(
+                  DISPOSAL_STATISTICS.PER_1 * 100,
+                  2,
+                );
               }
 
               // ## `E`
@@ -421,7 +424,10 @@ export class MatchesService {
                 3,
               );
               if (DISPOSAL_STATISTICS.PER_2 > 0) {
-                DISPOSAL_STATISTICS.PER_2 = DISPOSAL_STATISTICS.PER_2 * 100;
+                DISPOSAL_STATISTICS.PER_2 = _.round(
+                  DISPOSAL_STATISTICS.PER_2 * 100,
+                  2,
+                );
               }
 
               // ## `HB`
@@ -438,7 +444,10 @@ export class MatchesService {
                 3,
               );
               if (DISPOSAL_STATISTICS.PER_3 > 0) {
-                DISPOSAL_STATISTICS.PER_3 = DISPOSAL_STATISTICS.PER_3 * 100;
+                DISPOSAL_STATISTICS.PER_3 = _.round(
+                  DISPOSAL_STATISTICS.PER_3 * 100,
+                  2,
+                );
               }
 
               // ### `CLEARANCES`
