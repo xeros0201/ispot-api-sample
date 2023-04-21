@@ -61,4 +61,5 @@ export type PlayerStatsProperty = {
   I50: number;
   G: number;
   B: number;
+  EFFORT_SPOIL: number;
 };
