@@ -385,6 +385,7 @@ export class MatchesService {
                   I50: 0,
                   G: 0,
                   B: 0,
+                  EFFORT_SPOIL: 0,
                 },
               });
 
@@ -402,6 +403,9 @@ export class MatchesService {
                 _.divide(DISPOSAL_STATISTICS.E_1, DISPOSAL_STATISTICS.D),
                 3,
               );
+              if (DISPOSAL_STATISTICS.PER_1 > 0) {
+                DISPOSAL_STATISTICS.PER_1 = DISPOSAL_STATISTICS.PER_1 * 100;
+              }
 
               // ## `E`
               DISPOSAL_STATISTICS.E_2 = v.KICK_EF;
@@ -416,6 +420,9 @@ export class MatchesService {
                 _.divide(DISPOSAL_STATISTICS.E_2, DISPOSAL_STATISTICS.K),
                 3,
               );
+              if (DISPOSAL_STATISTICS.PER_2 > 0) {
+                DISPOSAL_STATISTICS.PER_2 = DISPOSAL_STATISTICS.PER_2 * 100;
+              }
 
               // ## `HB`
               DISPOSAL_STATISTICS.E_3 = v.HB_EF;
@@ -430,6 +437,9 @@ export class MatchesService {
                 _.divide(DISPOSAL_STATISTICS.E_3, DISPOSAL_STATISTICS.HB),
                 3,
               );
+              if (DISPOSAL_STATISTICS.PER_3 > 0) {
+                DISPOSAL_STATISTICS.PER_3 = DISPOSAL_STATISTICS.PER_3 * 100;
+              }
 
               // ### `CLEARANCES`
               CLEARANCES.CLR_BU = v.CLR_BU;
@@ -454,6 +464,7 @@ export class MatchesService {
               OTHER.I50 = v.I50_INDIVIDUAL;
               OTHER.G = i === 0 ? v.GOAL_HOME : v.GOAL_AWAY;
               OTHER.B = i === 0 ? v.BEHIND_HOME : v.BEHIND_AWAY;
+              OTHER.EFFORT_SPOIL = v.EFFORT_SPOIL;
 
               _.assign(results, {
                 [player.playerId.toString()]: _.merge(
@@ -930,8 +941,8 @@ export class MatchesService {
         POSSESSION.TOTAL_CONT[1],
       );
 
-      POSSESSION.HB_REC[0] = sumBy(homeTeamStats, 'UM');
-      POSSESSION.HB_REC[1] = sumBy(awayTeamStats, 'UM');
+      POSSESSION.HB_REC[0] = sumBy(homeTeamStats, 'E_3');
+      POSSESSION.HB_REC[1] = sumBy(awayTeamStats, 'E_3');
       POSSESSION.HB_REC[2] = _.subtract(
         POSSESSION.HB_REC[0],
         POSSESSION.HB_REC[1],

@@ -162,8 +162,8 @@ const main = async (): Promise<void> => {
             data: [
               'I50s|I50S',
               'Sc %/I50|SC_PER_I50',
-              'Deep|DEEP',
-              'Shallow|SHALLOW',
+              // 'Deep|DEEP',
+              // 'Shallow|SHALLOW',
               'F50 Marks|F50_MARKS',
               'R. Behinds|R_BEHINDS',
             ].map((s) => ({
@@ -186,13 +186,13 @@ const main = async (): Promise<void> => {
         children: {
           createMany: {
             data: [
-              'Loose Ball|LOOSE_BALL',
-              'Hard Ball|HARD_BALL',
+              // 'Loose Ball|LOOSE_BALL',
+              // 'Hard Ball|HARD_BALL',
               'Frees For|FREES_FOR',
               'Cont M|COUNT_M',
               'Total Cont|TOTAL_CONT',
               'HB Rec|HB_REC',
-              'Gathers|GATHERS',
+              // 'Gathers|GATHERS',
               'Uncon M|UNCON_M',
               'Total Uncon|TOTAL_UNCON',
             ].map((s) => ({
@@ -297,13 +297,14 @@ const main = async (): Promise<void> => {
           createMany: {
             data: [
               'HO',
-              'HOTA',
+              // 'HOTA',
               'T',
               'FK F|FK_F',
               'FK A|FK_A',
               'I50',
               'G',
               'B',
+              'EFFORT SPOIL|EFFORT_SPOIL',
             ].map((s) => ({
               name: s.split('|')[0],
               alias: s.includes('|') ? s.split('|')[1] : s.split('|')[0],
