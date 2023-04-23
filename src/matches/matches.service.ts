@@ -682,6 +682,7 @@ export class MatchesService {
             INTERCEPT_M: [0, 0, 0],
             TACKLES: [0, 0, 0],
             FREE_KICKS: [0, 0, 0],
+            EFFORT_SPOIL: [0, 0, 0],
           },
           STOPPAGE: {
             BU: [0, 0, 0],
@@ -747,16 +748,16 @@ export class MatchesService {
       );
 
       OVERVIEW.DISPOSAL_PER[0] = _.round(
-        _.divide(sumBy(homeTeamStats, 'E_1'), sumBy(homeTeamStats, 'D')),
-        3,
+        _.divide(sumBy(homeTeamStats, 'E_1'), sumBy(homeTeamStats, 'D')) * 100,
+        1,
       );
       OVERVIEW.DISPOSAL_PER[1] = _.round(
-        _.divide(sumBy(awayTeamStats, 'E_1'), sumBy(awayTeamStats, 'D')),
-        3,
+        _.divide(sumBy(awayTeamStats, 'E_1'), sumBy(awayTeamStats, 'D')) * 100,
+        1,
       );
-      OVERVIEW.DISPOSAL_PER[2] = _.round(
-        _.subtract(OVERVIEW.DISPOSAL_PER[0], OVERVIEW.DISPOSAL_PER[1]),
-        3,
+      OVERVIEW.DISPOSAL_PER[2] = _.subtract(
+        OVERVIEW.DISPOSAL_PER[0],
+        OVERVIEW.DISPOSAL_PER[1],
       );
 
       OVERVIEW.CLANGERS[0] = sumBy(homeTeamStats, 'TO_1');
@@ -850,6 +851,13 @@ export class MatchesService {
       OVERVIEW.FREE_KICKS[2] = _.subtract(
         OVERVIEW.FREE_KICKS[0],
         OVERVIEW.FREE_KICKS[1],
+      );
+
+      OVERVIEW.EFFORT_SPOIL[0] = sumBy(homeTeamStats, 'E_3');
+      OVERVIEW.EFFORT_SPOIL[1] = sumBy(awayTeamStats, 'E_3');
+      OVERVIEW.EFFORT_SPOIL[2] = _.subtract(
+        OVERVIEW.EFFORT_SPOIL[0],
+        OVERVIEW.EFFORT_SPOIL[1],
       );
 
       // ## `STOPPAGE`
