@@ -114,6 +114,7 @@ const main = async (): Promise<void> => {
               'Intercept M|INTERCEPT_M',
               'Tackles|TACKLES',
               'Free Kicks|FREE_KICKS',
+              'Effort Spoil|EFFORT_SPOIL',
             ].map((s) => ({
               name: s.split('|')[0],
               alias: s.split('|')[1],

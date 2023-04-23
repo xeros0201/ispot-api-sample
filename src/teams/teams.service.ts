@@ -90,70 +90,67 @@ export class TeamsService {
   }
 
   public async getStats(seasonId: number, round?: number): Promise<any> {
-    const matches = await this.prismaService.match.findMany({
-      where: {
-        seasonId,
-        ...(!_.isNil(round) ? { round } : {}),
-      },
-    });
-
     const teamReports = await this.prismaService.teamReport.findMany({
       where: {
-        matchId: { in: _.map(matches, (m) => m.id) },
-      },
-      include: {
-        team: true,
-        playersOnTeamReports: {
-          include: {
-            resultProperty: {
-              include: { parent: true },
-            },
-            player: true,
-          },
+        match: {
+          seasonId,
+          status: 'PUBLISHED',
+          ...(!_.isNil(round) ? { round } : {}),
         },
       },
     });
 
-    return _(teamReports)
-      .map((teamReport) => {
-        return {
-          team: _.pick(teamReport.team, ['id', 'name']),
-          score: teamReport.score,
-          meta: teamReport.meta,
-          players: _(teamReport.playersOnTeamReports)
-            .groupBy((s) => s.playerId)
-            .map((values, playerId) => {
-              const { player } = _.find(
-                values,
-                (r) => r.playerId === _.toNumber(playerId),
-              );
+    const players = await this.prismaService.playersOnTeamReports.findMany({
+      where: {
+        teamReportId: { in: _.map(teamReports, (teamReport) => teamReport.id) },
+      },
+      include: {
+        teamReport: {
+          include: { team: true },
+        },
+        resultProperty: {
+          include: { parent: true },
+        },
+        player: true,
+      },
+    });
 
-              return {
-                player: _.pick(player, ['id', 'name', 'playerNumber']),
-                values: _(values)
-                  .map((r) => ({
-                    resultProperty: r.resultProperty,
-                    value: r.value,
-                  }))
-                  .groupBy((r) => r.resultProperty.parent.name)
-                  .mapValues((v) => {
-                    return _.transform(
-                      v,
-                      (r, p) => {
-                        _.assign(r, {
-                          [p.resultProperty.alias]: {
-                            name: p.resultProperty.name,
-                            value: p.value,
-                          },
-                        });
-                      },
-                      {},
-                    );
+    return _(players)
+      .groupBy((player) => player.teamReport.teamId)
+      .map((teams) => {
+        const players = _(teams)
+          .groupBy((team) => team.playerId)
+          .map((players) => {
+            const values = _(players)
+              .groupBy((player) => player.resultProperty.parent.name)
+              .mapValues((children) => {
+                return _(children)
+                  .orderBy((s) => s.resultProperty.id)
+                  .groupBy((c) => c.resultProperty.alias)
+                  .mapValues((child) => {
+                    const value = _(child)
+                      .map((r) => r.value)
+                      .mean();
+
+                    return {
+                      name: child[0].resultProperty.name,
+                      value: _.round(value, 2),
+                    };
                   })
-                  .value(),
-              };
-            })
-            .value(),
+                  .value();
+              })
+              .value();
+
+            return {
+              player: players[0].player,
+              values,
+            };
+          })
+          .value();
+
+        return {
+          team: teams[0].teamReport.team,
+          players,
         };
       })
       .value();
