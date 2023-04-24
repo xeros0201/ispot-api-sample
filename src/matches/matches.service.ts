@@ -749,15 +749,15 @@ export class MatchesService {
 
       OVERVIEW.DISPOSAL_PER[0] = _.round(
         _.divide(sumBy(homeTeamStats, 'E_1'), sumBy(homeTeamStats, 'D')) * 100,
-        1,
+        2,
       );
       OVERVIEW.DISPOSAL_PER[1] = _.round(
         _.divide(sumBy(awayTeamStats, 'E_1'), sumBy(awayTeamStats, 'D')) * 100,
-        1,
+        2,
       );
-      OVERVIEW.DISPOSAL_PER[2] = _.subtract(
-        OVERVIEW.DISPOSAL_PER[0],
-        OVERVIEW.DISPOSAL_PER[1],
+      OVERVIEW.DISPOSAL_PER[2] = _.round(
+        _.subtract(OVERVIEW.DISPOSAL_PER[0], OVERVIEW.DISPOSAL_PER[1]),
+        2,
       );
 
       OVERVIEW.CLANGERS[0] = sumBy(homeTeamStats, 'TO_1');
@@ -775,19 +775,19 @@ export class MatchesService {
         _.divide(
           _.add(sumBy(homeTeamStats, 'G'), sumBy(homeTeamStats, 'B')),
           OVERVIEW.I50S[0],
-        ),
-        3,
+        ) * 100,
+        2,
       );
       OVERVIEW.SC_PER_I50[1] = _.round(
         _.divide(
           _.add(sumBy(awayTeamStats, 'G'), sumBy(awayTeamStats, 'B')),
           OVERVIEW.I50S[0],
-        ),
-        3,
+        ) * 100,
+        2,
       );
       OVERVIEW.SC_PER_I50[2] = _.round(
         _.subtract(OVERVIEW.SC_PER_I50[0], OVERVIEW.SC_PER_I50[1]),
-        3,
+        2,
       );
 
       OVERVIEW.CONT_POSS[0] = sumBy(homeTeamStats, 'CP');
