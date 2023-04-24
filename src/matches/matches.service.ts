@@ -1108,6 +1108,7 @@ export class MatchesService {
                   resultProperty: r.resultProperty,
                   value: r.value,
                 }))
+                .orderBy((r) => r.resultProperty.id)
                 .groupBy((r) => r.resultProperty.parent.name)
                 .mapValues((v) => {
                   return _.transform(
