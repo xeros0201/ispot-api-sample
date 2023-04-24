@@ -64,7 +64,7 @@
     ],
     "settings": {
       "options": {
-        "baseUrl": "http://localhost:3000/api"
+        "baseUrl": "https://stats.isports.net.au/api"
       }
     }
   }
