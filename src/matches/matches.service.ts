@@ -853,8 +853,8 @@ export class MatchesService {
         OVERVIEW.FREE_KICKS[1],
       );
 
-      OVERVIEW.EFFORT_SPOIL[0] = sumBy(homeTeamStats, 'E_3');
-      OVERVIEW.EFFORT_SPOIL[1] = sumBy(awayTeamStats, 'E_3');
+      OVERVIEW.EFFORT_SPOIL[0] = sumBy(homeTeamStats, 'EFFORT_SPOIL');
+      OVERVIEW.EFFORT_SPOIL[1] = sumBy(awayTeamStats, 'EFFORT_SPOIL');
       OVERVIEW.EFFORT_SPOIL[2] = _.subtract(
         OVERVIEW.EFFORT_SPOIL[0],
         OVERVIEW.EFFORT_SPOIL[1],
