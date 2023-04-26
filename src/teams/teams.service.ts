@@ -126,7 +126,7 @@ export class TeamsService {
               .groupBy((player) => player.resultProperty.parent.name)
               .mapValues((children) => {
                 return _(children)
-                  .orderBy(['priority', 'id'])
+                  .orderBy(['resultProperty.id', 'resultProperty.priority'])
                   .groupBy((c) => c.resultProperty.alias)
                   .mapValues((child) => {
                     const value = _(child)
