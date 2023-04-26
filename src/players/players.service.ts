@@ -98,7 +98,13 @@ export class PlayersService {
 
   public async getStats(
     alias: string,
-    { teamId }: { teamId?: number },
+    {
+      seasonId,
+      teamId,
+    }: {
+      seasonId?: number;
+      teamId?: number;
+    },
   ): Promise<any> {
     const resultProperty = await this.prismaService.resultProperty.findFirst({
       where: { alias },
@@ -108,10 +114,13 @@ export class PlayersService {
       throw new BadRequestException('No Property found!');
     }
 
+    console.log(seasonId);
+
     const results = await this.prismaService.playersOnTeamReports.groupBy({
       by: ['playerId'],
       where: {
         resultPropertyId: resultProperty.id,
+        ...(!_.isNil(seasonId) ? { teamReport: { match: { seasonId } } } : {}),
         ...(!_.isNil(teamId) ? { player: { teamId } } : {}),
       },
       _sum: { value: true },

@@ -30,9 +30,11 @@ export class PlayersController {
   @Get('/_stats')
   public async getStatsByProperty(
     @Query('property') property: string,
+    @Query('seasonId') seasonId?: string,
     @Query('teamId') teamId?: string,
   ): Promise<any> {
     return this.playersService.getStats(property, {
+      seasonId: _.toNumber(seasonId) || undefined,
       teamId: _.toNumber(teamId) || undefined,
     });
   }
