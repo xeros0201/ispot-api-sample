@@ -789,7 +789,7 @@ export class MatchesService {
             sumBy(awayTeamStats, 'G'),
             sumBy(awayTeamStats, 'B'),
           ]),
-          OVERVIEW.I50S[0],
+          OVERVIEW.I50S[1],
         ) * 100,
         1,
       );
