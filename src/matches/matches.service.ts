@@ -406,7 +406,7 @@ export class MatchesService {
               if (DISPOSAL_STATISTICS.PER_1 > 0) {
                 DISPOSAL_STATISTICS.PER_1 = _.round(
                   DISPOSAL_STATISTICS.PER_1 * 100,
-                  2,
+                  1,
                 );
               }
 
@@ -426,7 +426,7 @@ export class MatchesService {
               if (DISPOSAL_STATISTICS.PER_2 > 0) {
                 DISPOSAL_STATISTICS.PER_2 = _.round(
                   DISPOSAL_STATISTICS.PER_2 * 100,
-                  2,
+                  1,
                 );
               }
 
@@ -446,7 +446,7 @@ export class MatchesService {
               if (DISPOSAL_STATISTICS.PER_3 > 0) {
                 DISPOSAL_STATISTICS.PER_3 = _.round(
                   DISPOSAL_STATISTICS.PER_3 * 100,
-                  2,
+                  1,
                 );
               }
 
@@ -773,14 +773,22 @@ export class MatchesService {
 
       OVERVIEW.SC_PER_I50[0] = _.round(
         _.divide(
-          _.add(sumBy(homeTeamStats, 'G'), sumBy(homeTeamStats, 'B')),
+          _.sum([
+            homeTeamData.meta.RUSHED || 0,
+            sumBy(homeTeamStats, 'G'),
+            sumBy(homeTeamStats, 'B'),
+          ]),
           OVERVIEW.I50S[0],
         ) * 100,
         1,
       );
       OVERVIEW.SC_PER_I50[1] = _.round(
         _.divide(
-          _.add(sumBy(awayTeamStats, 'G'), sumBy(awayTeamStats, 'B')),
+          _.sum([
+            awayTeamData.meta.RUSHED || 0,
+            sumBy(awayTeamStats, 'G'),
+            sumBy(awayTeamStats, 'B'),
+          ]),
           OVERVIEW.I50S[0],
         ) * 100,
         1,
@@ -1108,7 +1116,7 @@ export class MatchesService {
                   resultProperty: r.resultProperty,
                   value: r.value,
                 }))
-                .orderBy((r) => r.resultProperty.id)
+                .orderBy(['id', 'priority'])
                 .groupBy((r) => r.resultProperty.parent.name)
                 .mapValues((v) => {
                   return _.transform(

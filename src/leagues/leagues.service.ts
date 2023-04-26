@@ -20,7 +20,10 @@ export class LeaguesService {
   ) {}
 
   public async findAll(): Promise<LeagueEntity[]> {
-    return this.prismaService.league.findMany({ include: { sport: true } });
+    return this.prismaService.league.findMany({
+      orderBy: { name: 'asc' },
+      include: { sport: true },
+    });
   }
 
   public async findAllBySportId(

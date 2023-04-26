@@ -20,6 +20,7 @@ export class TeamsService {
 
   public async findAll(): Promise<TeamEntity[]> {
     return this.prismaService.team.findMany({
+      orderBy: { name: 'asc' },
       include: {
         season: {
           include: { league: true },
@@ -125,7 +126,7 @@ export class TeamsService {
               .groupBy((player) => player.resultProperty.parent.name)
               .mapValues((children) => {
                 return _(children)
-                  .orderBy((s) => s.resultProperty.id)
+                  .orderBy(['id', 'priority'])
                   .groupBy((c) => c.resultProperty.alias)
                   .mapValues((child) => {
                     const value = _(child)
@@ -134,7 +135,7 @@ export class TeamsService {
 
                     return {
                       name: child[0].resultProperty.name,
-                      value: _.round(value, 2),
+                      value: _.round(value, 1),
                     };
                   })
                   .value();
