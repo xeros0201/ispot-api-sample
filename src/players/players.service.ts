@@ -125,7 +125,7 @@ export class PlayersService {
       },
       _sum: { value: true },
       orderBy: [{ _sum: { value: 'desc' } }],
-      take: 10,
+      take: 20,
     });
 
     const players = await this.prismaService.player.findMany({
