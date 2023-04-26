@@ -1116,7 +1116,7 @@ export class MatchesService {
                   resultProperty: r.resultProperty,
                   value: r.value,
                 }))
-                .orderBy(['priority', 'id'])
+                .orderBy(['resultProperty.id', 'resultProperty.priority'])
                 .groupBy((r) => r.resultProperty.parent.name)
                 .mapValues((v) => {
                   return _.transform(
