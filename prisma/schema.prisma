@@ -154,6 +154,7 @@ model ResultProperty {
   type                 ResultPropertyType
   name                 String
   alias                String?
+  priority             Int?
   sportId              Int                    @map("sport_id")
   sport                Sport?                 @relation(fields: [sportId], references: [id])
   parentId             Int?                   @map("parent_id")
