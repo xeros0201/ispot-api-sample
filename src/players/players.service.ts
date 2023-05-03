@@ -114,8 +114,6 @@ export class PlayersService {
       throw new BadRequestException('No Property found!');
     }
 
-    console.log(seasonId);
-
     const results = await this.prismaService.playersOnTeamReports.groupBy({
       by: ['playerId'],
       where: {
@@ -123,8 +121,17 @@ export class PlayersService {
         ...(!_.isNil(seasonId) ? { teamReport: { match: { seasonId } } } : {}),
         ...(!_.isNil(teamId) ? { player: { teamId } } : {}),
       },
-      _sum: { value: true },
-      orderBy: [{ _sum: { value: 'desc' } }],
+      ...(resultProperty.alias.includes('PER_')
+        ? { _avg: { value: true } }
+        : {}),
+      ...(!resultProperty.alias.includes('PER_')
+        ? { _sum: { value: true } }
+        : {}),
+      orderBy: [
+        resultProperty.alias.includes('PER_')
+          ? { _avg: { value: 'desc' } }
+          : { _sum: { value: 'desc' } },
+      ],
       take: 20,
     });
 
@@ -149,7 +156,11 @@ export class PlayersService {
       .map((player) => {
         const p = _.find(results, (r) => r.playerId === player.id);
 
-        _.assign(player, { total: p._sum.value });
+        const value = resultProperty.alias.includes('PER_')
+          ? p._avg.value
+          : p._sum.value;
+
+        _.assign(player, { total: _.round(value, 1) });
 
         return _.omit(player, [
           'createdDate',
