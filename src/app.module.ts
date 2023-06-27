@@ -1,10 +1,12 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { PrismaModule } from 'nestjs-prisma';
 import { S3Module } from 'nestjs-s3';
 
 import { AuthModule } from './auth/auth.module';
 import { AWSS3Module } from './aws-s3/aws-s3.module';
+import { ThrottlerBehindProxyGuard } from './common/guards/throttler-behind-proxy.guard';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { HealthModule } from './health/health.module';
 import { LeaguesModule } from './leagues/leagues.module';
@@ -44,6 +46,12 @@ import { UsersModule } from './users/users.module';
     MatchesModule,
     UsersModule,
     LocationsModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerBehindProxyGuard,
+    },
   ],
 })
 export class AppModule implements NestModule {
