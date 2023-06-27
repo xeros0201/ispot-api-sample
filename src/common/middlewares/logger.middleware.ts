@@ -6,8 +6,10 @@ export class LoggerMiddleware implements NestMiddleware {
   private readonly logger = new Logger(LoggerMiddleware.name);
 
   public use(request: Request, response: Response, next: NextFunction): void {
-    const { ip, method, originalUrl } = request;
+    const { method, originalUrl } = request;
+
     const userAgent = request.get('user-agent') || '';
+    const ip = request.header('X-Forwarded-For') || request.ip;
 
     response.on('finish', () => {
       const { statusCode } = response;
